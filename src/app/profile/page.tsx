@@ -1,10 +1,11 @@
 "use client";
+
+import { AuthContext } from "@/components/contextTypes";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../components/contextTypes";
+import { Recipe } from "../../../lib/types/recipe";
 import { readUserRecipes } from "../api/recipe/read";
-import type { Recipe } from "../../../lib/types/recipe";
-import { RecipeCard } from "../../components/card";
 import Link from "next/link";
+import { RecipeCard } from "@/components/card";
 
 const Profile = () => {
   const { user, profile } = useContext(AuthContext);
@@ -22,6 +23,8 @@ const Profile = () => {
       });
     }
   }, [user]);
+
+  console.log(recipes);
 
   return (
     <div className="px-2 flex h-full gap-5 font-primary text-brand-black dark:text-brand-white">

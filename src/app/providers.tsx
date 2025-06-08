@@ -10,10 +10,8 @@ export default function Providers({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <CommonProvider>
-        <AuthProvider>{children}</AuthProvider>
-      </CommonProvider>
-    </html>
+    <CommonProvider>
+      <AuthProvider>{children}</AuthProvider>
+    </CommonProvider>
   );
 }
