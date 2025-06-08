@@ -1,6 +1,7 @@
 "use client";
 
 import { Clock } from "lucide-react";
+import Image from "next/image";
 
 interface RecipeCardProps {
   image: string;
@@ -27,8 +28,8 @@ export const RecipeCard = ({ image, title, time }: RecipeCardProps) => {
   const cookingTime = getCookingTimeLabel(time);
   return (
     <div className="hover-effect font font-primary text-lg text-brand-black dark:text-brand-white">
-      <div className=" flex items-center rounded-md max-h-[181px] max-w-[308px] overflow-hidden shadow-md">
-        <img src={image} alt={title} />
+      <div className="relative aspect-[308/181] w-[308px] rounded-md overflow-hidden shadow-md">
+        <Image fill src={image} alt={title} className="object-cover" />
       </div>
       <div className="flex justify-between py-2">
         <p>{title}</p>

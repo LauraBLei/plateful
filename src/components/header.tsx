@@ -1,15 +1,22 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext, CommonContext } from "./contextTypes";
 import { signOut } from "../app/api/auth/signOut";
 import { signInWithGoogle } from "../app/api/auth/login";
 import { LogOut, Moon, Sun, User2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export const Header = () => {
   const { user } = useContext(AuthContext);
   const { darkMode, toggleDarkMode } = useContext(CommonContext);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <header className="w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
       <div className="bg-orange-300 p-2 flex justify-center items-center">
@@ -35,23 +42,26 @@ export const Header = () => {
             </div>
           )}
         </button>
-        {user ? (
+        {mounted && user ? (
           <Link
-            className="rounded-full overflow-hidden w-[40px] hover-effect"
+            className="relative rounded-full aspect-square overflow-hidden w-[40px] hover-effect"
             href="/profile"
           >
-            <img
+            <Image
+              fill
               src={user?.user_metadata.avatar_url}
               alt={user?.user_metadata.full_name}
             />
           </Link>
         ) : (
-          <button onClick={signInWithGoogle}>
-            <User2 className="hover-effect hover:text-brand-orange" />
-            <span className="sr-only">Sign in</span>
-          </button>
+          mounted && (
+            <button onClick={signInWithGoogle}>
+              <User2 className="hover-effect hover:text-brand-orange" />
+              <span className="sr-only">Sign in</span>
+            </button>
+          )
         )}
-        {user && (
+        {mounted && user && (
           <button onClick={signOut}>
             <LogOut className="hover-effect hover:text-brand-orange" />
           </button>

@@ -1,10 +1,12 @@
 "use client";
+
+import { AuthContext } from "@/components/contextTypes";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../components/contextTypes";
+import { Recipe } from "../../../lib/types/recipe";
 import { readUserRecipes } from "../api/recipe/read";
-import type { Recipe } from "../../../lib/types/recipe";
-import { RecipeCard } from "../../components/card";
 import Link from "next/link";
+import { RecipeCard } from "@/components/card";
+import Image from "next/image";
 
 const Profile = () => {
   const { user, profile } = useContext(AuthContext);
@@ -23,15 +25,18 @@ const Profile = () => {
     }
   }, [user]);
 
+  console.log(recipes);
+
   return (
     <div className="px-2 flex h-full gap-5 font-primary text-brand-black dark:text-brand-white">
       <div className="p-10 min-h-[800px] shadow-md max-w-[435px] w-full border-1 dark:border-brand-white rounded-md h-full">
         <div className="w-full items-center flex flex-col gap-5 mb-10">
-          <div className="rounded-full max-w-[170px] w-full overflow-hidden">
-            <img
-              className="w-full h-full object-cover"
+          <div className="relative rounded-full aspect-square max-w-[170px] w-full overflow-hidden">
+            <Image
+              fill
               src={user?.user_metadata.avatar_url}
               alt={user?.user_metadata.full_name}
+              className="object-cover"
             />
           </div>
           <h1 className="text-center text-2xl">{profile?.name}</h1>
@@ -68,6 +73,7 @@ const Profile = () => {
             {recipes.length > 0
               ? recipes.map((recipe) => (
                   <RecipeCard
+                    key={recipe.id}
                     time={recipe.time}
                     title={recipe.name}
                     image={recipe.image}
