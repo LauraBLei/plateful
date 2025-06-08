@@ -71,6 +71,7 @@ const Profile = () => {
             {recipes.length > 0
               ? recipes.map((recipe) => (
                   <RecipeCard
+                    key={recipe.id}
                     time={recipe.time}
                     title={recipe.name}
                     image={recipe.image}

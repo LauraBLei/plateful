@@ -13,8 +13,7 @@ type IngredientGroup = {
   groupName: string;
   ingredients: string[];
 };
-
-export const CreateRecipe = () => {
+const CreateRecipe = () => {
   const { user } = useContext(AuthContext);
   const [image, setImage] = useState<File | null>(null);
   const [title, setTitle] = useState("");
@@ -164,3 +163,5 @@ export const CreateRecipe = () => {
     </div>
   );
 };
+
+export default CreateRecipe;
