@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../components/context";
+import { AuthContext } from "../../components/contextTypes";
 import { readUserRecipes } from "../api/recipe/read";
 import type { Recipe } from "../../../lib/types/recipe";
 import { RecipeCard } from "../../components/card";

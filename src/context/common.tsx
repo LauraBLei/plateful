@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   CommonContext,
   type ContextProviderProps,
-} from "../components/context";
+} from "../components/contextTypes";
 
 export const CommonProvider = ({ children }: ContextProviderProps) => {
   const [darkMode, setDarkMode] = useState<boolean>(() => {

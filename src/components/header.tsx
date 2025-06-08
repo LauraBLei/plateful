@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { AuthContext, CommonContext } from "./context";
+import { AuthContext, CommonContext } from "./contextTypes";
 import { signOut } from "../app/api/auth/signOut";
 import { signInWithGoogle } from "../app/api/auth/login";
 import { LogOut, Moon, Sun, User2 } from "lucide-react";

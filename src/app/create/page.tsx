@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useState } from "react";
 import { uploadRecipeImage } from "../api/recipe/create";
-import { AuthContext } from "../../components/context";
+import { AuthContext } from "../../components/contextTypes";
 import { supabase } from "../../../lib/supabase";
 
 type IngredientGroup = {

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { AuthContext, type ContextProviderProps } from "../components/context";
+import {
+  AuthContext,
+  type ContextProviderProps,
+} from "../components/contextTypes";
 import type { User } from "@supabase/supabase-js";
 import type { UserProfile } from "../../lib/types/user";
 import { checkUser } from "../app/api/auth/user";
