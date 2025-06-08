@@ -1,5 +1,5 @@
 import type { User } from "@supabase/supabase-js";
-import { supabase } from "../supabase";
+import { supabase } from "../../../../lib/supabase";
 
 export const setUser = async (user: User) => {
   await supabase.from("users").insert({
@@ -17,9 +17,6 @@ export const checkUser = async (user: User) => {
     .select("*")
     .eq("id", user.id)
     .single();
-  if (error) {
-    console.log("user check gave error: ", error);
-  } else {
-    return existingUser;
-  }
+  if (error) console.log("user check gave error: ", error);
+  return existingUser;
 };

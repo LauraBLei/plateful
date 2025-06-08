@@ -1,8 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 
 // Create a single supabase client for interacting with your database
-const publicURLForPlateful = import.meta.env.VITE_SUPABASE_URL ?? "";
-const superSecretKeyDoNotCommit = import.meta.env.VITE_SUPABASE_KEY ?? "";
+const publicURLForPlateful = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const superSecretKeyDoNotCommit =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 export const supabase = createClient(
   publicURLForPlateful,
   superSecretKeyDoNotCommit

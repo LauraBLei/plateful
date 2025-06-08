@@ -1,4 +1,4 @@
-import { supabase } from "../supabase";
+import { supabase } from "../../../../lib/supabase";
 
 export const readRecipes = async () => {
   const { data, error } = await supabase.from("recipes").select();

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { AuthContext, type ContextProviderProps } from "../types/context";
-import { supabase } from "../API/supabase";
+import { AuthContext, type ContextProviderProps } from "../components/context";
 import type { User } from "@supabase/supabase-js";
-import type { UserProfile } from "../types/user";
-import { checkUser } from "../API/auth/user";
+import type { UserProfile } from "../../lib/types/user";
+import { checkUser } from "../app/api/auth/user";
+import { setUser as SetSupaUser } from "../app/api/auth/user";
+import { supabase } from "../../lib/supabase";
 
 export const AuthProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
         const existingUser = await checkUser(user);
 
         if (!existingUser) {
-          setUser(user);
+          SetSupaUser(user);
         } else {
           setProfile(existingUser);
         }

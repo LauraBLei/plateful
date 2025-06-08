@@ -1,14 +1,15 @@
+"use client";
 import React, { useContext, useState } from "react";
-import { uploadRecipeImage } from "../API/recipe/create";
-import { AuthContext } from "../types/context";
-import { supabase } from "../API/supabase";
+import { uploadRecipeImage } from "../api/recipe/create";
+import { AuthContext } from "../../components/context";
+import { supabase } from "../../../lib/supabase";
 
 type IngredientGroup = {
   groupName: string;
   ingredients: string[];
 };
 
-export const CreateRecipe = () => {
+const CreateRecipe = () => {
   const { user } = useContext(AuthContext);
   const [image, setImage] = useState<File | null>(null);
   const [title, setTitle] = useState("");
@@ -291,3 +292,5 @@ export const CreateRecipe = () => {
     </form>
   );
 };
+
+export default CreateRecipe;

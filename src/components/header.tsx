@@ -1,9 +1,11 @@
+"use client";
+
 import { useContext } from "react";
-import { AuthContext, CommonContext } from "../types/context";
-import { Link } from "react-router";
-import { signOut } from "../API/auth/signOut";
-import { signInWithGoogle } from "../API/auth/login";
+import { AuthContext, CommonContext } from "./context";
+import { signOut } from "../app/api/auth/signOut";
+import { signInWithGoogle } from "../app/api/auth/login";
 import { LogOut, Moon, Sun, User2 } from "lucide-react";
+import Link from "next/link";
 
 export const Header = () => {
   const { user } = useContext(AuthContext);
@@ -14,10 +16,10 @@ export const Header = () => {
         Logo
       </div>
       <nav className="flex  items-center gap-5 ">
-        <Link to="/" className="hover-effect dark:hover:text-brand-orange ">
+        <Link href="/" className="hover-effect dark:hover:text-brand-orange ">
           Home
         </Link>
-        <Link to="/" className="hover-effect dark:hover:text-brand-orange">
+        <Link href="/" className="hover-effect dark:hover:text-brand-orange">
           All Recipes
         </Link>
         <button onClick={toggleDarkMode}>
@@ -36,7 +38,7 @@ export const Header = () => {
         {user ? (
           <Link
             className="rounded-full overflow-hidden w-[40px] hover-effect"
-            to="/profile"
+            href="/profile"
           >
             <img
               src={user?.user_metadata.avatar_url}

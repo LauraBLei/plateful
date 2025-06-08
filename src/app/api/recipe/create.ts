@@ -1,6 +1,6 @@
 // lib/uploadImage.ts
 
-import { supabase } from "../supabase";
+import { supabase } from "../../../../lib/supabase";
 
 export const uploadRecipeImage = async (file: File, userId: string) => {
   const fileExt = file.name.split(".").pop();

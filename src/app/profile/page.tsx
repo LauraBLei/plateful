@@ -1,11 +1,12 @@
+"use client";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../types/context";
-import { readUserRecipes } from "../API/recipe/read";
-import type { Recipe } from "../types/recipe";
-import { Link } from "react-router";
-import { RecipeCard } from "../components/card";
+import { AuthContext } from "../../components/context";
+import { readUserRecipes } from "../api/recipe/read";
+import type { Recipe } from "../../../lib/types/recipe";
+import { RecipeCard } from "../../components/card";
+import Link from "next/link";
 
-export const Profile = () => {
+const Profile = () => {
   const { user, profile } = useContext(AuthContext);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [activeTab, setActiveTab] = useState<"recipes" | "favorites">(
@@ -21,8 +22,6 @@ export const Profile = () => {
       });
     }
   }, [user]);
-
-  console.log(recipes);
 
   return (
     <div className="px-2 flex h-full gap-5 font-primary text-brand-black dark:text-brand-white">
@@ -57,7 +56,7 @@ export const Profile = () => {
           >
             Your Favorites
           </button>
-          <Link className="button hover-effect" to={"/create"}>
+          <Link className="button hover-effect" href={"/create"}>
             Add a recipe
           </Link>
         </div>
@@ -82,3 +81,5 @@ export const Profile = () => {
     </div>
   );
 };
+
+export default Profile;
