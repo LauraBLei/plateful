@@ -6,6 +6,7 @@ import { signOut } from "../app/api/auth/signOut";
 import { signInWithGoogle } from "../app/api/auth/login";
 import { LogOut, Moon, Sun, User2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export const Header = () => {
   const { user } = useContext(AuthContext);
@@ -43,10 +44,11 @@ export const Header = () => {
         </button>
         {mounted && user ? (
           <Link
-            className="rounded-full overflow-hidden w-[40px] hover-effect"
+            className="relative rounded-full aspect-square overflow-hidden w-[40px] hover-effect"
             href="/profile"
           >
-            <img
+            <Image
+              fill
               src={user?.user_metadata.avatar_url}
               alt={user?.user_metadata.full_name}
             />

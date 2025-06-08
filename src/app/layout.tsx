@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <Providers>
         <body>
-          <div className="min-h-screen flex flex-col gap-5 transition-colors duration-500 dark:bg-brand-black bg-brand-white">
+          <div className="min-h-screen items-center flex flex-col gap-5 transition-colors duration-500 dark:bg-brand-black bg-brand-white">
             <Header />
             {children}
           </div>

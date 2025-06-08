@@ -107,56 +107,59 @@ const CreateRecipe = () => {
   };
 
   return (
-    <div className="max-w-[1440px] w-full ">
+    <div className="max-w-[1440px] flex flex-col gap-10 w-full px-2  ">
+      <h1 className="headline">Create Recipe!</h1>
       <form
         onSubmit={handleSubmit}
-        className="max-w-3xl  p-4 space-y-6 font-primary text-brand-black dark:text-brand-white"
+        className="  w-full  space-y-6 font-primary text-brand-black dark:text-brand-white"
       >
-        {/* Image Upload */}
-        <ImageInput setImage={setImage} image={image} />
+        <div className="flex w-full gap-5 flex-wrap lg:flex-nowrap">
+          <div className="flex flex-col w-full ">
+            {/* Image Upload */}
+            <ImageInput setImage={setImage} image={image} />
+            {/* Title */}
+            <div>
+              <label className="block mb-1 font-semibold" htmlFor="title">
+                Recipe Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="input"
+                maxLength={50}
+                required
+              />
+            </div>
+            <TimeSelect time={time} setTime={setTime} />
 
-        {/* Title */}
-        <div>
-          <label className="block mb-1 font-semibold" htmlFor="title">
-            Recipe Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="input "
-            required
-          />
+            <TagSelect tag={tag} setTag={setTag} />
+
+            {/* Recipe Steps */}
+            <StepsInput
+              steps={steps}
+              handleStepChange={handleStepChange}
+              addStep={addStep}
+              removeStep={removeStep}
+            />
+          </div>
+          <div className="w-full max-w-[700px]">
+            {/* Ingredient Groups */}
+            <IngredientGroupsInput
+              ingredientGroups={ingredientGroups}
+              handleGroupNameChange={handleGroupNameChange}
+              handleIngredientChange={handleIngredientChange}
+              addIngredient={addIngredient}
+              removeIngredient={removeIngredient}
+              addIngredientGroup={addIngredientGroup}
+              removeIngredientGroup={removeIngredientGroup}
+            />
+          </div>
         </div>
-        <TimeSelect time={time} setTime={setTime} />
-
-        <TagSelect tag={tag} setTag={setTag} />
-
-        {/* Recipe Steps */}
-        <StepsInput
-          steps={steps}
-          handleStepChange={handleStepChange}
-          addStep={addStep}
-          removeStep={removeStep}
-        />
-
-        {/* Ingredient Groups */}
-        <IngredientGroupsInput
-          ingredientGroups={ingredientGroups}
-          handleGroupNameChange={handleGroupNameChange}
-          handleIngredientChange={handleIngredientChange}
-          addIngredient={addIngredient}
-          removeIngredient={removeIngredient}
-          addIngredientGroup={addIngredientGroup}
-          removeIngredientGroup={removeIngredientGroup}
-        />
 
         {/* Submit */}
-        <button
-          type="submit"
-          className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 rounded"
-        >
+        <button type="submit" className="button">
           Submit Recipe
         </button>
       </form>

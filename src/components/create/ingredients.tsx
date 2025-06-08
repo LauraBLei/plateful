@@ -31,7 +31,7 @@ export const IngredientGroupsInput = ({
     {ingredientGroups.map((group, groupIdx) => (
       <div
         key={groupIdx}
-        className="mb-6 border border-gray-200 p-4 rounded space-y-4 bg-gray-50"
+        className="mb-6 border border-gray-200 p-4 rounded space-y-4 bg-brand-white text-brand-black"
       >
         <div className="flex items-center gap-2">
           <label
@@ -56,7 +56,7 @@ export const IngredientGroupsInput = ({
           value={group.groupName}
           onChange={(e) => handleGroupNameChange(groupIdx, e.target.value)}
           placeholder="e.g. Base, Sauce, Toppings"
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input"
           required
         />
 
