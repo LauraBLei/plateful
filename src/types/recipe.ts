@@ -1,13 +1,13 @@
-import type { User } from "./user";
+import type { UserProfile } from "./user";
 
 export type Recipe = {
   id: number;
   name: string;
-  owner: User;
+  owner: UserProfile;
   time: number;
   ingredients: Ingredient[];
   steps: string[];
-  media: Media;
+  image: string;
   created: Date;
   updated: Date;
 };
@@ -15,9 +15,4 @@ export type Recipe = {
 export type Ingredient = {
   name: string;
   ingredients: string[];
-};
-
-export type Media = {
-  src: string;
-  alt: string;
 };

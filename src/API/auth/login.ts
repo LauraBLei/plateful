@@ -8,8 +8,6 @@ export const signInWithGoogle = async () => {
   if (error) {
     console.error("Error during sign-in:", error);
   } else {
-    // This will redirect user to Google login page
-    console.log("Redirecting to Google...");
-    console.log("data: ", data);
+    return data;
   }
 };

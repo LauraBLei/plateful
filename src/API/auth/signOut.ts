@@ -6,6 +6,6 @@ export const signOut = async () => {
   if (error) {
     console.error("Error signing out:", error.message);
   } else {
-    console.log("Successfully signed out");
+    alert("you logged out");
   }
 };

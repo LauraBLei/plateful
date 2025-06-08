@@ -7,11 +7,3 @@ export const supabase = createClient(
   publicURLForPlateful,
   superSecretKeyDoNotCommit
 );
-
-export const readRecipes = async () => {
-  const { data, error } = await supabase.from("recipes").select();
-  console.log("data: ", data);
-  console.log("error: ", error);
-
-  return data;
-};

@@ -1,9 +1,8 @@
 import { useContext, useEffect } from "react";
-import { readRecipes } from "../API/supabase";
 import { AuthContext } from "../types/context";
+import { readRecipes } from "../API/recipe/read";
 export const Home = () => {
   const { user } = useContext(AuthContext);
-  console.log(user);
 
   useEffect(() => {
     readRecipes().then((x) => console.log(x));
@@ -11,6 +10,7 @@ export const Home = () => {
   return (
     <div>
       <p>Home</p>
+      <p>Welcome {user?.user_metadata.full_name}</p>
     </div>
   );
 };

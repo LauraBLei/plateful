@@ -1,26 +1,52 @@
 import { useEffect, useState } from "react";
-import { AuthContext } from "../types/context";
+import { AuthContext, type ContextProviderProps } from "../types/context";
 import { supabase } from "../API/supabase";
 import type { User } from "@supabase/supabase-js";
-
-type ContextProviderProps = {
-  children: React.ReactNode;
-};
+import type { UserProfile } from "../types/user";
+import { checkUser } from "../API/auth/user";
 
 export const AuthProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null); // optional: typed interface for your users table
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      const user = data ? data.user : null;
-
+    const syncUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      const user = data?.user ?? null;
       setUser(user);
-    });
+
+      if (user) {
+        // Check if the user exists in your custom users table
+        const existingUser = await checkUser(user);
+
+        if (!existingUser) {
+          setUser(user);
+        } else {
+          setProfile(existingUser);
+        }
+      }
+    };
+
+    syncUser();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        const user = session ? session.user : null;
+        const user = session?.user ?? null;
         setUser(user);
+
+        // Repeat sync on auth state change
+        if (user) {
+          supabase
+            .from("users")
+            .select("*")
+            .eq("id", user.id)
+            .single()
+            .then(({ data }) => {
+              setProfile(data);
+            });
+        } else {
+          setProfile(null);
+        }
       }
     );
 
@@ -28,13 +54,9 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
       authListener.subscription.unsubscribe();
     };
   }, []);
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-      }}
-    >
+    <AuthContext.Provider value={{ user, setUser, profile, setProfile }}>
       {children}
     </AuthContext.Provider>
   );
