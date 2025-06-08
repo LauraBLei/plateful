@@ -27,3 +27,7 @@
 .headline {
   @apply w-full text-2xl border-b-1 text-brand-black dark:text-brand-white border-brand-black dark:border-brand-white;
 }
+
+.input {
+  @apply focus:outline-none focus:ring-1 focus:ring-brand-orange w-full border-1 rounded-md border-brand-black dark:border-brand-white py-2 px-5;
+}
