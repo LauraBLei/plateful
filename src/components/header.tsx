@@ -19,8 +19,22 @@ export const Header = () => {
 
   return (
     <header className="max-w-[1440px] w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
-      <div className="bg-orange-300 p-2 flex justify-center items-center">
-        Logo
+      <div className="relative aspect-[5/2] w-[120px]  p-2 flex justify-center items-center">
+        {darkMode ? (
+          <Image
+            fill
+            className="object-contain"
+            src="/logo/dark.png"
+            alt="Plateful Logo"
+          />
+        ) : (
+          <Image
+            fill
+            className="object-contain"
+            src="/logo/light.png"
+            alt="Plateful Logo"
+          />
+        )}
       </div>
       <nav className="flex  items-center gap-5 ">
         <Link href="/" className="hover-effect dark:hover:text-brand-orange ">
