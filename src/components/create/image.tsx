@@ -26,7 +26,7 @@ export const ImageInput = ({ setImage, image }: ImageInputProps) => {
 
       <div
         onClick={triggerFileSelect}
-        className="relative aspect-[308/181] w-full  overflow-hidden max-h-[200px] md:max-h-[400px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded cursor-pointer hover:bg-gray-100 transition"
+        className="relative aspect-[308/181] w-full  overflow-hidden max-h-[200px] md:max-h-[400px] flex items-center justify-center border-2 border-dashed border-brand-black dark:border-brand-white rounded cursor-pointer bg-brand-white lg:bg-transparent lg:hover:bg-gray-100 transition"
       >
         {imagePreviewUrl ? (
           <Image
@@ -36,7 +36,7 @@ export const ImageInput = ({ setImage, image }: ImageInputProps) => {
             className="object-cover"
           />
         ) : (
-          <span className="text-gray-500">Click to upload image</span>
+          <span className="text-brand-black">Click to upload image</span>
         )}
       </div>
 
