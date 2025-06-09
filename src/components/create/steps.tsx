@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextCounter } from "../textCounter";
 
 interface StepsInputProps {
@@ -14,7 +14,14 @@ export const StepsInput = ({
   addStep,
   removeStep,
 }: StepsInputProps) => {
-  const [textCount, setTextCount] = useState<number>(0);
+  const [textCounts, setTextCounts] = useState<number[]>(
+    steps.map((s) => s.length)
+  );
+
+  // Update textCounts when steps change (add/remove)
+  useEffect(() => {
+    setTextCounts(steps.map((s) => s.length));
+  }, [steps]);
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -32,15 +39,19 @@ export const StepsInput = ({
                   value={step}
                   onChange={(e) => {
                     handleStepChange(i, e.target.value);
-                    setTextCount(e.target.value.length);
+                    setTextCounts((prev) => {
+                      const updated = [...prev];
+                      updated[i] = e.target.value.length;
+                      return updated;
+                    });
                   }}
                   className="input2 min-h-[80px]"
                   required
-                  maxLength={250}
+                  maxLength={400}
                 />
                 <TextCounter
-                  count={textCount}
-                  maxCharacters={250}
+                  count={textCounts[i] || 0}
+                  maxCharacters={400}
                   style="text-brand-white dark:text-brand-black"
                 />
               </div>

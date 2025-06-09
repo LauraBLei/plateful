@@ -107,7 +107,7 @@ const CreateRecipe = () => {
   };
 
   return (
-    <div className="max-w-[1440px] flex flex-col gap-10 w-full px-2  ">
+    <div className="max-w-[1440px] mb-10 flex flex-col gap-10 w-full px-2  ">
       <h1 className="headline">Create Recipe!</h1>
       <form
         onSubmit={handleSubmit}
