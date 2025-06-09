@@ -4,7 +4,7 @@ import type { Recipe } from "../../../lib/types/recipe";
 import { readRecipe } from "../api/recipe/read";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { checkUser } from "../api/auth/user";
+import { checkUser, updateUser } from "../api/auth/user";
 import { UserProfile } from "../../../lib/types/user";
 import { Clock, HeartIcon } from "lucide-react";
 
@@ -63,10 +63,15 @@ const Recipe = () => {
     });
   };
 
+  const handleSetFavorite = () => {
+    if (owner && recipe)
+      updateUser({ id: owner.id, bio: owner.bio, favorites: [recipe.id] });
+  };
+
   return (
-    <div className="max-w-[1440px] mb-10 px-2 flex gap-10 w-full font-primary text-brand-black dark:text-brand-white">
-      <div className="flex flex-col gap-5 md:gap-10">
-        <div className="relative aspect-[308/181] w-[561px] rounded-md overflow-hidden shadow-md">
+    <div className="max-w-[1440px] mb-10 px-2 flex gap-10 w-full flex-wrap lg:flex-nowrap font-primary text-brand-black dark:text-brand-white">
+      <div className="flex flex-col gap-5 md:gap-10 w-full">
+        <div className="relative aspect-[308/181] w-full rounded-md overflow-hidden shadow-md">
           <Image
             fill
             src={recipe?.image ? recipe.image : "/default.jpg"}
@@ -100,12 +105,15 @@ const Recipe = () => {
           <h1 className="headline flex justify-between">
             {recipe?.name}{" "}
             <div className="flex items-center gap-5">
-              <p className="flex gap-2 items-center">
+              <button
+                onClick={handleSetFavorite}
+                className="flex gap-2 items-center"
+              >
                 <HeartIcon className="w-[20px] hover:text-brand-orange cursor-pointer" />
                 <span className="whitespace-nowrap text-sm">
                   Add to favorite
                 </span>
-              </p>
+              </button>
               <p className="flex items-center gap-2">
                 <Clock className="w-[20px]" />
                 <span className="text-sm whitespace-nowrap">{cookingTime}</span>
@@ -128,11 +136,11 @@ const Recipe = () => {
           <h3 className="headlineTwo">How to do it!</h3>
 
           {recipe?.steps.map((step, i) => (
-            <div key={i} className="flex items-center gap-2 py-1">
+            <div key={i} className="flex items-center gap-4 py-1 min-h-[32px]">
               <input
                 type="checkbox"
                 id={`step-checkbox-${i}`}
-                className={`cursor-pointer w-5 h-5 rounded-md border-2 border-brand-orange appearance-none transition-colors duration-200 ${
+                className={`shrink-0 cursor-pointer w-5 h-5 rounded-md border-2 border-brand-orange appearance-none transition-colors duration-200 ${
                   checkedSteps[i] ? "bg-brand-orange" : "bg-transparent"
                 }`}
                 checked={checkedSteps[i] || false}
@@ -141,7 +149,7 @@ const Recipe = () => {
               <p
                 className={
                   checkedSteps[i]
-                    ? "line-through text-brand-black dark:text-brand-white d"
+                    ? "line-through text-brand-black dark:text-brand-white"
                     : ""
                 }
               >

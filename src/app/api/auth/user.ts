@@ -20,3 +20,21 @@ export const checkUser = async (id: string) => {
   if (error) console.log("user check gave error: ", error);
   return existingUser;
 };
+
+export const updateUser = async ({
+  id,
+  bio,
+  favorites,
+}: {
+  id: string;
+  bio: string;
+  favorites: number[];
+}) => {
+  await supabase
+    .from("users")
+    .update({
+      bio,
+      favorites,
+    })
+    .eq("id", id);
+};

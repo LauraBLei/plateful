@@ -40,7 +40,10 @@ export const Header = () => {
         <Link href="/" className="hover-effect dark:hover:text-brand-orange ">
           Home
         </Link>
-        <Link href="/" className="hover-effect dark:hover:text-brand-orange">
+        <Link
+          href="/allRecipes"
+          className="hover-effect dark:hover:text-brand-orange"
+        >
           All Recipes
         </Link>
         <button onClick={toggleDarkMode}>
