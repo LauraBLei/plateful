@@ -18,46 +18,48 @@ export const StepsInput = ({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <h2 className="headlineTwo">Recipe Steps</h2>
-      {steps.map((step, i) => (
-        <div key={i} className="mb-2 flex flex-col  gap-2">
-          <label className="whitespace-nowrap" htmlFor={`step-${i}`}>
-            Step {i + 1}
-          </label>
-          <div className="flex gap-5 w-full">
-            <div className="w-full">
-              <textarea
-                id={`step-${i}`}
-                value={step}
-                onChange={(e) => {
-                  handleStepChange(i, e.target.value);
-                  setTextCount(e.target.value.length);
-                }}
-                className="input min-h-[80px]"
-                required
-                maxLength={250}
-              />
-              <TextCounter count={textCount} maxCharacters={250} />
+      <h2 className="headlineTwo ">Recipe Steps</h2>
+      <div className="w-full mb-6 border border-gray-200 p-4 rounded-md space-y-4 bg-brand-black text-brand-white dark:text-brand-black dark:bg-brand-white ">
+        {steps.map((step, i) => (
+          <div key={i} className="mb-2 flex flex-col  gap-2">
+            <label className="whitespace-nowrap" htmlFor={`step-${i}`}>
+              Step {i + 1}
+            </label>
+            <div className="flex gap-5 w-full">
+              <div className="w-full">
+                <textarea
+                  id={`step-${i}`}
+                  value={step}
+                  onChange={(e) => {
+                    handleStepChange(i, e.target.value);
+                    setTextCount(e.target.value.length);
+                  }}
+                  className="input2 min-h-[80px]"
+                  required
+                  maxLength={250}
+                />
+                <TextCounter count={textCount} maxCharacters={250} />
+              </div>
+              <button
+                type="button"
+                onClick={() => removeStep(i)}
+                disabled={steps.length === 1}
+                className="removeButton"
+                aria-label={`Remove step ${i + 1}`}
+              >
+                &times;
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => removeStep(i)}
-              disabled={steps.length === 1}
-              className="removeButton"
-              aria-label={`Remove step ${i + 1}`}
-            >
-              &times;
-            </button>
           </div>
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={addStep}
-        className="createButton hover-effect"
-      >
-        + Add Step
-      </button>
+        ))}
+        <button
+          type="button"
+          onClick={addStep}
+          className="createButton hover-effect"
+        >
+          + Add Step
+        </button>
+      </div>
     </div>
   );
 };

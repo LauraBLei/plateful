@@ -27,7 +27,7 @@
   @apply text-3xl  text-red-700 disabled:hidden cursor-pointer;
 }
 .headline {
-  @apply w-full text-2xl border-b-1 text-brand-black dark:text-brand-white border-brand-black dark:border-brand-white;
+  @apply w-full font-semibold text-2xl border-b-1 text-brand-black dark:text-brand-white border-brand-black dark:border-brand-white;
 }
 
 .createButton {
@@ -35,7 +35,7 @@
 }
 
 .headlineTwo {
-  @apply w-full text-xl   text-brand-black dark:text-brand-white;
+  @apply w-full text-xl font-semibold  text-brand-black dark:text-brand-white;
 }
 
 .input {

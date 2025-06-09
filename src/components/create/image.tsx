@@ -22,7 +22,7 @@ export const ImageInput = ({ setImage, image }: ImageInputProps) => {
 
   return (
     <div>
-      <label className="block mb-1 font-semibold">Upload Image</label>
+      <label className="headlineTwo">Upload Image</label>
 
       <div
         onClick={triggerFileSelect}

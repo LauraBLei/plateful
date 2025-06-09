@@ -119,7 +119,7 @@ const CreateRecipe = () => {
             <ImageInput setImage={setImage} image={image} />
             {/* Title */}
             <div>
-              <label className="block mb-1 font-semibold" htmlFor="title">
+              <label className="headlineTwo" htmlFor="title">
                 Recipe Title
               </label>
               <input

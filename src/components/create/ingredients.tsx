@@ -58,6 +58,7 @@ export const IngredientGroupsInput = ({
           onChange={(e) => handleGroupNameChange(groupIdx, e.target.value)}
           placeholder="e.g. Base, Sauce, Toppings"
           className="input2"
+          maxLength={50}
           required
         />
 
@@ -73,6 +74,7 @@ export const IngredientGroupsInput = ({
                 }
                 placeholder="Ingredient"
                 className="input2"
+                maxLength={50}
                 required
               />
               <button
