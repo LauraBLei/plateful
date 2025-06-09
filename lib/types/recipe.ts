@@ -1,9 +1,7 @@
-import type { UserProfile } from "./user";
-
 export type Recipe = {
   id: number;
   name: string;
-  owner: UserProfile;
+  owner_id: string;
   time: number;
   ingredients: Ingredient[];
   steps: string[];
@@ -13,6 +11,6 @@ export type Recipe = {
 };
 
 export type Ingredient = {
-  name: string;
+  groupName: string;
   ingredients: string[];
 };

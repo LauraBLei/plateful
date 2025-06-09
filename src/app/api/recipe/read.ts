@@ -19,3 +19,13 @@ export const readUserRecipes = async (userId: string) => {
 
   return data;
 };
+
+export const readRecipe = async ({ id }: { id: number }) => {
+  const { data: recipe, error } = await supabase
+    .from("recipes")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) console.log("Recipe fetch gave error: ", error);
+  return recipe;
+};

@@ -38,7 +38,11 @@ export const StepsInput = ({
                   required
                   maxLength={250}
                 />
-                <TextCounter count={textCount} maxCharacters={250} />
+                <TextCounter
+                  count={textCount}
+                  maxCharacters={250}
+                  style="text-brand-white dark:text-brand-black"
+                />
               </div>
               <button
                 type="button"

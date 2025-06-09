@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
 
       if (user) {
         // Check if the user exists in your custom users table
-        const existingUser = await checkUser(user);
+        const existingUser = await checkUser(user.id);
 
         if (!existingUser) {
           SetSupaUser(user);

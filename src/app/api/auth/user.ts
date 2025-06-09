@@ -11,11 +11,11 @@ export const setUser = async (user: User) => {
   });
 };
 
-export const checkUser = async (user: User) => {
+export const checkUser = async (id: string) => {
   const { data: existingUser, error } = await supabase
     .from("users")
     .select("*")
-    .eq("id", user.id)
+    .eq("id", id)
     .single();
   if (error) console.log("user check gave error: ", error);
   return existingUser;

@@ -14,6 +14,9 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState<"recipes" | "favorites">(
     "recipes"
   );
+  const profileImage = user?.user_metadata.avatar_url
+    ? user?.user_metadata.avatar_url
+    : "/default.jpg";
 
   const recipeTab = activeTab === "recipes";
   const favTab = activeTab === "favorites";
@@ -34,7 +37,7 @@ const Profile = () => {
           <div className="relative rounded-full aspect-square max-w-[170px] w-full overflow-hidden">
             <Image
               fill
-              src={user?.user_metadata.avatar_url}
+              src={profileImage}
               alt={user?.user_metadata.full_name}
               className="object-cover"
             />
@@ -77,6 +80,7 @@ const Profile = () => {
                     time={recipe.time}
                     title={recipe.name}
                     image={recipe.image}
+                    id={recipe.id}
                   />
                 ))
               : "You have no recipes yet!"}

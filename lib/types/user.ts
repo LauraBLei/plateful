@@ -4,4 +4,5 @@ export type UserProfile = {
   name: string;
   email: string | null;
   bio: string;
+  avatar: string;
 };

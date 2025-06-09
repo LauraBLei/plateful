@@ -2,14 +2,16 @@
 
 import { Clock } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface RecipeCardProps {
   image: string;
   title: string;
   time: number;
+  id: number;
 }
 
-export const RecipeCard = ({ image, title, time }: RecipeCardProps) => {
+export const RecipeCard = ({ image, title, time, id }: RecipeCardProps) => {
   const getCookingTimeLabel = (minutes: number) => {
     switch (minutes) {
       case 30:
@@ -27,9 +29,17 @@ export const RecipeCard = ({ image, title, time }: RecipeCardProps) => {
 
   const cookingTime = getCookingTimeLabel(time);
   return (
-    <div className="hover-effect font font-primary text-lg text-brand-black dark:text-brand-white">
+    <Link
+      href={`/recipe?id=${id}`}
+      className="hover-effect font font-primary text-lg text-brand-black dark:text-brand-white"
+    >
       <div className="relative aspect-[308/181] w-[308px] rounded-md overflow-hidden shadow-md">
-        <Image fill src={image} alt={title} className="object-cover" />
+        <Image
+          fill
+          src={image ? image : "/default.jpg"}
+          alt={title}
+          className="object-cover"
+        />
       </div>
       <div className="flex justify-between py-2">
         <p>{title}</p>
@@ -38,6 +48,6 @@ export const RecipeCard = ({ image, title, time }: RecipeCardProps) => {
           <span className="text-sm">{cookingTime}</span>
         </p>
       </div>
-    </div>
+    </Link>
   );
 };

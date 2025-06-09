@@ -1,6 +1,7 @@
 interface CounterProps {
   count: number;
   maxCharacters: number;
+  style: string;
 }
 /**
  * TextCounter component displays the current character count relative to a maximum limit.
@@ -16,9 +17,11 @@ interface CounterProps {
  * @returns {JSX.Element} A right-aligned character counter like "45/150"
  */
 
-export const TextCounter = ({ count, maxCharacters }: CounterProps) => {
+export const TextCounter = ({ count, maxCharacters, style }: CounterProps) => {
   return (
-    <div className="whitespace-nowrap flex justify-end px-5 font-primary text-base dark:text-white">
+    <div
+      className={`${style} whitespace-nowrap flex justify-end px-5 font-primary text-base`}
+    >
       <span>
         {count} / {maxCharacters}
       </span>
