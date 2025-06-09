@@ -28,7 +28,7 @@ const Profile = () => {
   console.log(recipes);
 
   return (
-    <div className="px-2 flex h-full gap-5 font-primary text-brand-black dark:text-brand-white">
+    <div className="px-2 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
       <div className="p-10 min-h-[800px] shadow-md max-w-[435px] w-full border-1 dark:border-brand-white rounded-md h-full">
         <div className="w-full items-center flex flex-col gap-5 mb-10">
           <div className="relative rounded-full aspect-square max-w-[170px] w-full overflow-hidden">
@@ -44,7 +44,7 @@ const Profile = () => {
             {profile && profile.bio ? profile.bio : "no bio added yet"}
           </p>
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 w-full">
           <button
             onClick={() => setActiveTab("recipes")}
             className={`button ${
@@ -67,7 +67,7 @@ const Profile = () => {
         </div>
       </div>
       {recipeTab && (
-        <div className="h-full flex flex-col gap-5">
+        <div className="h-full flex flex-col gap-5 w-full">
           <h1 className="headline ">Your Recipes</h1>
           <div className="flex flex-wrap gap-5">
             {recipes.length > 0

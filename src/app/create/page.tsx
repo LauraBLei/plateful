@@ -114,7 +114,7 @@ const CreateRecipe = () => {
         className="  w-full  space-y-6 font-primary text-brand-black dark:text-brand-white"
       >
         <div className="flex w-full gap-5 flex-wrap lg:flex-nowrap">
-          <div className="flex flex-col w-full ">
+          <div className="flex gap-5 flex-col w-full ">
             {/* Image Upload */}
             <ImageInput setImage={setImage} image={image} />
             {/* Title */}
@@ -132,9 +132,11 @@ const CreateRecipe = () => {
                 required
               />
             </div>
-            <TimeSelect time={time} setTime={setTime} />
+            <div className="flex gap-5 w-full">
+              <TimeSelect time={time} setTime={setTime} />
 
-            <TagSelect tag={tag} setTag={setTag} />
+              <TagSelect tag={tag} setTag={setTag} />
+            </div>
 
             {/* Recipe Steps */}
             <StepsInput
@@ -144,7 +146,7 @@ const CreateRecipe = () => {
               removeStep={removeStep}
             />
           </div>
-          <div className="w-full max-w-[700px]">
+          <div className="w-full lg:max-w-[700px]">
             {/* Ingredient Groups */}
             <IngredientGroupsInput
               ingredientGroups={ingredientGroups}
@@ -159,7 +161,7 @@ const CreateRecipe = () => {
         </div>
 
         {/* Submit */}
-        <button type="submit" className="button">
+        <button type="submit" className="createButton hover-effect">
           Submit Recipe
         </button>
       </form>

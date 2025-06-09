@@ -23,11 +23,25 @@
 .button-active {
   @apply bg-brand-orange text-brand-black border-brand-orange cursor-default;
 }
-
+.removeButton {
+  @apply text-3xl  text-red-700 disabled:hidden cursor-pointer;
+}
 .headline {
   @apply w-full text-2xl border-b-1 text-brand-black dark:text-brand-white border-brand-black dark:border-brand-white;
 }
 
+.createButton {
+  @apply rounded-md text-center py-2 font-bold bg-brand-orange text-brand-black w-full;
+}
+
+.headlineTwo {
+  @apply w-full text-xl   text-brand-black dark:text-brand-white;
+}
+
 .input {
   @apply focus:outline-none focus:ring-1 focus:ring-brand-orange w-full border-1 rounded-md border-brand-black dark:border-brand-white py-2 px-5;
+}
+
+.input2 {
+  @apply focus:outline-none focus:ring-1 focus:ring-brand-orange w-full border-1 rounded-md border-brand-white dark:border-brand-black py-2 px-5;
 }

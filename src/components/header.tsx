@@ -18,7 +18,7 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className="w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
+    <header className="max-w-[1440px] w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
       <div className="bg-orange-300 p-2 flex justify-center items-center">
         Logo
       </div>

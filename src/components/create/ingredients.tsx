@@ -26,14 +26,14 @@ export const IngredientGroupsInput = ({
   addIngredientGroup,
   removeIngredientGroup,
 }: IngredientGroupsInputProps) => (
-  <div>
-    <h2 className="font-semibold mb-2">Ingredients</h2>
+  <div className="w-full flex flex-col gap-2">
+    <h2 className="headlineTwo">Ingredients</h2>
     {ingredientGroups.map((group, groupIdx) => (
       <div
         key={groupIdx}
-        className="mb-6 border border-gray-200 p-4 rounded space-y-4 bg-brand-white text-brand-black"
+        className="w-full mb-6 border border-gray-200 p-4 rounded-md space-y-4 bg-brand-black text-brand-white dark:text-brand-black dark:bg-brand-white "
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full">
           <label
             className="block font-semibold flex-1"
             htmlFor={`group-name-${groupIdx}`}
@@ -44,9 +44,10 @@ export const IngredientGroupsInput = ({
             type="button"
             onClick={() => removeIngredientGroup(groupIdx)}
             disabled={ingredientGroups.length === 1}
-            className="text-red-600 hover:text-red-800 disabled:text-gray-400"
+            className="removeButton flex items-center gap-2 hover-effect"
             aria-label={`Remove ingredient group ${groupIdx + 1}`}
           >
+            <span className="text-sm text-brand-black">Remove Group</span>{" "}
             &times;
           </button>
         </div>
@@ -56,7 +57,7 @@ export const IngredientGroupsInput = ({
           value={group.groupName}
           onChange={(e) => handleGroupNameChange(groupIdx, e.target.value)}
           placeholder="e.g. Base, Sauce, Toppings"
-          className="input"
+          className="input2"
           required
         />
 
@@ -71,14 +72,14 @@ export const IngredientGroupsInput = ({
                   handleIngredientChange(groupIdx, ingIdx, e.target.value)
                 }
                 placeholder="Ingredient"
-                className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="input2"
                 required
               />
               <button
                 type="button"
                 onClick={() => removeIngredient(groupIdx, ingIdx)}
                 disabled={group.ingredients.length === 1}
-                className="text-red-600 hover:text-red-800 disabled:text-gray-400"
+                className="removeButton"
                 aria-label={`Remove ingredient ${ingIdx + 1}`}
               >
                 &times;
@@ -88,7 +89,7 @@ export const IngredientGroupsInput = ({
           <button
             type="button"
             onClick={() => addIngredient(groupIdx)}
-            className="mt-1 px-2 py-1 rounded bg-green-600 text-white hover:bg-green-700"
+            className="createButton hover-effect"
           >
             + Add Ingredient
           </button>
@@ -98,7 +99,7 @@ export const IngredientGroupsInput = ({
     <button
       type="button"
       onClick={addIngredientGroup}
-      className="px-3 py-2 rounded bg-green-800 text-white hover:bg-green-900"
+      className="createButton hover-effect"
     >
       + Add Ingredient Group
     </button>

@@ -4,18 +4,15 @@ interface TimeSelectProps {
 }
 
 export const TimeSelect = ({ time, setTime }: TimeSelectProps) => (
-  <div>
-    <label
-      htmlFor="time"
-      className="block mb-1 font-semibold text-brand-black dark:text-brand-white"
-    >
+  <div className="w-full flex flex-col gap-2">
+    <label htmlFor="time" className="headlineTwo">
       Time Required
     </label>
     <select
       id="time"
       value={time}
       onChange={(e) => setTime(Number(e.target.value))}
-      className="input"
+      className="input cursor-pointer"
       required
     >
       <option className="text-brand-black" value={30}>

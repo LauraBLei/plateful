@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { TextCounter } from "../textCounter";
+
 interface StepsInputProps {
   steps: string[];
   handleStepChange: (index: number, value: string) => void;
@@ -10,39 +13,51 @@ export const StepsInput = ({
   handleStepChange,
   addStep,
   removeStep,
-}: StepsInputProps) => (
-  <div>
-    <h2 className="font-semibold mb-2">Recipe Steps</h2>
-    {steps.map((step, i) => (
-      <div key={i} className="mb-2 flex items-center gap-2">
-        <label className="block flex-1" htmlFor={`step-${i}`}>
-          Step {i + 1}
-        </label>
-        <input
-          type="text"
-          id={`step-${i}`}
-          value={step}
-          onChange={(e) => handleStepChange(i, e.target.value)}
-          className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-        <button
-          type="button"
-          onClick={() => removeStep(i)}
-          disabled={steps.length === 1}
-          className="text-red-600 hover:text-red-800 disabled:text-gray-400"
-          aria-label={`Remove step ${i + 1}`}
-        >
-          &times;
-        </button>
-      </div>
-    ))}
-    <button
-      type="button"
-      onClick={addStep}
-      className="mt-1 px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
-    >
-      + Add Step
-    </button>
-  </div>
-);
+}: StepsInputProps) => {
+  const [textCount, setTextCount] = useState<number>(0);
+
+  return (
+    <div className="w-full flex flex-col gap-2">
+      <h2 className="headlineTwo">Recipe Steps</h2>
+      {steps.map((step, i) => (
+        <div key={i} className="mb-2 flex flex-col  gap-2">
+          <label className="whitespace-nowrap" htmlFor={`step-${i}`}>
+            Step {i + 1}
+          </label>
+          <div className="flex gap-5 w-full">
+            <div className="w-full">
+              <textarea
+                id={`step-${i}`}
+                value={step}
+                onChange={(e) => {
+                  handleStepChange(i, e.target.value);
+                  setTextCount(e.target.value.length);
+                }}
+                className="input min-h-[80px]"
+                required
+                maxLength={250}
+              />
+              <TextCounter count={textCount} maxCharacters={250} />
+            </div>
+            <button
+              type="button"
+              onClick={() => removeStep(i)}
+              disabled={steps.length === 1}
+              className="removeButton"
+              aria-label={`Remove step ${i + 1}`}
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addStep}
+        className="createButton hover-effect"
+      >
+        + Add Step
+      </button>
+    </div>
+  );
+};
