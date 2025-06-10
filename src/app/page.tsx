@@ -1,14 +1,99 @@
 "use client";
 
 import { AuthContext } from "@/components/contextTypes";
-import { useContext } from "react";
+import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
+import { Recipe } from "../../lib/types/recipe";
+
+import { RecipeCard } from "@/components/card";
+import { readRecipes, readSortedRecipes } from "./api/recipe/read";
 
 const Home = () => {
   const { profile } = useContext(AuthContext);
+  // const [followerRecipes, setFollowerRecipes] = useState<Recipe[]>([])
+  const [timeRecipes, setTimeRecipes] = useState<Recipe[]>([]);
+  const [recentRecipes, setRecentRecipes] = useState<Recipe[]>([]);
+
+  useEffect(() => {
+    // Fetch 30 min recipes
+    readSortedRecipes({ time: 30 }).then((x) => {
+      if (x) setTimeRecipes(x ? x.slice(0, 4) : []);
+    });
+    // Fetch 3 most recent recipes
+    readRecipes().then((x) => {
+      if (x && x.length > 0) {
+        // Sort by created date descending, then take 3
+        const sorted = [...x].sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        setRecentRecipes(sorted.slice(0, 4));
+      } else {
+        setRecentRecipes([]);
+      }
+    });
+  }, []);
 
   return (
-    <div className="max-w-[1440px] w-full">
-      {profile ? <div>logged in</div> : <div>Logged out</div>}
+    <div className="max-w-[1440px] w-full px-2 font-primary flex flex-col gap-5">
+      <div>
+        {profile ? (
+          <div className="flex  max-h-[400px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
+            <div className="flex-1 rounded-t-md md:rounded-l-md md:rounded-r-none dark:bg-brand-white bg-brand-black h-full px-5 text-center py-10 md:py-20 shadow-md">
+              <h1 className="text-2xl md:text-5xl font-semibold text-brand-white dark:text-brand-black">
+                Welcome {profile.name}
+              </h1>
+            </div>
+            <div className="flex-1 rounded-b-md md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white">
+              <p className="font-semibold">Got a recipe you wanna share?</p>
+              <Link href={"/create"} className="button text-lg  my-5">
+                Add a recipe
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div>
+              <h1>Welcome to plateful!</h1>
+            </div>
+            <div> Sign up!</div>
+          </div>
+        )}
+      </div>
+      {/*<section id="follow" className="flex flex-col gap-2">
+        <h2 className="headline">Recent recipes from followers</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2">
+
+        </div>
+      </section>*/}
+      <section id="recent" className="flex flex-col gap-2">
+        <h2 className="headline">Recent</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2">
+          {recentRecipes.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              image={recipe.image}
+              id={recipe.id}
+              title={recipe.name}
+              time={recipe.time}
+            />
+          ))}
+        </div>
+      </section>
+      <section id="30min" className="flex flex-col gap-2">
+        <h2 className="headline">30 min recipes!</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
+          {timeRecipes.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              image={recipe.image}
+              id={recipe.id}
+              title={recipe.name}
+              time={recipe.time}
+            />
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
