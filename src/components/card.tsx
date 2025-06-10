@@ -31,14 +31,15 @@ export const RecipeCard = ({ image, title, time, id }: RecipeCardProps) => {
   return (
     <Link
       href={`/recipe?id=${id}`}
-      className="hover-effect font font-primary text-lg text-brand-black dark:text-brand-white"
+      className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white"
     >
-      <div className="relative aspect-[308/181] w-[308px] rounded-md overflow-hidden shadow-md">
+      <div className="relative  aspect-[308/181] w-full  rounded-md overflow-hidden shadow-md mx-auto">
         <Image
           fill
           src={image ? image : "/default.jpg"}
           alt={title}
-          className="object-cover"
+          className="object-cover w-full h-full"
+          priority={false}
         />
       </div>
       <div className="flex justify-between py-2">

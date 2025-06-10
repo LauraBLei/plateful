@@ -38,8 +38,6 @@ const Profile = () => {
   }, [profile]);
 
   const updateBio = (newBio: string) => {
-    // Add your update bio logic here, e.g., API call to update bio
-    console.log("Bio updated to:", newBio);
     if (profile && updateProfile) {
       updateUser({
         id: profile?.id,
@@ -144,7 +142,7 @@ const Profile = () => {
       {recipeTab && (
         <div className="h-full flex flex-col gap-5 w-full">
           <h1 className="headline ">Your Recipes</h1>
-          <div className="flex flex-wrap gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
             {recipes.length > 0
               ? recipes.map((recipe) => (
                   <RecipeCard
@@ -162,7 +160,7 @@ const Profile = () => {
       {favTab && (
         <div className="h-full flex flex-col gap-5 w-full">
           <h1 className="headline ">Your Favorites</h1>
-          <div className="flex flex-wrap gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
             {favorites.length > 0
               ? favorites.map((recipe) => (
                   <RecipeCard

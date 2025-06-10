@@ -30,6 +30,25 @@ export const readRecipe = async ({ id }: { id: number }) => {
   return recipe;
 };
 
+export const readSortedRecipes = async ({
+  time,
+  tag,
+}: {
+  time?: number;
+  tag?: string;
+}) => {
+  let query = supabase.from("recipes").select("*");
+  if (typeof time !== "undefined") {
+    query = query.eq("time", time);
+  }
+  if (tag) {
+    query = query.eq("tag", tag);
+  }
+  const { data, error } = await query;
+  if (error) console.log("error fetching sorted recipes:", error);
+  return data;
+};
+
 export const readFavoriteRecipes = async ({
   favorites,
 }: {
