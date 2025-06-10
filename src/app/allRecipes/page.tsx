@@ -10,6 +10,8 @@ const AllRecipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>("");
 
+  const mealTypes = ["dinner", "lunch", "breakfast", "dessert"];
+
   useEffect(() => {
     readRecipes().then((x) => {
       if (x) {
@@ -31,31 +33,29 @@ const AllRecipes = () => {
     setRecipes(sorted || []);
   };
   return (
-    <div className="max-w-[1440px] w-full flex mx-auto p-4 text-brand-black dark:text-brand-white">
-      <div>
-        <h2>Filter</h2>
-        <div>
+    <div className="max-w-[1440px] w-full flex gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
+      <div className="w-full max-w-[200px] flex flex-col gap-5">
+        <h2 className="headlineTwo">Filter meal types:</h2>
+        <div className="flex flex-col gap-2 w-full">
           <FilterButton
             value=""
             label="Show all"
             onClick={sortRecipes}
             active={activeFilter === ""}
           />
-          <FilterButton
-            value="dinner"
-            label="Dinner"
-            onClick={sortRecipes}
-            active={activeFilter === "dinner"}
-          />
-          <FilterButton
-            value="dessert"
-            label="Dessert"
-            onClick={sortRecipes}
-            active={activeFilter === "dessert"}
-          />
+          {mealTypes.map((type) => (
+            <FilterButton
+              key={type}
+              value={type}
+              label={type.charAt(0).toUpperCase() + type.slice(1)}
+              onClick={sortRecipes}
+              active={activeFilter === type}
+            />
+          ))}
         </div>
       </div>
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-2">
+        <h1 className="headline">All Recipes</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
           {recipes && recipes.length > 0 ? (
             recipes.map((recipe) => (
