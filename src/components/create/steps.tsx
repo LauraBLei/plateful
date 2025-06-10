@@ -3,20 +3,24 @@ import { TextCounter } from "../textCounter";
 
 interface StepsInputProps {
   steps: string[];
-  handleStepChange: (index: number, value: string) => void;
-  addStep: () => void;
-  removeStep: (index: number) => void;
+  setSteps: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export const StepsInput = ({
-  steps,
-  handleStepChange,
-  addStep,
-  removeStep,
-}: StepsInputProps) => {
+export const StepsInput = ({ steps, setSteps }: StepsInputProps) => {
   const [textCounts, setTextCounts] = useState<number[]>(
     steps.map((s) => s.length)
   );
+
+  const handleStepChange = (index: number, value: string) => {
+    const newSteps = [...steps];
+    newSteps[index] = value;
+    setSteps(newSteps);
+  };
+  const addStep = () => setSteps([...steps, ""]);
+  const removeStep = (index: number) => {
+    if (steps.length === 1) return; // prevent removing last step
+    setSteps(steps.filter((_, i) => i !== index));
+  };
 
   // Update textCounts when steps change (add/remove)
   useEffect(() => {
