@@ -1,0 +1,152 @@
+import { RecipeCard } from "@/components/card";
+import Link from "next/link";
+import { Edit } from "lucide-react";
+import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
+
+import type { UserProfile as UserProfileType } from "../../lib/types/user";
+import type { Recipe } from "../../lib/types/recipe";
+
+interface UserProfileProps {
+  profile: UserProfileType;
+  editingBio: boolean;
+  bioInput: string;
+  handleBioClick: () => void;
+  handleBioChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBioSubmit: (e: React.FormEvent) => void;
+  activeTab: "recipes" | "favorites";
+  setActiveTab: Dispatch<SetStateAction<"recipes" | "favorites">>;
+  recipes: Recipe[];
+  favorites: Recipe[];
+}
+
+export const UserProfile = ({
+  profile,
+  editingBio,
+  bioInput,
+  handleBioClick,
+  handleBioChange,
+  handleBioSubmit,
+  activeTab,
+  setActiveTab,
+  recipes,
+  favorites,
+}: UserProfileProps) => {
+  const profileImage = profile ? profile.avatar : "/default.jpg";
+  const recipeTab = activeTab === "recipes";
+  const favTab = activeTab === "favorites";
+  return (
+    <>
+      <div className="p-10 min-h-[800px] shadow-md max-w-[435px] w-full border-1 dark:border-brand-white rounded-md h-full">
+        <div className="w-full items-center flex flex-col gap-5 mb-10">
+          <div className="relative rounded-full aspect-square max-w-[170px] w-full overflow-hidden">
+            <Image
+              fill
+              src={profileImage}
+              alt={profile?.name ?? "profile name not found"}
+              className="object-cover"
+            />
+          </div>
+          <h1 className="text-center text-2xl">{profile?.name}</h1>
+          <div className="relative flex w-full justify-center items-center">
+            {editingBio ? (
+              <form
+                onSubmit={handleBioSubmit}
+                className="flex w-full items-center gap-2"
+              >
+                <input
+                  type="text"
+                  value={bioInput}
+                  onChange={handleBioChange}
+                  className="input w-full"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="absolute right-0 top-1/2 -translate-y-1/2"
+                  aria-label="Save bio"
+                >
+                  <Edit />
+                </button>
+              </form>
+            ) : (
+              <>
+                <p
+                  className="italic text-center w-full cursor-pointer pr-8"
+                  onClick={handleBioClick}
+                >
+                  {profile && profile.bio ? profile.bio : "no bio added yet"}
+                </p>
+                <button
+                  type="button"
+                  className="absolute right-0 top-1/2 -translate-y-1/2"
+                  aria-label="Edit bio"
+                  onClick={handleBioClick}
+                >
+                  <Edit />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col gap-5 w-full">
+          <button
+            onClick={() => setActiveTab("recipes")}
+            className={`button ${
+              activeTab === "recipes" ? "button-active" : "hover-effect"
+            }`}
+          >
+            Your Recipes
+          </button>
+          <button
+            onClick={() => setActiveTab("favorites")}
+            className={`button ${
+              activeTab === "favorites" ? "button-active" : "hover-effect"
+            }`}
+          >
+            Your Favorites
+          </button>
+          <Link className="button hover-effect" href={"/create"}>
+            Add a recipe
+          </Link>
+        </div>
+      </div>
+      {recipeTab && (
+        <div className="h-full flex flex-col gap-5 w-full">
+          <h1 className="headline ">Your Recipes</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
+            {recipes.length > 0
+              ? recipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    time={recipe.time}
+                    title={recipe.name}
+                    image={recipe.image}
+                    id={recipe.id}
+                  />
+                ))
+              : "You have no recipes yet!"}
+          </div>
+        </div>
+      )}
+      {favTab && (
+        <div className="h-full flex flex-col gap-5 w-full">
+          <h1 className="headline ">Your Favorites</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
+            {favorites.length > 0
+              ? favorites.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    id={recipe.id}
+                    image={recipe.image}
+                    title={recipe.name}
+                    time={recipe.time}
+                  />
+                ))
+              : "You have no favorites"}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};

@@ -6,4 +6,6 @@ export type UserProfile = {
   bio: string;
   avatar: string;
   favorites: number[];
+  followers: string[];
+  following: string[];
 };

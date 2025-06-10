@@ -8,6 +8,7 @@ import { checkUser, updateUser } from "../api/auth/user";
 import { UserProfile } from "../../../lib/types/user";
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
 import { AuthContext } from "@/components/contextTypes";
+import Link from "next/link";
 
 const Recipe = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -123,7 +124,7 @@ const Recipe = () => {
       <div className="w-full">
         <div className="flex justify-between">
           <h1 className="headline flex justify-between">
-            {recipe?.name}{" "}
+            {recipe?.name}
             <div className="flex items-center gap-5">
               <button
                 onClick={handleSetFavorite}
@@ -146,7 +147,10 @@ const Recipe = () => {
             </div>
           </h1>
         </div>
-        <div className="flex gap-5 items-center py-2 border-b-1 border-brand-black dark:border-brand-white">
+        <Link
+          href={`/profile?id=${owner?.id}`}
+          className="flex gap-5 items-center py-2 border-b-1 border-brand-black dark:border-brand-white"
+        >
           <div className="relative  aspect-square w-[50px] rounded-full overflow-hidden shadow-md">
             <Image
               fill
@@ -156,7 +160,7 @@ const Recipe = () => {
             />
           </div>
           <p className="text-lg">{owner?.name}</p>
-        </div>
+        </Link>
         <div className="flex flex-col gap-5 py-2">
           <h3 className="headlineTwo">How to do it!</h3>
 

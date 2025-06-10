@@ -9,7 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const Header = () => {
-  const { user } = useContext(AuthContext);
+  const { profile } = useContext(AuthContext);
   const { darkMode, toggleDarkMode } = useContext(CommonContext);
   const [mounted, setMounted] = useState(false);
 
@@ -68,15 +68,15 @@ export const Header = () => {
             )}
           </button>
         )}
-        {mounted && user ? (
+        {mounted && profile ? (
           <Link
             className="relative rounded-full aspect-square overflow-hidden w-[40px] hover-effect"
-            href="/profile"
+            href={`/profile?id=${profile.id}`}
           >
             <Image
               fill
-              src={user?.user_metadata.avatar_url}
-              alt={user?.user_metadata.full_name}
+              src={profile.avatar ? profile.avatar : "/default.jpg"}
+              alt={profile.name}
             />
           </Link>
         ) : (
@@ -87,7 +87,7 @@ export const Header = () => {
             </button>
           )
         )}
-        {mounted && user && (
+        {mounted && profile && (
           <button onClick={signOut}>
             <LogOut className="hover-effect hover:text-brand-orange" />
           </button>

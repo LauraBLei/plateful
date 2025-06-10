@@ -1,14 +1,15 @@
 "use client";
 
 import { AuthContext } from "@/components/contextTypes";
+import { UserProfile as UserProfileComponent } from "@/components/userProfile";
 import { useContext, useEffect, useState } from "react";
 import { Recipe } from "../../../lib/types/recipe";
 import { readFavoriteRecipes, readUserRecipes } from "../api/recipe/read";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import type { UserProfile } from "../../../lib/types/user";
+import { getUser, updateUser } from "../api/auth/user";
 import { RecipeCard } from "@/components/card";
 import Image from "next/image";
-import { Edit } from "lucide-react";
-import { updateUser } from "../api/auth/user";
 
 const Profile = () => {
   const { profile, updateProfile } = useContext(AuthContext);
@@ -19,12 +20,21 @@ const Profile = () => {
   );
   const [editingBio, setEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState(profile?.bio || "");
-  const profileImage = profile ? profile.avatar : "/default.jpg";
 
-  const recipeTab = activeTab === "recipes";
-  const favTab = activeTab === "favorites";
+  const searchParams = useSearchParams();
+  const profileIdFromUrl = searchParams.get("id");
+  const [otherProfile, setOtherProfile] = useState<UserProfile | null>(null);
+
+  const isOwnProfile = !profileIdFromUrl || profileIdFromUrl === profile?.id;
+
+  const isFollowingUser = !!(
+    profile &&
+    otherProfile &&
+    profile.following?.includes(otherProfile.id)
+  );
+
   useEffect(() => {
-    if (profile) {
+    if (isOwnProfile && profile) {
       readUserRecipes(profile.id).then((x) => {
         if (x) setRecipes(x);
       });
@@ -34,8 +44,18 @@ const Profile = () => {
       }).then((x) => {
         if (x) setFavorites(x);
       });
+      setOtherProfile(null);
+    } else if (profileIdFromUrl) {
+      getUser(profileIdFromUrl).then((x) => {
+        if (x) setOtherProfile(x);
+      });
+
+      readUserRecipes(profileIdFromUrl).then((x) => {
+        if (x) setRecipes(x);
+      });
+      setFavorites([]);
     }
-  }, [profile]);
+  }, [profile, profileIdFromUrl, isOwnProfile]);
 
   const updateBio = (newBio: string) => {
     if (profile && updateProfile) {
@@ -57,91 +77,73 @@ const Profile = () => {
     setBioInput(e.target.value);
   };
 
+  const handleFollow = async () => {
+    if (!profile || !otherProfile) return;
+    let newFollowing = profile.following ? [...profile.following] : [];
+    let newFollowers = otherProfile.followers
+      ? [...otherProfile.followers]
+      : [];
+    const isFollowing = newFollowing.includes(otherProfile.id);
+
+    if (isFollowing) {
+      newFollowing = newFollowing.filter((id) => id !== otherProfile.id);
+      newFollowers = newFollowers.filter((id) => id !== profile.id);
+    } else {
+      newFollowing.push(otherProfile.id);
+      newFollowers.push(profile.id);
+    }
+
+    // Only update what is needed
+    await updateUser({
+      id: profile.id,
+      followingUpdated: newFollowing,
+    });
+    await updateUser({
+      id: otherProfile.id,
+      followersUpdated: newFollowers,
+    });
+    if (updateProfile) updateProfile({ following: newFollowing });
+    setOtherProfile({ ...otherProfile, followers: newFollowers });
+  };
+
   const handleBioSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateBio(bioInput);
     setEditingBio(false);
   };
-
-  return (
-    <div className="px-2 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
-      <div className="p-10 min-h-[800px] shadow-md max-w-[435px] w-full border-1 dark:border-brand-white rounded-md h-full">
-        <div className="w-full items-center flex flex-col gap-5 mb-10">
+  if (!isOwnProfile && otherProfile) {
+    // Render a different layout for other users' profiles
+    return (
+      <div className="px-2 flex flex-col w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
+        <div className="flex items-center flex-wrap gap-10">
           <div className="relative rounded-full aspect-square max-w-[170px] w-full overflow-hidden">
             <Image
               fill
-              src={profileImage}
-              alt={profile?.name ?? "profile name not found"}
+              src={otherProfile.avatar || "/default.jpg"}
+              alt={otherProfile.name || "profile name not found"}
               className="object-cover"
             />
           </div>
-          <h1 className="text-center text-2xl">{profile?.name}</h1>
-          <div className="relative flex w-full justify-center items-center">
-            {editingBio ? (
-              <form
-                onSubmit={handleBioSubmit}
-                className="flex w-full items-center gap-2"
-              >
-                <input
-                  type="text"
-                  value={bioInput}
-                  onChange={handleBioChange}
-                  className="input w-full"
-                  autoFocus
-                />
-                <button
-                  type="submit"
-                  className="absolute right-0 top-1/2 -translate-y-1/2"
-                  aria-label="Save bio"
-                >
-                  <Edit />
-                </button>
-              </form>
-            ) : (
-              <>
-                <p
-                  className="italic text-center w-full cursor-pointer pr-8"
-                  onClick={handleBioClick}
-                >
-                  {profile && profile.bio ? profile.bio : "no bio added yet"}
-                </p>
-                <button
-                  type="button"
-                  className="absolute right-0 top-1/2 -translate-y-1/2"
-                  aria-label="Edit bio"
-                  onClick={handleBioClick}
-                >
-                  <Edit />
-                </button>
-              </>
-            )}
+          <div>
+            <h1 className="headline flex justify-between items-center">
+              {otherProfile.name}{" "}
+              <p className="text-sm">
+                {otherProfile.followers ? otherProfile.followers.length : 0}{" "}
+                {otherProfile.followers && otherProfile.followers.length === 1
+                  ? "Follower"
+                  : "Followers"}
+              </p>
+            </h1>
+            <p className="p-2 italic border-brand-black dark:border-brand-white">
+              {otherProfile.bio}
+            </p>
           </div>
-        </div>
-        <div className="flex flex-col gap-5 w-full">
-          <button
-            onClick={() => setActiveTab("recipes")}
-            className={`button ${
-              activeTab === "recipes" ? "button-active" : "hover-effect"
-            }`}
-          >
-            Your Recipes
+          <button className="button max-w-[150px]" onClick={handleFollow}>
+            {isFollowingUser ? "Unfollow" : "Follow"}
           </button>
-          <button
-            onClick={() => setActiveTab("favorites")}
-            className={`button ${
-              activeTab === "favorites" ? "button-active" : "hover-effect"
-            }`}
-          >
-            Your Favorites
-          </button>
-          <Link className="button hover-effect" href={"/create"}>
-            Add a recipe
-          </Link>
         </div>
-      </div>
-      {recipeTab && (
         <div className="h-full flex flex-col gap-5 w-full">
-          <h1 className="headline ">Your Recipes</h1>
+          <h1 className="headline ">{otherProfile.name}&apos;s Recipes</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
             {recipes.length > 0
               ? recipes.map((recipe) => (
@@ -153,27 +155,28 @@ const Profile = () => {
                     id={recipe.id}
                   />
                 ))
-              : "You have no recipes yet!"}
+              : `${otherProfile.name} has no recipes yet!`}
           </div>
         </div>
-      )}
-      {favTab && (
-        <div className="h-full flex flex-col gap-5 w-full">
-          <h1 className="headline ">Your Favorites</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
-            {favorites.length > 0
-              ? favorites.map((recipe) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    id={recipe.id}
-                    image={recipe.image}
-                    title={recipe.name}
-                    time={recipe.time}
-                  />
-                ))
-              : "You have no favorites"}
-          </div>
-        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-2 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
+      {isOwnProfile && profile && (
+        <UserProfileComponent
+          profile={profile}
+          editingBio={editingBio}
+          bioInput={bioInput}
+          handleBioClick={handleBioClick}
+          handleBioChange={handleBioChange}
+          handleBioSubmit={handleBioSubmit}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          recipes={recipes}
+          favorites={favorites}
+        />
       )}
     </div>
   );

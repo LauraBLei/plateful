@@ -21,20 +21,32 @@ export const checkUser = async (id: string) => {
   return existingUser;
 };
 
-export const updateUser = async ({
-  id,
-  bio,
-  updatedList,
-}: {
+export const updateUser = async (fields: {
   id: string;
-  bio: string;
-  updatedList: number[];
+  bio?: string;
+  updatedList?: number[];
+  followersUpdated?: string[];
+  followingUpdated?: string[];
 }) => {
-  await supabase
+  const { id, bio, updatedList, followersUpdated, followingUpdated } = fields;
+  const updateObj: { [key: string]: unknown } = {};
+  if (bio !== undefined) updateObj.bio = bio;
+  if (updatedList !== undefined) updateObj.favorites = updatedList;
+  if (followersUpdated !== undefined) updateObj.followers = followersUpdated;
+  if (followingUpdated !== undefined) updateObj.following = followingUpdated;
+  const { error, data } = await supabase
     .from("users")
-    .update({
-      bio,
-      favorites: updatedList,
-    })
+    .update(updateObj)
     .eq("id", id);
+  return { error, data };
+};
+
+export const getUser = async (id: string) => {
+  const { data } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  return data;
 };
