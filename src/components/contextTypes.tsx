@@ -12,6 +12,7 @@ export interface AuthContextType {
   setUser: (input: User | null) => void;
   profile: UserProfile | null;
   setProfile: (input: UserProfile | null) => void;
+  updateProfile?: (fields: Partial<UserProfile>) => void;
 }
 
 export const AuthContext = createContext<AuthContextType>(

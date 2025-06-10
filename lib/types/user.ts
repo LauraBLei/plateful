@@ -5,4 +5,5 @@ export type UserProfile = {
   email: string | null;
   bio: string;
   avatar: string;
+  favorites: number[];
 };

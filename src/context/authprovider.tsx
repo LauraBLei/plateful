@@ -13,6 +13,21 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null); // optional: typed interface for your users table
 
+  const updateProfile = (fields: Partial<UserProfile>) => {
+    if (!profile) return;
+    const updated: UserProfile = {
+      id: profile.id,
+      created_at: profile.created_at,
+      name: profile.name,
+      email: profile.email,
+      bio: profile.bio,
+      avatar: profile.avatar,
+      favorites: profile.favorites,
+      ...fields,
+    };
+    setProfile(updated);
+  };
+
   useEffect(() => {
     const syncUser = async () => {
       const { data } = await supabase.auth.getUser();
@@ -60,7 +75,9 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, profile, setProfile }}>
+    <AuthContext.Provider
+      value={{ user, setUser, profile, setProfile, updateProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );

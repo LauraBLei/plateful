@@ -18,7 +18,10 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className="max-w-[1440px] w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
+    <header
+      className="max-w-[1440px] w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold "
+      suppressHydrationWarning
+    >
       <div className="relative aspect-[5/2] w-[120px]  p-2 flex justify-center items-center">
         {darkMode ? (
           <Image

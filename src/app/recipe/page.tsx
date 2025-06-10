@@ -1,19 +1,26 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { Recipe } from "../../../lib/types/recipe";
 import { readRecipe } from "../api/recipe/read";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { checkUser, updateUser } from "../api/auth/user";
 import { UserProfile } from "../../../lib/types/user";
-import { Clock, HeartIcon } from "lucide-react";
+import { Clock, HeartMinus, HeartPlus } from "lucide-react";
+import { AuthContext } from "@/components/contextTypes";
 
 const Recipe = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [owner, setOwner] = useState<UserProfile | null>(null);
   const [checkedSteps, setCheckedSteps] = useState<boolean[]>([]);
+  const { profile, updateProfile } = useContext(AuthContext);
   const searchParams = useSearchParams();
   const id = searchParams.get("id") ?? ``;
+  const isFavorite = !!(
+    profile &&
+    recipe &&
+    profile.favorites.includes(recipe.id)
+  );
 
   const getCookingTimeLabel = (minutes: number) => {
     switch (minutes) {
@@ -35,7 +42,6 @@ const Recipe = () => {
     if (id) {
       readRecipe({ id: Number(id) }).then((x) => {
         if (x) setRecipe(x);
-        console.log("Fetched recipe:", x);
       });
     }
   }, [id]);
@@ -47,7 +53,6 @@ const Recipe = () => {
       });
     }
   }, [recipe]);
-  console.log("user state: ", owner);
 
   useEffect(() => {
     if (recipe?.steps) {
@@ -64,8 +69,23 @@ const Recipe = () => {
   };
 
   const handleSetFavorite = () => {
-    if (owner && recipe)
-      updateUser({ id: owner.id, bio: owner.bio, favorites: [recipe.id] });
+    if (profile && recipe) {
+      let updatedFavorites;
+      if (isFavorite) {
+        // Remove favorite if it exists
+        updatedFavorites = profile.favorites.filter((f) => f !== recipe.id);
+      } else {
+        // Add favorite if it doesn't exist
+        updatedFavorites = [...profile?.favorites, recipe.id];
+      }
+      if (updatedFavorites && updateProfile)
+        updateProfile({ favorites: updatedFavorites });
+      updateUser({
+        id: profile.id,
+        bio: profile.bio,
+        updatedList: updatedFavorites,
+      });
+    }
   };
 
   return (
@@ -107,11 +127,16 @@ const Recipe = () => {
             <div className="flex items-center gap-5">
               <button
                 onClick={handleSetFavorite}
-                className="flex gap-2 items-center"
+                className="flex gap-2 items-center hover:text-brand-orange cursor-pointer"
               >
-                <HeartIcon className="w-[20px] hover:text-brand-orange cursor-pointer" />
+                {isFavorite ? (
+                  <HeartMinus className="w-[20px] hover:text-brand-orange cursor-pointer" />
+                ) : (
+                  <HeartPlus className="w-[20px] " />
+                )}
+
                 <span className="whitespace-nowrap text-sm">
-                  Add to favorite
+                  {isFavorite ? "Remove from favorite" : "Add to favorite"}
                 </span>
               </button>
               <p className="flex items-center gap-2">

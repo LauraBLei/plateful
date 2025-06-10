@@ -24,17 +24,17 @@ export const checkUser = async (id: string) => {
 export const updateUser = async ({
   id,
   bio,
-  favorites,
+  updatedList,
 }: {
   id: string;
   bio: string;
-  favorites: number[];
+  updatedList: number[];
 }) => {
   await supabase
     .from("users")
     .update({
       bio,
-      favorites,
+      favorites: updatedList,
     })
     .eq("id", id);
 };
