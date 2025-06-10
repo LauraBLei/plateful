@@ -3,30 +3,35 @@
 import { AuthContext } from "@/components/contextTypes";
 import { useContext, useEffect, useState } from "react";
 import { Recipe } from "../../../lib/types/recipe";
-import { readUserRecipes } from "../api/recipe/read";
+import { readFavoriteRecipes, readUserRecipes } from "../api/recipe/read";
 import Link from "next/link";
 import { RecipeCard } from "@/components/card";
 import Image from "next/image";
 
 const Profile = () => {
-  const { user, profile } = useContext(AuthContext);
+  const { profile } = useContext(AuthContext);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [favorites, setFavorites] = useState<Recipe[]>([]);
   const [activeTab, setActiveTab] = useState<"recipes" | "favorites">(
     "recipes"
   );
-  const profileImage = user?.user_metadata.avatar_url
-    ? user?.user_metadata.avatar_url
-    : "/default.jpg";
+  const profileImage = profile ? profile.avatar : "/default.jpg";
 
   const recipeTab = activeTab === "recipes";
   const favTab = activeTab === "favorites";
   useEffect(() => {
-    if (user) {
-      readUserRecipes(user.id).then((x) => {
+    if (profile) {
+      readUserRecipes(profile.id).then((x) => {
         if (x) setRecipes(x);
       });
+      readFavoriteRecipes({
+        id: profile.id,
+        favorites: profile?.favorites,
+      }).then((x) => {
+        if (x) setFavorites(x);
+      });
     }
-  }, [user]);
+  }, [profile]);
 
   console.log(recipes);
 
@@ -38,7 +43,7 @@ const Profile = () => {
             <Image
               fill
               src={profileImage}
-              alt={user?.user_metadata.full_name}
+              alt={profile?.name ?? "profile name not found"}
               className="object-cover"
             />
           </div>
@@ -87,7 +92,24 @@ const Profile = () => {
           </div>
         </div>
       )}
-      {favTab && <div className="h-full">Favorite feature coming soon</div>}
+      {favTab && (
+        <div className="h-full flex flex-col gap-5 w-full">
+          <h1 className="headline ">Your Favorites</h1>
+          <div className="flex flex-wrap gap-5">
+            {favorites.length > 0
+              ? favorites.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    id={recipe.id}
+                    image={recipe.image}
+                    title={recipe.name}
+                    time={recipe.time}
+                  />
+                ))
+              : "You have no favorites"}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

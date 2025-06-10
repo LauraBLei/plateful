@@ -29,3 +29,18 @@ export const readRecipe = async ({ id }: { id: number }) => {
   if (error) console.log("Recipe fetch gave error: ", error);
   return recipe;
 };
+
+export const readFavoriteRecipes = async ({
+  favorites,
+}: {
+  id: string;
+  favorites: number[];
+}) => {
+  if (!favorites || favorites.length === 0) return [];
+  const { data, error } = await supabase
+    .from("recipes")
+    .select("*")
+    .in("id", favorites);
+  if (error) console.log("error fetching favorite recipes:", error);
+  return data;
+};
