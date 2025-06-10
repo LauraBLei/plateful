@@ -13,15 +13,19 @@ export const Header = () => {
   const { darkMode, toggleDarkMode } = useContext(CommonContext);
   const [mounted, setMounted] = useState(false);
 
+  const [isHydrated, setHydrated] = useState(false);
+
   useEffect(() => {
     setMounted(true);
+    setHydrated(true);
   }, []);
 
+  if (!isHydrated) {
+    return <></>;
+  }
+
   return (
-    <header
-      className="max-w-[1440px] w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold "
-      suppressHydrationWarning
-    >
+    <header className="max-w-[1440px] w-full flex justify-between p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
       <div className="relative aspect-[5/2] w-[120px]  p-2 flex justify-center items-center">
         {darkMode ? (
           <Image
@@ -49,19 +53,21 @@ export const Header = () => {
         >
           All Recipes
         </Link>
-        <button onClick={toggleDarkMode}>
-          {darkMode ? (
-            <div className="flex gap-2 hover-effect dark:hover:text-brand-orange">
-              <Moon />
-              <span>Dark Mode</span>
-            </div>
-          ) : (
-            <div className="flex gap-2 hover-effect dark:hover:text-brand-orange">
-              <Sun />
-              <span>Light Mode</span>
-            </div>
-          )}
-        </button>
+        {isHydrated && (
+          <button onClick={toggleDarkMode}>
+            {darkMode ? (
+              <div className="flex gap-2 hover-effect dark:hover:text-brand-orange">
+                <Moon />
+                <span>Dark Mode</span>
+              </div>
+            ) : (
+              <div className="flex gap-2 hover-effect dark:hover:text-brand-orange">
+                <Sun />
+                <span>Light Mode</span>
+              </div>
+            )}
+          </button>
+        )}
         {mounted && user ? (
           <Link
             className="relative rounded-full aspect-square overflow-hidden w-[40px] hover-effect"

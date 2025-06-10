@@ -1,10 +1,14 @@
+"use client";
+
+import { AuthContext } from "@/components/contextTypes";
+import { useContext } from "react";
+
 const Home = () => {
-  // const { user } = useContext(AuthContext);
+  const { profile } = useContext(AuthContext);
 
   return (
-    <div>
-      <p>Home</p>
-      {/* <p>Welcome {user?.user_metadata.full_name}</p> */}
+    <div className="max-w-[1440px] w-full">
+      {profile ? <div>logged in</div> : <div>Logged out</div>}
     </div>
   );
 };
