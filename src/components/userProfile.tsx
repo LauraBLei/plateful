@@ -49,10 +49,16 @@ export const UserProfile = ({
           </div>
           <h1 className="text-center text-2xl">{profile?.name}</h1>
           <p className="text-sm">
-            {profile.followers ? profile.followers.length : 0}{" "}
+            {profile.followers ? profile.followers.length : 0}
             {profile.followers && profile.followers.length === 1
               ? "Follower"
               : "Followers"}
+          </p>
+          <p className="text-sm">
+            {profile.following ? profile.following.length : 0}
+            {profile.following && profile.following.length === 1
+              ? "Following"
+              : "Following"}
           </p>
           <div className="relative flex w-full justify-center items-center">
             {editingBio ? (
