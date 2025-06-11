@@ -9,6 +9,7 @@ import { RecipeCard } from "@/components/card";
 import { readRecipes, readSortedRecipes } from "./api/recipe/read";
 import { getUser } from "./api/auth/user";
 import { signInWithGoogle } from "./api/auth/login";
+import Loader from "@/components/loader";
 
 const Home = () => {
   const { profile } = useContext(AuthContext);
@@ -16,8 +17,10 @@ const Home = () => {
   const [timeRecipes, setTimeRecipes] = useState<Recipe[]>([]);
   const [recentRecipes, setRecentRecipes] = useState<Recipe[]>([]);
   const [followingName, setFollowingName] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     // Fetch 30 min recipes
     readSortedRecipes({ time: 30 }).then((x) => {
       if (x) setTimeRecipes(x ? x.slice(0, 4) : []);
@@ -34,6 +37,7 @@ const Home = () => {
       } else {
         setRecentRecipes([]);
       }
+      setLoading(false);
     });
     // Only fetch followers' recipes if logged in
     if (profile && profile.following && profile.following.length > 0) {
@@ -66,17 +70,21 @@ const Home = () => {
     }
   }, [profile]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="max-w-[1440px] mb-30 w-full px-2 font-primary flex flex-col gap-5">
       <div>
         {profile ? (
-          <div className="flex  max-h-[400px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
-            <div className="flex-1 rounded-t-md md:rounded-l-md md:rounded-r-none dark:bg-brand-white bg-brand-black h-full px-5 text-center py-10 md:py-20 shadow-md">
+          <div className="flex  min-h-[270px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
+            <div className="flex-1 flex items-center justify-center rounded-t-md md:rounded-l-md md:rounded-r-none dark:bg-brand-white bg-brand-black h-full px-5 text-center shadow-md min-h-[160px] md:min-h-[270px]">
               <h1 className="text-2xl md:text-5xl font-semibold text-brand-white dark:text-brand-black">
                 Welcome {profile.name}
               </h1>
             </div>
-            <div className="flex-1 rounded-b-md md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white">
+            <div className="flex-1 rounded-b-md  md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white min-h-[160px] md:min-h-[270px]">
               <p className="font-semibold">Got a recipe you wanna share?</p>
               <Link href={"/create"} className="button text-lg  my-5">
                 Add a recipe

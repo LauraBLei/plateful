@@ -9,6 +9,7 @@ import { UserProfile } from "../../../lib/types/user";
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
 import { AuthContext } from "@/components/contextTypes";
 import Link from "next/link";
+import Loader from "@/components/loader";
 
 const Recipe = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -22,6 +23,7 @@ const Recipe = () => {
     recipe &&
     profile.favorites.includes(recipe.id)
   );
+  const [loading, setLoading] = useState(true);
 
   const getCookingTimeLabel = (minutes: number) => {
     switch (minutes) {
@@ -40,10 +42,14 @@ const Recipe = () => {
   const cookingTime = getCookingTimeLabel(recipe?.time ? recipe.time : 30);
 
   useEffect(() => {
+    setLoading(true);
     if (id) {
       readRecipe({ id: Number(id) }).then((x) => {
         if (x) setRecipe(x);
+        setLoading(false);
       });
+    } else {
+      setLoading(false);
     }
   }, [id]);
 
@@ -88,6 +94,10 @@ const Recipe = () => {
       });
     }
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="max-w-[1440px] mb-30 px-2 flex gap-10 w-full flex-wrap lg:flex-nowrap font-primary text-brand-black dark:text-brand-white">

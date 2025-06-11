@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { readRecipes, readSortedRecipes } from "../api/recipe/read";
 import { Recipe } from "../../../lib/types/recipe";
 import { RecipeCard } from "@/components/card";
+import Loader from "@/components/loader";
 
 const AllRecipes = () => {
   const [defaultRecipes, setDefaultRecipes] = useState<Recipe[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   const mealTypes = [
     "dinner",
@@ -21,11 +23,13 @@ const AllRecipes = () => {
   ];
 
   useEffect(() => {
+    setLoading(true);
     readRecipes().then((x) => {
       if (x) {
         setRecipes(x);
         setDefaultRecipes(x);
       }
+      setLoading(false);
     });
   }, []);
 
@@ -40,6 +44,11 @@ const AllRecipes = () => {
     const sorted = await readSortedRecipes({ tag: value });
     setRecipes(sorted || []);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="max-w-[1440px] mb-30 w-full flex gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
       <div className="w-full max-w-[200px] flex flex-col gap-5">

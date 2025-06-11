@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import type { UserProfile } from "../../../lib/types/user";
 import { getUser, updateUser } from "../api/auth/user";
 import { UserProfilePage } from "@/components/userProfile";
+import Loader from "@/components/loader";
 
 const Profile = () => {
   const { profile, updateProfile } = useContext(AuthContext);
@@ -23,6 +24,7 @@ const Profile = () => {
   const searchParams = useSearchParams();
   const profileIdFromUrl = searchParams.get("id");
   const [otherProfile, setOtherProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const isOwnProfile = !profileIdFromUrl || profileIdFromUrl === profile?.id;
 
@@ -33,6 +35,7 @@ const Profile = () => {
   );
 
   useEffect(() => {
+    setLoading(true);
     if (isOwnProfile && profile) {
       readUserRecipes(profile.id).then((x) => {
         if (x) setRecipes(x);
@@ -54,6 +57,7 @@ const Profile = () => {
       });
       setFavorites([]);
     }
+    setLoading(false);
   }, [profile, profileIdFromUrl, isOwnProfile]);
 
   const updateBio = (newBio: string) => {
@@ -110,6 +114,9 @@ const Profile = () => {
     updateBio(bioInput);
     setEditingBio(false);
   };
+  if (loading) {
+    return <Loader />;
+  }
   if (!isOwnProfile && otherProfile) {
     // Render a different layout for other users' profiles
     return (
