@@ -12,6 +12,7 @@ import { PortionSize } from "@/components/create/portions";
 import { LanguageSelect } from "@/components/create/language";
 import { useSearchParams } from "next/navigation";
 import type { Recipe } from "../../../lib/types/recipe";
+import { updateRecipe } from "../api/recipe/update";
 
 type IngredientGroup = {
   groupName: string;
@@ -64,7 +65,7 @@ const CreateRecipe = () => {
     let uploadedUrl = "";
     try {
       if (image) {
-        const userId = user?.id || "anonymous"; // replace this with your actual user logic
+        const userId = user?.id || "anonymous";
         uploadedUrl = await uploadRecipeImage(image, userId);
       }
     } catch (err) {
@@ -73,27 +74,48 @@ const CreateRecipe = () => {
       return;
     }
 
-    const recipeData = {
-      name: title,
-      steps,
-      ingredients: ingredientGroups,
-      image: uploadedUrl,
-      time,
-      tag,
-      owner_id: user?.id,
-      language,
-      portions: portion,
-    };
-
-    console.log("Recipe submitted:", recipeData);
-    // Submit recipeData to Supabase
-    const { data, error } = await supabase
-      .from("recipes")
-      .insert(recipeData)
-      .select("id")
-      .single();
-    if (!error && data && data.id) {
-      window.location.href = `/recipe?id=${data.id}`;
+    if (isEdit && existingRecipe) {
+      // Only update image if a new one is uploaded, otherwise keep the old one
+      const updateData = {
+        name: title,
+        steps,
+        ingredients: ingredientGroups,
+        image: uploadedUrl || existingRecipe.image,
+        time,
+        tag,
+        language,
+        portions: portion,
+      };
+      try {
+        await updateRecipe({
+          recipeId: existingRecipe.id,
+          userId: user?.id || "anonymous",
+          updateData,
+        });
+        window.location.href = `/recipe?id=${existingRecipe.id}`;
+      } catch {
+        alert("Failed to update recipe.");
+      }
+    } else {
+      const recipeData = {
+        name: title,
+        steps,
+        ingredients: ingredientGroups,
+        image: uploadedUrl,
+        time,
+        tag,
+        owner_id: user?.id,
+        language,
+        portions: portion,
+      };
+      const { data, error } = await supabase
+        .from("recipes")
+        .insert(recipeData)
+        .select("id")
+        .single();
+      if (!error && data && data.id) {
+        window.location.href = `/recipe?id=${data.id}`;
+      }
     }
   };
 
