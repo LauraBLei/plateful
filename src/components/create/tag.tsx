@@ -26,6 +26,15 @@ export const TagSelect = ({ tag, setTag }: TagSelectProps) => (
       <option className="text-brand-black" value="dessert">
         Dessert
       </option>
+      <option className="text-brand-black" value="salad">
+        Salad
+      </option>
+      <option className="text-brand-black" value="drink">
+        Drink
+      </option>
+      <option className="text-brand-black" value="snack">
+        Snack
+      </option>
     </select>
   </div>
 );
