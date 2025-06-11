@@ -23,6 +23,8 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
       bio: profile.bio,
       avatar: profile.avatar,
       favorites: profile.favorites,
+      followers: profile.followers,
+      following: profile.following,
       ...fields,
     };
     setProfile(updated);

@@ -123,7 +123,7 @@ const Tablet = ({ isFollowingUser, handleFollow, otherProfile }: Props) => {
                   : " Following"}
               </p>
               <button
-                className="button w-full max-w-[150px]"
+                className="button text-sm max-w-[150px]"
                 onClick={handleFollow}
               >
                 {isFollowingUser ? "Unfollow" : "Follow"}

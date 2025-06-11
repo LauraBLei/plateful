@@ -295,7 +295,7 @@ const Tablet = ({
           )}
         </div>
         <div className="flex flex-col my-5 gap-2 w-full">
-          <div className="flex ">
+          <div className="flex gap-2">
             <button
               onClick={() => setActiveTab("recipes")}
               className={`button ${
