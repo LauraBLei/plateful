@@ -111,8 +111,8 @@ const Recipe = () => {
                 {ingredientGroup.groupName}
               </p>
               <ul className="ml-5">
-                {ingredientGroup.ingredients.map((ingredient) => (
-                  <li className="text-lg" key={ingredient}>
+                {ingredientGroup.ingredients.map((ingredient, i) => (
+                  <li className="text-lg" key={ingredient + i}>
                     {ingredient}
                   </li>
                 ))}

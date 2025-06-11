@@ -36,10 +36,10 @@ export const UserProfile = ({
   const recipeTab = activeTab === "recipes";
   const favTab = activeTab === "favorites";
   return (
-    <>
-      <div className="p-10 min-h-[800px] shadow-md max-w-[435px] w-full border-1 dark:border-brand-white rounded-md h-full">
+    <div className="flex flex-col gap-5 md:flex-row w-full">
+      <div className="p-10 md:min-h-[800px] flex flex-col shadow-md max-w-[435px] w-full border-1 dark:border-brand-white rounded-md h-full">
         <div className="w-full items-center flex flex-col gap-5 mb-10">
-          <div className="relative rounded-full aspect-square max-w-[170px] w-full overflow-hidden">
+          <div className="relative rounded-full aspect-square max-w-[130px] md:max-w-[170px] w-full overflow-hidden">
             <Image
               fill
               src={profileImage}
@@ -47,19 +47,23 @@ export const UserProfile = ({
               className="object-cover"
             />
           </div>
-          <h1 className="text-center text-2xl">{profile?.name}</h1>
-          <p className="text-sm">
-            {profile.followers ? profile.followers.length : 0}
-            {profile.followers && profile.followers.length === 1
-              ? "Follower"
-              : "Followers"}
-          </p>
-          <p className="text-sm">
-            {profile.following ? profile.following.length : 0}
-            {profile.following && profile.following.length === 1
-              ? "Following"
-              : "Following"}
-          </p>
+          <div className="flex flex-col gap-5">
+            <h1 className="text-center text-2xl">{profile?.name}</h1>
+            <div className="flex gap-5">
+              <p className="text-sm flex gap-2">
+                {profile.followers ? profile.followers.length : 0}
+                {profile.followers && profile.followers.length === 1
+                  ? " Follower"
+                  : " Followers"}
+              </p>
+              <p className="text-sm">
+                {profile.following ? profile.following.length : 0}
+                {profile.following && profile.following.length === 1
+                  ? " Following"
+                  : " Following"}
+              </p>
+            </div>
+          </div>
           <div className="relative flex w-full justify-center items-center">
             {editingBio ? (
               <form
@@ -159,6 +163,6 @@ export const UserProfile = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
