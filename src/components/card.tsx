@@ -1,17 +1,28 @@
 "use client";
 
-import { Clock } from "lucide-react";
+import { Clock, Edit, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { deleteRecipe } from "@/app/api/recipe/delete";
+import { useContext } from "react";
+import { AuthContext } from "@/components/contextTypes";
 
 interface RecipeCardProps {
   image: string;
   title: string;
   time: number;
   id: number;
+  isOwnRecipe?: boolean;
 }
 
-export const RecipeCard = ({ image, title, time, id }: RecipeCardProps) => {
+export const RecipeCard = ({
+  image,
+  title,
+  time,
+  id,
+  isOwnRecipe = false,
+}: RecipeCardProps) => {
+  const { profile } = useContext(AuthContext);
   const getCookingTimeLabel = (minutes: number) => {
     switch (minutes) {
       case 30:
@@ -26,7 +37,17 @@ export const RecipeCard = ({ image, title, time, id }: RecipeCardProps) => {
         return "> 2 hours";
     }
   };
-
+  const onDelete = async () => {
+    if (!profile) return;
+    const confirmed = confirm("are you sure you wanna delete this?");
+    if (!confirmed) return;
+    try {
+      await deleteRecipe({ userId: profile.id, recipeId: id });
+      window.location.reload();
+    } catch {
+      alert("Failed to delete recipe.");
+    }
+  };
   const cookingTime = getCookingTimeLabel(time);
   return (
     <Link
@@ -42,12 +63,36 @@ export const RecipeCard = ({ image, title, time, id }: RecipeCardProps) => {
           priority={false}
         />
       </div>
-      <div className="flex justify-between py-2">
+      <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
-        <p className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <Clock className="w-[20px]" />
           <span className="text-sm">{cookingTime}</span>
-        </p>
+          {isOwnRecipe && (
+            <>
+              <button
+                type="button"
+                className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // No onEdit handler, so do nothing for now
+                }}
+              >
+                <Edit />
+              </button>
+              <button
+                type="button"
+                className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await onDelete();
+                }}
+              >
+                <Trash2Icon />
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </Link>
   );

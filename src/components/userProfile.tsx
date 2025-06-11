@@ -68,6 +68,7 @@ export const UserProfilePage = ({
                     title={recipe.name}
                     image={recipe.image}
                     id={recipe.id}
+                    isOwnRecipe
                   />
                 ))
               : "You have no recipes yet!"}
