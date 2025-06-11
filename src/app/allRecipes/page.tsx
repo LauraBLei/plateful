@@ -10,7 +10,15 @@ const AllRecipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>("");
 
-  const mealTypes = ["dinner", "lunch", "breakfast", "dessert"];
+  const mealTypes = [
+    "dinner",
+    "lunch",
+    "breakfast",
+    "dessert",
+    "drink",
+    "salad",
+    "snack",
+  ];
 
   useEffect(() => {
     readRecipes().then((x) => {
