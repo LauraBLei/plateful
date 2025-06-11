@@ -123,7 +123,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="px-2 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
+    <div className="px-2 mb-30 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
       {isOwnProfile && profile && (
         <UserProfilePage
           profile={profile}

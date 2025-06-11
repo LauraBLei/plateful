@@ -57,11 +57,18 @@ const CreateRecipe = () => {
 
     console.log("Recipe submitted:", recipeData);
     // Submit recipeData to Supabase
-    await supabase.from("recipes").insert(recipeData);
+    const { data, error } = await supabase
+      .from("recipes")
+      .insert(recipeData)
+      .select("id")
+      .single();
+    if (!error && data && data.id) {
+      window.location.href = `/recipe?id=${data.id}`;
+    }
   };
 
   return (
-    <div className="max-w-[1440px] mb-10 flex flex-col gap-10 w-full px-2  ">
+    <div className="max-w-[1440px] mb-30 flex flex-col gap-10 w-full px-2  ">
       <h1 className="headline">Create Recipe!</h1>
       <form
         onSubmit={handleSubmit}

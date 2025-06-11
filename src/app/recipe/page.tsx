@@ -90,7 +90,7 @@ const Recipe = () => {
   };
 
   return (
-    <div className="max-w-[1440px] mb-10 px-2 flex gap-10 w-full flex-wrap lg:flex-nowrap font-primary text-brand-black dark:text-brand-white">
+    <div className="max-w-[1440px] mb-30 px-2 flex gap-10 w-full flex-wrap lg:flex-nowrap font-primary text-brand-black dark:text-brand-white">
       <div className="flex flex-col gap-5 md:gap-10 w-full">
         <div className="relative aspect-[308/181] w-full rounded-md overflow-hidden shadow-md">
           <Image

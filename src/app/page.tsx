@@ -67,7 +67,7 @@ const Home = () => {
   }, [profile]);
 
   return (
-    <div className="max-w-[1440px] w-full px-2 font-primary flex flex-col gap-5">
+    <div className="max-w-[1440px] mb-30 w-full px-2 font-primary flex flex-col gap-5">
       <div>
         {profile ? (
           <div className="flex  max-h-[400px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">

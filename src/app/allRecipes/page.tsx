@@ -33,7 +33,7 @@ const AllRecipes = () => {
     setRecipes(sorted || []);
   };
   return (
-    <div className="max-w-[1440px] w-full flex gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
+    <div className="max-w-[1440px] mb-30 w-full flex gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
       <div className="w-full max-w-[200px] flex flex-col gap-5">
         <h2 className="headlineTwo">Filter meal types:</h2>
         <div className="flex flex-col gap-2 w-full">
