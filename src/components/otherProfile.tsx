@@ -18,35 +18,20 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
   recipes,
 }) => {
   return (
-    <div className="px-2 flex flex-col w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
-      <div className="flex items-center flex-wrap gap-10">
-        <div className="relative rounded-full aspect-square max-w-[170px] w-full overflow-hidden">
-          <Image
-            fill
-            src={otherProfile.avatar || "/default.jpg"}
-            alt={otherProfile.name || "profile name not found"}
-            className="object-cover"
-          />
-        </div>
-        <div>
-          <h1 className="headline flex justify-between items-center">
-            {otherProfile.name}{" "}
-            <p className="text-sm">
-              {otherProfile.followers ? otherProfile.followers.length : 0}{" "}
-              {otherProfile.followers && otherProfile.followers.length === 1
-                ? "Follower"
-                : "Followers"}
-            </p>
-          </h1>
-          <p className="p-2 italic border-brand-black dark:border-brand-white">
-            {otherProfile.bio}
-          </p>
-        </div>
-        <button className="button max-w-[150px]" onClick={handleFollow}>
-          {isFollowingUser ? "Unfollow" : "Follow"}
-        </button>
+    <div className="px-2 flex flex-col lg:flex-row w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
+      <div>
+        <Desktop
+          handleFollow={handleFollow}
+          isFollowingUser={isFollowingUser}
+          otherProfile={otherProfile}
+        />
+        <Tablet
+          handleFollow={handleFollow}
+          isFollowingUser={isFollowingUser}
+          otherProfile={otherProfile}
+        />
       </div>
-      <div className="h-full flex flex-col gap-5 w-full">
+      <div className="w-full flex flex-col gap-5">
         <h1 className="headline ">{otherProfile.name}&apos;s Recipes</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
           {recipes.length > 0
@@ -60,6 +45,94 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
                 />
               ))
             : `${otherProfile.name} has no recipes yet!`}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface Props {
+  isFollowingUser: boolean;
+  handleFollow: () => void;
+  otherProfile: UserProfile;
+}
+const Desktop = ({ isFollowingUser, handleFollow, otherProfile }: Props) => {
+  return (
+    <div className="p-10 hidden lg:flex lg:min-h-[800px]  flex-col items-center shadow-md lg:max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full">
+      <div className="relative rounded-full aspect-square max-w-[130px] md:max-w-[170px] w-full overflow-hidden">
+        <Image
+          fill
+          src={otherProfile.avatar || "/default.jpg"}
+          alt={otherProfile.name || "profile name not found"}
+          className="object-cover"
+        />
+      </div>
+      <div className="flex flex-col items-center gap-5 mt-2">
+        <h1 className="headlineTwo text-center">{otherProfile.name}</h1>
+        <div className="flex gap-5">
+          <p className="text-sm">
+            {otherProfile.followers ? otherProfile.followers.length : 0}{" "}
+            {otherProfile.followers && otherProfile.followers.length === 1
+              ? "Follower"
+              : "Followers"}
+          </p>
+          <p className="text-sm">
+            {otherProfile.following ? otherProfile.following.length : 0}
+            {otherProfile.following && otherProfile.following.length === 1
+              ? " Following"
+              : " Following"}
+          </p>
+        </div>
+        <p className="p-2 italic border-brand-black dark:border-brand-white">
+          {otherProfile.bio}
+        </p>
+      </div>
+      <button className="button max-w-[150px]" onClick={handleFollow}>
+        {isFollowingUser ? "Unfollow" : "Follow"}
+      </button>
+    </div>
+  );
+};
+
+const Tablet = ({ isFollowingUser, handleFollow, otherProfile }: Props) => {
+  return (
+    <div className="flex flex-col w-full px-2 lg:hidden">
+      <div className="w-full flex flex-col gap-5 mb-5 ">
+        <div className="flex gap-10 items-center w-full">
+          <div className="relative rounded-full aspect-square max-w-[100px] w-full overflow-hidden">
+            <Image
+              fill
+              src={otherProfile.avatar || "/default.jpg"}
+              alt={otherProfile.name || "profile name not found"}
+              className="object-cover"
+            />
+          </div>
+          <div className="w-full flex flex-col gap-2 ">
+            <h1 className="headline  w-full">{otherProfile.name}</h1>
+            <div className="flex gap-5 md:gap-10 justify-center md:justify-evenly flex-wrap md:flex-nowrap items-center">
+              <p className="text-sm whitespace-nowrap">
+                {otherProfile.followers ? otherProfile.followers.length : 0}{" "}
+                {otherProfile.followers && otherProfile.followers.length === 1
+                  ? "Follower"
+                  : "Followers"}
+              </p>
+              <p className="text-sm whitespace-nowrap">
+                {otherProfile.following ? otherProfile.following.length : 0}
+                {otherProfile.following && otherProfile.following.length === 1
+                  ? " Following"
+                  : " Following"}
+              </p>
+              <button
+                className="button w-full max-w-[150px]"
+                onClick={handleFollow}
+              >
+                {isFollowingUser ? "Unfollow" : "Follow"}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p className="italic ">{otherProfile.bio}</p>
         </div>
       </div>
     </div>
