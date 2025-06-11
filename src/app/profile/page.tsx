@@ -1,7 +1,6 @@
 "use client";
 
 import { AuthContext } from "@/components/contextTypes";
-import { UserProfile as UserProfileComponent } from "@/components/userProfile";
 import { OtherProfile } from "@/components/otherProfile";
 import { useContext, useEffect, useState } from "react";
 import { Recipe } from "../../../lib/types/recipe";
@@ -9,6 +8,7 @@ import { readFavoriteRecipes, readUserRecipes } from "../api/recipe/read";
 import { useSearchParams } from "next/navigation";
 import type { UserProfile } from "../../../lib/types/user";
 import { getUser, updateUser } from "../api/auth/user";
+import { UserProfilePage } from "@/components/userProfile";
 
 const Profile = () => {
   const { profile, updateProfile } = useContext(AuthContext);
@@ -125,7 +125,7 @@ const Profile = () => {
   return (
     <div className="px-2 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
       {isOwnProfile && profile && (
-        <UserProfileComponent
+        <UserProfilePage
           profile={profile}
           editingBio={editingBio}
           bioInput={bioInput}
