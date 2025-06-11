@@ -8,6 +8,7 @@ export type Recipe = {
   image: string;
   created: Date;
   updated: Date;
+  portions: number;
 };
 
 export type Ingredient = {

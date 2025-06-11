@@ -101,8 +101,9 @@ const Recipe = () => {
           />
         </div>
         <div className="border-1 p-5 shadow-md flex flex-col gap-5 rounded-md border-brand-black dark:border-brand-white">
-          <h2 className="headlineTwo pb-2 border-b-1 border-brand-black dark:border-brand-white">
+          <h2 className="headlineTwo flex justify-between pb-2 border-b-1 border-brand-black dark:border-brand-white">
             Ingredients
+            <p>Portions: {recipe?.portions}</p>
           </h2>
 
           {recipe?.ingredients.map((ingredientGroup) => (
