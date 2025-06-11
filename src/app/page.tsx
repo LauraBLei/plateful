@@ -8,6 +8,7 @@ import { Recipe } from "../../lib/types/recipe";
 import { RecipeCard } from "@/components/card";
 import { readRecipes, readSortedRecipes } from "./api/recipe/read";
 import { getUser } from "./api/auth/user";
+import { signInWithGoogle } from "./api/auth/login";
 
 const Home = () => {
   const { profile } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const Home = () => {
         setRecentRecipes([]);
       }
     });
-    // Fetch 3 latest recipes from a random user in following
+    // Only fetch followers' recipes if logged in
     if (profile && profile.following && profile.following.length > 0) {
       const shuffled = [...profile.following].sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, 1); // pick 1 random following
@@ -83,15 +84,25 @@ const Home = () => {
             </div>
           </div>
         ) : (
-          <div>
-            <div>
-              <h1>Welcome to plateful!</h1>
+          <div className="flex  max-h-[400px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
+            <div className="flex-1 rounded-t-md md:rounded-l-md md:rounded-r-none dark:bg-brand-white bg-brand-black h-full px-5 text-center py-10 md:py-20 shadow-md">
+              <h1 className="text-2xl md:text-5xl font-semibold text-brand-white dark:text-brand-black">
+                Welcome to Plateful!
+              </h1>
             </div>
-            <div> Sign up!</div>
+            <div className="flex-1 rounded-b-md md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white">
+              <p className="font-semibold">Got a recipe you wanna share?</p>
+              <button
+                onClick={signInWithGoogle}
+                className="button text-lg  my-5"
+              >
+                Sign up now!
+              </button>
+            </div>
           </div>
         )}
       </div>
-      {
+      {profile && (
         <section id="follow" className="flex flex-col gap-2">
           <h2 className="headline">
             Recent recipes from {followingName || "following"}
@@ -114,7 +125,7 @@ const Home = () => {
             )}
           </div>
         </section>
-      }
+      )}
       <section id="recent" className="flex flex-col gap-2">
         <h2 className="headline">Recent</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2">
