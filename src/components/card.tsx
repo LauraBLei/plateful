@@ -50,19 +50,18 @@ export const RecipeCard = ({
   };
   const cookingTime = getCookingTimeLabel(time);
   return (
-    <Link
-      href={`/recipe?id=${id}`}
-      className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white"
-    >
-      <div className="relative  aspect-[308/181] w-full  rounded-md overflow-hidden shadow-md mx-auto">
-        <Image
-          fill
-          src={image ? image : "/default.jpg"}
-          alt={title}
-          className="object-cover w-full h-full"
-          priority={false}
-        />
-      </div>
+    <div className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white">
+      <Link href={`/recipe?id=${id}`}>
+        <div className="relative  aspect-[308/181] w-full  rounded-md overflow-hidden shadow-md mx-auto">
+          <Image
+            fill
+            src={image ? image : "/default.jpg"}
+            alt={title}
+            className="object-cover w-full h-full"
+            priority={false}
+          />
+        </div>
+      </Link>
       <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
         <div className="flex items-center gap-2">
@@ -70,16 +69,13 @@ export const RecipeCard = ({
           <span className="text-sm">{cookingTime}</span>
           {isOwnRecipe && (
             <>
-              <button
+              <Link
+                href={`/create?id=${id}`}
                 type="button"
                 className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // No onEdit handler, so do nothing for now
-                }}
               >
                 <Edit />
-              </button>
+              </Link>
               <button
                 type="button"
                 className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
@@ -94,6 +90,6 @@ export const RecipeCard = ({
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };

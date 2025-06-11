@@ -1,13 +1,26 @@
 import Image from "next/image";
 import { useRef } from "react";
+import type { Recipe } from "../../../lib/types/recipe";
 
 interface ImageInputProps {
   setImage: (input: File | null) => void;
   image: File | null;
+  existingRecipe?: Recipe | null;
 }
 
-export const ImageInput = ({ setImage, image }: ImageInputProps) => {
+export const ImageInput = ({
+  setImage,
+  image,
+  existingRecipe,
+}: ImageInputProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // If editing and no new image is selected, use the existing image URL for preview
+  const imagePreviewUrl = image
+    ? URL.createObjectURL(image)
+    : existingRecipe && existingRecipe.image
+    ? existingRecipe.image
+    : null;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -17,8 +30,6 @@ export const ImageInput = ({ setImage, image }: ImageInputProps) => {
   const triggerFileSelect = () => {
     fileInputRef.current?.click();
   };
-
-  const imagePreviewUrl = image ? URL.createObjectURL(image) : null;
 
   return (
     <div>
