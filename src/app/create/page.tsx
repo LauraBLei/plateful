@@ -1,18 +1,15 @@
 "use client";
 import { AuthContext } from "@/components/contextTypes";
 import React, { useContext, useEffect, useState } from "react";
-import { uploadRecipeImage } from "../api/recipe/create";
 import { ImageInput } from "@/components/create/image";
 import { TimeSelect } from "@/components/create/time";
 import { TagSelect } from "@/components/create/tag";
 import { StepsInput } from "@/components/create/steps";
 import { IngredientGroupsInput } from "@/components/create/ingredients";
-import { supabase } from "../../../lib/supabase";
 import { PortionSize } from "@/components/create/portions";
 import { LanguageSelect } from "@/components/create/language";
 import { useSearchParams } from "next/navigation";
-import type { Recipe } from "../../../lib/types/recipe";
-import { updateRecipe } from "../api/recipe/update";
+import { Recipe } from "@/types/recipe";
 
 type IngredientGroup = {
   groupName: string;
@@ -37,19 +34,17 @@ const CreateRecipe = () => {
 
   useEffect(() => {
     if (isEdit) {
-      supabase
-        .from("recipes")
-        .select("*")
-        .eq("id", recipeIdFromUrl)
-        .single()
-        .then(({ data, error }) => {
-          if (!error && data) {
-            setExistingRecipe(data as Recipe);
+      // Fetch the recipe from the API instead of using supabase directly
+      fetch(`/api/recipe/read?id=${recipeIdFromUrl}`)
+        .then((res) => res.json())
+        .then((data: any) => {
+          if (data) {
+            setExistingRecipe(data);
             setTitle(data.name || "");
             setTime(data.time || 30);
-            setTag(data.tag || "breakfast");
+            setTag((data as any).tag || "breakfast");
             setSteps(data.steps || [""]);
-            setLanguage(data.language || "");
+            setLanguage((data as any).language || "");
             setPortion(data.portions || 1);
             setIngredientGroups(
               data.ingredients || [{ groupName: "", ingredients: [""] }]
@@ -87,11 +82,16 @@ const CreateRecipe = () => {
         portions: portion,
       };
       try {
-        await updateRecipe({
-          recipeId: existingRecipe.id,
-          userId: user?.id || "anonymous",
-          updateData,
+        const response = await fetch("/api/recipe/update", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            recipeId: existingRecipe.id,
+            userId: user?.id || "anonymous",
+            updateData,
+          }),
         });
+        if (!response.ok) throw new Error("Failed to update recipe");
         window.location.href = `/recipe?id=${existingRecipe.id}`;
       } catch {
         alert("Failed to update recipe.");
@@ -108,13 +108,19 @@ const CreateRecipe = () => {
         language,
         portions: portion,
       };
-      const { data, error } = await supabase
-        .from("recipes")
-        .insert(recipeData)
-        .select("id")
-        .single();
-      if (!error && data && data.id) {
-        window.location.href = `/recipe?id=${data.id}`;
+      try {
+        const response = await fetch("/api/recipe/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(recipeData),
+        });
+        if (!response.ok) throw new Error("Failed to create recipe");
+        const data = await response.json();
+        if (data && data.id) {
+          window.location.href = `/recipe?id=${data.id}`;
+        }
+      } catch (err) {
+        alert("Failed to create recipe.");
       }
     }
   };
@@ -177,5 +183,20 @@ const CreateRecipe = () => {
     </div>
   );
 };
+
+async function uploadRecipeImage(image: File, userId: string): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", image); // key must be 'file' to match API
+  formData.append("userId", userId);
+  const response = await fetch("/api/recipe/uploadImage", {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error("Failed to upload image");
+  }
+  const data = await response.json();
+  return data.publicUrl;
+}
 
 export default CreateRecipe;

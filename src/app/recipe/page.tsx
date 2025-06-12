@@ -1,15 +1,37 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import type { Recipe } from "../../../lib/types/recipe";
-import { readRecipe } from "../api/recipe/read";
+import type { Recipe } from "@/types/recipe";
+import type { UserProfile } from "@/types/user";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { checkUser, updateUser } from "../api/auth/user";
-import { UserProfile } from "../../../lib/types/user";
-import { Clock, HeartMinus, HeartPlus } from "lucide-react";
 import { AuthContext } from "@/components/contextTypes";
 import Link from "next/link";
 import Loader from "@/components/loader";
+import { Clock, HeartMinus, HeartPlus } from "lucide-react";
+
+const readRecipe = async ({ id }: { id: number }) => {
+  const res = await fetch(`/api/recipe/read?id=${id}`);
+  if (!res.ok) return null;
+  return await res.json();
+};
+
+const checkUser = async (id: string) => {
+  const res = await fetch(`/api/auth/user?id=${id}`);
+  if (!res.ok) return null;
+  return await res.json();
+};
+
+const updateUser = async (fields: {
+  id: string;
+  bio?: string;
+  updatedList?: number[];
+}) => {
+  await fetch("/api/auth/user", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  });
+};
 
 const Recipe = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -21,7 +43,7 @@ const Recipe = () => {
   const isFavorite = !!(
     profile &&
     recipe &&
-    profile.favorites.includes(recipe.id)
+    profile.favorites?.includes(recipe.id)
   );
   const [loading, setLoading] = useState(true);
 

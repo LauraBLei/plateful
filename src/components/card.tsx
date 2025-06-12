@@ -3,7 +3,6 @@
 import { Clock, Edit, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { deleteRecipe } from "@/app/api/recipe/delete";
 import { useContext } from "react";
 import { AuthContext } from "@/components/contextTypes";
 
@@ -36,6 +35,21 @@ export const RecipeCard = ({
       default:
         return "> 2 hours";
     }
+  };
+  const deleteRecipe = async ({
+    userId,
+    recipeId,
+  }: {
+    userId: string;
+    recipeId: number;
+  }) => {
+    const response = await fetch("/api/recipe/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, recipeId }),
+    });
+    if (!response.ok) throw new Error("Failed to delete recipe");
+    return true;
   };
   const onDelete = async () => {
     if (!profile) return;

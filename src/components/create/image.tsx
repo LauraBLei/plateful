@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRef } from "react";
-import type { Recipe } from "../../../lib/types/recipe";
+import type { Recipe } from "@/types/recipe";
 
 interface ImageInputProps {
   setImage: (input: File | null) => void;

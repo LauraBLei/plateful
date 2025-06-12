@@ -2,11 +2,10 @@
 
 import { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext, CommonContext } from "./contextTypes";
-import { signOut } from "../app/api/auth/signOut";
-import { signInWithGoogle } from "../app/api/auth/login";
 import { LogOut, Moon, Sun, User2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { supabase } from "../../lib/supabase";
 
 export const Header = () => {
   const { profile } = useContext(AuthContext);
@@ -34,6 +33,15 @@ export const Header = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen]);
+
+  const signInWithGoogle = async () => {
+    await supabase.auth.signInWithOAuth({ provider: "google" });
+  };
+
+  const signOut = async () => {
+    await fetch("/api/auth/signOut", { method: "POST" });
+    // You may want to trigger a page reload or redirect after logout
+  };
 
   if (!isHydrated) {
     return <></>;

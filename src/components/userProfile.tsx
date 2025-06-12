@@ -4,8 +4,8 @@ import { Edit } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
-import type { UserProfile } from "../../lib/types/user";
-import type { Recipe } from "../../lib/types/recipe";
+import type { UserProfile } from "@/types/user";
+import type { Recipe } from "@/types/recipe";
 
 interface UserProfileProps {
   profile: UserProfile;

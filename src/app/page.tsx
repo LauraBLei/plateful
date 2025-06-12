@@ -3,12 +3,10 @@
 import { AuthContext } from "@/components/contextTypes";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
-import { Recipe } from "../../lib/types/recipe";
+import { Recipe } from "@/types/recipe";
+import { supabase } from "@/supabase";
 
 import { RecipeCard } from "@/components/card";
-import { readRecipes, readSortedRecipes } from "./api/recipe/read";
-import { getUser } from "./api/auth/user";
-import { signInWithGoogle } from "./api/auth/login";
 import Loader from "@/components/loader";
 
 const Home = () => {
@@ -22,53 +20,66 @@ const Home = () => {
   useEffect(() => {
     setLoading(true);
     // Fetch 30 min recipes
-    readSortedRecipes({ time: 30 }).then((x) => {
-      if (x) setTimeRecipes(x ? x.slice(0, 4) : []);
-    });
+    fetch("/api/recipe/read?time=30")
+      .then((res) => res.json())
+      .then((x: Recipe[]) => {
+        if (x) setTimeRecipes(x.slice(0, 4));
+      });
     // Fetch 3 most recent recipes
-    readRecipes().then((x) => {
-      if (x && x.length > 0) {
-        // Sort by created date descending, then take 3
-        const sorted = [...x].sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        setRecentRecipes(sorted.slice(0, 4));
-      } else {
-        setRecentRecipes([]);
-      }
-      setLoading(false);
-    });
+    fetch("/api/recipe/read")
+      .then((res) => res.json())
+      .then((x: Recipe[]) => {
+        if (x && x.length > 0) {
+          // Sort by created date descending, then take 3
+          const sorted = [...x].sort(
+            (a, b) =>
+              new Date((b as any).created_at || b.created).getTime() -
+              new Date((a as any).created_at || a.created).getTime()
+          );
+          setRecentRecipes(sorted.slice(0, 4));
+        } else {
+          setRecentRecipes([]);
+        }
+        setLoading(false);
+      });
     // Only fetch followers' recipes if logged in
     if (profile && profile.following && profile.following.length > 0) {
       const shuffled = [...profile.following].sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, 1); // pick 1 random following
       if (selected.length > 0) {
-        getUser(selected[0]).then((x) => {
-          if (x && x.name) setFollowingName(x.name);
-        });
-        readRecipes().then((allRecipes) => {
-          if (allRecipes && allRecipes.length > 0) {
-            // Filter recipes by owner_id in selected
-            const followingPosts = allRecipes.filter((r) =>
-              selected.includes(r.owner_id)
-            );
-            // Sort by created_at desc and take 3
-            const sorted = followingPosts.sort(
-              (a, b) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
-            );
-            setFollowerRecipes(sorted.slice(0, 3));
-          } else {
-            setFollowerRecipes([]);
-          }
-        });
+        fetch(`/api/auth/user?id=${selected[0]}`)
+          .then((res) => res.json())
+          .then((x) => {
+            if (x && x.name) setFollowingName(x.name);
+          });
+        fetch("/api/recipe/read")
+          .then((res) => res.json())
+          .then((allRecipes: Recipe[]) => {
+            if (allRecipes && allRecipes.length > 0) {
+              // Filter recipes by owner_id in selected
+              const followingPosts = allRecipes.filter((r) =>
+                selected.includes(r.owner_id)
+              );
+              // Sort by created_at desc and take 3
+              const sorted = followingPosts.sort(
+                (a, b) =>
+                  new Date((b as any).created_at || b.created).getTime() -
+                  new Date((a as any).created_at || a.created).getTime()
+              );
+              setFollowerRecipes(sorted.slice(0, 3));
+            } else {
+              setFollowerRecipes([]);
+            }
+          });
       }
     } else {
       setFollowerRecipes([]);
     }
   }, [profile]);
+
+  const signInWithGoogle = async () => {
+    await supabase.auth.signInWithOAuth({ provider: "google" });
+  };
 
   if (loading) {
     return <Loader />;

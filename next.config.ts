@@ -1,8 +1,24 @@
 import type { NextConfig } from "next";
+import { resolve } from "path";
 
 const nextConfig: NextConfig = {
   images: {
     domains: ["xyggcchvvljyjoothces.supabase.co", "lh3.googleusercontent.com"],
+  },
+  webpack: (config) => {
+    config.resolve = config.resolve || {};
+    config.resolve.alias = config.resolve.alias || {};
+    config.resolve.alias["@"] = resolve(__dirname, "lib");
+    // Suppress dynamic require warnings for Supabase
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      {
+        module: /@supabase[\\/]realtime-js/,
+        message:
+          /Critical dependency: the request of a dependency is an expression/,
+      },
+    ];
+    return config;
   },
 };
 

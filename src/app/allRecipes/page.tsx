@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { readRecipes, readSortedRecipes } from "../api/recipe/read";
-import { Recipe } from "../../../lib/types/recipe";
+import { Recipe } from "@/types/recipe";
 import { RecipeCard } from "@/components/card";
 import Loader from "@/components/loader";
 
@@ -24,13 +23,15 @@ const AllRecipes = () => {
 
   useEffect(() => {
     setLoading(true);
-    readRecipes().then((x) => {
-      if (x) {
-        setRecipes(x);
-        setDefaultRecipes(x);
-      }
-      setLoading(false);
-    });
+    fetch("/api/recipe/read")
+      .then((res) => res.json())
+      .then((x: Recipe[]) => {
+        if (x) {
+          setRecipes(x);
+          setDefaultRecipes(x);
+        }
+        setLoading(false);
+      });
   }, []);
 
   const sortRecipes = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -41,7 +42,10 @@ const AllRecipes = () => {
       return;
     }
     // Only tag filter for now, can expand for time
-    const sorted = await readSortedRecipes({ tag: value });
+    const res = await fetch(
+      `/api/recipe/read?tag=${encodeURIComponent(value)}`
+    );
+    const sorted = await res.json();
     setRecipes(sorted || []);
   };
 

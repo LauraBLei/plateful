@@ -4,10 +4,8 @@ import {
   type ContextProviderProps,
 } from "../components/contextTypes";
 import type { User } from "@supabase/supabase-js";
-import type { UserProfile } from "../../lib/types/user";
-import { checkUser } from "../app/api/auth/user";
-import { setUser as SetSupaUser } from "../app/api/auth/user";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "@/supabase";
+import type { UserProfile } from "@/types/user";
 
 export const AuthProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
@@ -32,16 +30,23 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
 
   useEffect(() => {
     const syncUser = async () => {
+      // Use supabase client to get the current user session
       const { data } = await supabase.auth.getUser();
       const user = data?.user ?? null;
       setUser(user);
 
       if (user) {
-        // Check if the user exists in your custom users table
-        const existingUser = await checkUser(user.id);
+        // Check if the user exists in your custom users table via API
+        const res2 = await fetch(`/api/auth/user?id=${user.id}`);
+        const existingUser = res2.ok ? await res2.json() : null;
 
-        if (!existingUser) {
-          SetSupaUser(user);
+        if (!existingUser || existingUser.error) {
+          // Create user in users table via API
+          await fetch("/api/auth/user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+          });
         } else {
           setProfile(existingUser);
         }
@@ -50,29 +55,13 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
 
     syncUser();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        const user = session?.user ?? null;
-        setUser(user);
-
-        // Repeat sync on auth state change
-        if (user) {
-          supabase
-            .from("users")
-            .select("*")
-            .eq("id", user.id)
-            .single()
-            .then(({ data }) => {
-              setProfile(data);
-            });
-        } else {
-          setProfile(null);
-        }
-      }
-    );
+    // Listen for auth state changes and sync user
+    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
+      syncUser();
+    });
 
     return () => {
-      authListener.subscription.unsubscribe();
+      authListener?.subscription.unsubscribe();
     };
   }, []);
 
