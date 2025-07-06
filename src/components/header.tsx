@@ -6,6 +6,7 @@ import { LogOut, Moon, Sun, User2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "../../lib/supabase";
+import { signOut } from "@/api/authApi";
 
 export const Header = () => {
   const { profile } = useContext(AuthContext);
@@ -38,8 +39,8 @@ export const Header = () => {
     await supabase.auth.signInWithOAuth({ provider: "google" });
   };
 
-  const signOut = async () => {
-    await fetch("/api/auth/signOut", { method: "POST" });
+  const signOutHandler = async () => {
+    await signOut();
     // You may want to trigger a page reload or redirect after logout
   };
 
@@ -113,7 +114,7 @@ export const Header = () => {
             )
           )}
           {mounted && profile && (
-            <button onClick={signOut}>
+            <button onClick={signOutHandler}>
               <LogOut className="hover-effect hover:text-brand-orange" />
             </button>
           )}
@@ -240,7 +241,7 @@ export const Header = () => {
               {mounted && profile && (
                 <button
                   onClick={() => {
-                    signOut();
+                    signOutHandler();
                     setMenuOpen(false);
                   }}
                   className="flex items-center gap-2 hover-effect hover:text-brand-orange"

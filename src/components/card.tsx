@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "@/components/contextTypes";
+import { deleteRecipe } from "@/api/recipeActions";
 
 interface RecipeCardProps {
   image: string;
@@ -35,21 +36,6 @@ export const RecipeCard = ({
       default:
         return "> 2 hours";
     }
-  };
-  const deleteRecipe = async ({
-    userId,
-    recipeId,
-  }: {
-    userId: string;
-    recipeId: number;
-  }) => {
-    const response = await fetch("/api/recipe/delete", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, recipeId }),
-    });
-    if (!response.ok) throw new Error("Failed to delete recipe");
-    return true;
   };
   const onDelete = async () => {
     if (!profile) return;

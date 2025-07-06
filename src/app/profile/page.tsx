@@ -8,40 +8,12 @@ import { Recipe } from "@/types/recipe";
 import { useSearchParams } from "next/navigation";
 import type { UserProfile } from "@/types/user";
 import Loader from "@/components/loader";
-
-const readUserRecipes = async (userId: string) => {
-  const res = await fetch(`/api/recipe/read?userId=${userId}`);
-  if (!res.ok) return null;
-  return await res.json();
-};
-
-const readFavoriteRecipes = async ({
-  id,
-  favorites,
-}: {
-  id: string;
-  favorites: number[];
-}) => {
-  if (!favorites || favorites.length === 0) return [];
-  const params = favorites.map((fid) => `id=${fid}`).join("&");
-  const res = await fetch(`/api/recipe/read?${params}`);
-  if (!res.ok) return [];
-  return await res.json();
-};
-
-const getUser = async (id: string) => {
-  const res = await fetch(`/api/auth/user?id=${id}`);
-  if (!res.ok) return null;
-  return await res.json();
-};
-
-const updateUser = async (fields: any) => {
-  await fetch("/api/auth/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(fields),
-  });
-};
+import {
+  readUserRecipes,
+  readFavoriteRecipes,
+  getUser,
+  updateUser,
+} from "@/api/profileApi";
 
 const Profile = () => {
   const { profile, updateProfile } = useContext(AuthContext);

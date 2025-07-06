@@ -8,30 +8,7 @@ import { AuthContext } from "@/components/contextTypes";
 import Link from "next/link";
 import Loader from "@/components/loader";
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
-
-const readRecipe = async ({ id }: { id: number }) => {
-  const res = await fetch(`/api/recipe/read?id=${id}`);
-  if (!res.ok) return null;
-  return await res.json();
-};
-
-const checkUser = async (id: string) => {
-  const res = await fetch(`/api/auth/user?id=${id}`);
-  if (!res.ok) return null;
-  return await res.json();
-};
-
-const updateUser = async (fields: {
-  id: string;
-  bio?: string;
-  updatedList?: number[];
-}) => {
-  await fetch("/api/auth/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(fields),
-  });
-};
+import { readRecipe, checkUser, updateUser } from "@/api/recipePageApi";
 
 const Recipe = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -66,7 +43,7 @@ const Recipe = () => {
   useEffect(() => {
     setLoading(true);
     if (id) {
-      readRecipe({ id: Number(id) }).then((x) => {
+      readRecipe(Number(id)).then((x) => {
         if (x) setRecipe(x);
         setLoading(false);
       });

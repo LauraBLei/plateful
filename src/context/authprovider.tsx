@@ -6,6 +6,7 @@ import {
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/supabase";
 import type { UserProfile } from "@/types/user";
+import { fetchUserProfile, createUserProfile } from "@/api/userProfile";
 
 export const AuthProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
@@ -37,16 +38,11 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
 
       if (user) {
         // Check if the user exists in your custom users table via API
-        const res2 = await fetch(`/api/auth/user?id=${user.id}`);
-        const existingUser = res2.ok ? await res2.json() : null;
+        const existingUser = await fetchUserProfile(user.id);
 
-        if (!existingUser || existingUser.error) {
+        if (!existingUser) {
           // Create user in users table via API
-          await fetch("/api/auth/user", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
-          });
+          await createUserProfile(user);
         } else {
           setProfile(existingUser);
         }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Recipe } from "@/types/recipe";
 import { RecipeCard } from "@/components/card";
 import Loader from "@/components/loader";
+import { fetchAllRecipes, fetchRecipesByTag } from "@/api/allRecipesApi";
 
 const AllRecipes = () => {
   const [defaultRecipes, setDefaultRecipes] = useState<Recipe[]>([]);
@@ -23,15 +24,11 @@ const AllRecipes = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("/api/recipe/read")
-      .then((res) => res.json())
-      .then((x: Recipe[]) => {
-        if (x) {
-          setRecipes(x);
-          setDefaultRecipes(x);
-        }
-        setLoading(false);
-      });
+    fetchAllRecipes().then((x) => {
+      setRecipes(x);
+      setDefaultRecipes(x);
+      setLoading(false);
+    });
   }, []);
 
   const sortRecipes = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,11 +39,8 @@ const AllRecipes = () => {
       return;
     }
     // Only tag filter for now, can expand for time
-    const res = await fetch(
-      `/api/recipe/read?tag=${encodeURIComponent(value)}`
-    );
-    const sorted = await res.json();
-    setRecipes(sorted || []);
+    const res = await fetchRecipesByTag(value);
+    setRecipes(res || []);
   };
 
   if (loading) {

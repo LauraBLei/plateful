@@ -10,6 +10,12 @@ import { PortionSize } from "@/components/create/portions";
 import { LanguageSelect } from "@/components/create/language";
 import { useSearchParams } from "next/navigation";
 import { Recipe } from "@/types/recipe";
+import {
+  fetchRecipeById,
+  updateRecipe,
+  createRecipe,
+  uploadRecipeImage,
+} from "@/api/recipeEdit";
 
 type IngredientGroup = {
   groupName: string;
@@ -34,23 +40,20 @@ const CreateRecipe = () => {
 
   useEffect(() => {
     if (isEdit) {
-      // Fetch the recipe from the API instead of using supabase directly
-      fetch(`/api/recipe/read?id=${recipeIdFromUrl}`)
-        .then((res) => res.json())
-        .then((data: any) => {
-          if (data) {
-            setExistingRecipe(data);
-            setTitle(data.name || "");
-            setTime(data.time || 30);
-            setTag((data as any).tag || "breakfast");
-            setSteps(data.steps || [""]);
-            setLanguage((data as any).language || "");
-            setPortion(data.portions || 1);
-            setIngredientGroups(
-              data.ingredients || [{ groupName: "", ingredients: [""] }]
-            );
-          }
-        });
+      fetchRecipeById(Number(recipeIdFromUrl)).then((data: any) => {
+        if (data) {
+          setExistingRecipe(data);
+          setTitle(data.name || "");
+          setTime(data.time || 30);
+          setTag((data as any).tag || "breakfast");
+          setSteps(data.steps || [""]);
+          setLanguage((data as any).language || "");
+          setPortion(data.portions || 1);
+          setIngredientGroups(
+            data.ingredients || [{ groupName: "", ingredients: [""] }]
+          );
+        }
+      });
     }
   }, [isEdit, recipeIdFromUrl]);
 
@@ -82,16 +85,12 @@ const CreateRecipe = () => {
         portions: portion,
       };
       try {
-        const response = await fetch("/api/recipe/update", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            recipeId: existingRecipe.id,
-            userId: user?.id || "anonymous",
-            updateData,
-          }),
+        const ok = await updateRecipe({
+          recipeId: existingRecipe.id,
+          userId: user?.id || "anonymous",
+          updateData,
         });
-        if (!response.ok) throw new Error("Failed to update recipe");
+        if (!ok) throw new Error("Failed to update recipe");
         window.location.href = `/recipe?id=${existingRecipe.id}`;
       } catch {
         alert("Failed to update recipe.");
@@ -109,17 +108,11 @@ const CreateRecipe = () => {
         portions: portion,
       };
       try {
-        const response = await fetch("/api/recipe/create", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(recipeData),
-        });
-        if (!response.ok) throw new Error("Failed to create recipe");
-        const data = await response.json();
+        const data = await createRecipe(recipeData);
         if (data && data.id) {
           window.location.href = `/recipe?id=${data.id}`;
         }
-      } catch (err) {
+      } catch {
         alert("Failed to create recipe.");
       }
     }
@@ -183,20 +176,5 @@ const CreateRecipe = () => {
     </div>
   );
 };
-
-async function uploadRecipeImage(image: File, userId: string): Promise<string> {
-  const formData = new FormData();
-  formData.append("file", image); // key must be 'file' to match API
-  formData.append("userId", userId);
-  const response = await fetch("/api/recipe/uploadImage", {
-    method: "POST",
-    body: formData,
-  });
-  if (!response.ok) {
-    throw new Error("Failed to upload image");
-  }
-  const data = await response.json();
-  return data.publicUrl;
-}
 
 export default CreateRecipe;
