@@ -40,7 +40,7 @@ export async function uploadRecipeImage(
   userId: string
 ): Promise<string> {
   const formData = new FormData();
-  formData.append("image", image);
+  formData.append("file", image); // <-- match backend expectation
   formData.append("userId", userId);
   const response = await fetch("/api/recipe/uploadImage", {
     method: "POST",
@@ -48,5 +48,5 @@ export async function uploadRecipeImage(
   });
   if (!response.ok) throw new Error("Failed to upload image");
   const data = await response.json();
-  return data.url;
+  return data.publicUrl;
 }

@@ -9,6 +9,8 @@ export type Recipe = {
   created: Date;
   updated: Date;
   portions: number;
+  tag: string;
+  language: string;
 };
 
 export type Ingredient = {

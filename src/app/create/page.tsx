@@ -40,14 +40,14 @@ const CreateRecipe = () => {
 
   useEffect(() => {
     if (isEdit) {
-      fetchRecipeById(Number(recipeIdFromUrl)).then((data: any) => {
+      fetchRecipeById(Number(recipeIdFromUrl)).then((data: Recipe | null) => {
         if (data) {
           setExistingRecipe(data);
           setTitle(data.name || "");
           setTime(data.time || 30);
-          setTag((data as any).tag || "breakfast");
+          setTag(data.tag || "breakfast");
           setSteps(data.steps || [""]);
-          setLanguage((data as any).language || "");
+          setLanguage(data.language || "");
           setPortion(data.portions || 1);
           setIngredientGroups(
             data.ingredients || [{ groupName: "", ingredients: [""] }]

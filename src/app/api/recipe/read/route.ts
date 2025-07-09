@@ -9,18 +9,8 @@ export async function GET(req: NextRequest) {
   const tag = searchParams.get("tag");
 
   try {
-    if (idParams.length === 1) {
-      // Single id
-      const id = idParams[0];
-      const { data, error } = await supabase
-        .from("recipes")
-        .select("*")
-        .eq("id", Number(id))
-        .single();
-      if (error) throw error;
-      return NextResponse.json(data, { status: 200 });
-    } else if (idParams.length > 1) {
-      // Multiple ids
+    if (idParams.length > 0) {
+      // One or more ids: always return an array
       const ids = idParams.map(Number);
       const { data, error } = await supabase
         .from("recipes")
