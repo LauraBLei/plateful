@@ -3,6 +3,15 @@ interface TimeSelectProps {
   setTime: (value: number) => void;
 }
 
+const timeOptions = [
+  { value: 15, label: "Less than 30 minutes" },
+  { value: 30, label: "30 minutes" },
+  { value: 60, label: "1 hour" },
+  { value: 90, label: "1.5 hours" },
+  { value: 120, label: "2 hours" },
+  { value: 180, label: "More than 2 hours" },
+];
+
 export const TimeSelect = ({ time, setTime }: TimeSelectProps) => (
   <div className="w-full flex flex-col gap-2">
     <label htmlFor="time" className="headlineTwo">
@@ -15,21 +24,11 @@ export const TimeSelect = ({ time, setTime }: TimeSelectProps) => (
       className="input cursor-pointer"
       required
     >
-      <option className="text-brand-black" value={30}>
-        30 minutes
-      </option>
-      <option className="text-brand-black" value={60}>
-        1 hour
-      </option>
-      <option className="text-brand-black" value={90}>
-        1.5 hours
-      </option>
-      <option className="text-brand-black" value={120}>
-        2 hours
-      </option>
-      <option className="text-brand-black" value={180}>
-        More than 2 hours
-      </option>
+      {timeOptions.map((opt) => (
+        <option className="text-brand-black" key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
     </select>
   </div>
 );

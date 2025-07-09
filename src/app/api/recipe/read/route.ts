@@ -5,8 +5,9 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
   const idParams = searchParams.getAll("id");
-  const time = searchParams.get("time");
-  const tag = searchParams.get("tag");
+  const timeParams = searchParams.getAll("time");
+  const tagParams = searchParams.getAll("tag");
+  const language = searchParams.get("language");
 
   try {
     if (idParams.length > 0) {
@@ -26,11 +27,13 @@ export async function GET(req: NextRequest) {
         .eq("owner_id", userId);
       if (error) throw error;
       return NextResponse.json(data, { status: 200 });
-    } else if (time || tag) {
-      // Get sorted recipes
+    } else if (timeParams.length > 0 || tagParams.length > 0 || language) {
+      // Flexible filter: support multiple tags, multiple times, and language
       let query = supabase.from("recipes").select("*");
-      if (time) query = query.eq("time", Number(time));
-      if (tag) query = query.eq("tag", tag);
+      if (tagParams.length > 0) query = query.in("tag", tagParams);
+      if (timeParams.length > 0)
+        query = query.in("time", timeParams.map(Number));
+      if (language) query = query.eq("language", language);
       const { data, error } = await query;
       if (error) throw error;
       return NextResponse.json(data, { status: 200 });
