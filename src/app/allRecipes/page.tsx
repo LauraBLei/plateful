@@ -31,6 +31,7 @@ const AllRecipes = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -69,72 +70,92 @@ const AllRecipes = () => {
   };
 
   return (
-    <div className="max-w-[1440px] font-primary mb-30 w-full flex gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
-      <form
-        className="w-full max-w-[300px] flex flex-col gap-5 border p-4 rounded-md"
-        onSubmit={handleFilter}
-      >
-        <h2 className="headlineTwo">Filter recipes</h2>
-        <div>
-          <div className="font-semibold mb-2">Meal types:</div>
-          <div className="flex flex-col gap-2">
-            {mealTypes.map((type) => (
-              <label
-                key={type}
-                className={`flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition-colors duration-150 ${
-                  selectedTags.includes(type)
-                    ? "bg-brand-black text-brand-white border-1 border-brand-black dark:bg-brand-white dark:text-brand-black dark:border-brand-white"
-                    : "bg-transparent text-brand-black border-1 border-brand-black dark:text-brand-white dark:border-brand-white hover:bg-brand-black/10"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  value={type}
-                  checked={selectedTags.includes(type)}
-                  onChange={() => handleTagChange(type)}
-                  className="accent-brand-black dark:accent-brand-white w-4 h-4"
-                />
-                <span className="font-semibold select-none">
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-        <div>
-          <div className="font-semibold mb-2">Time (minutes):</div>
-          <select
-            value={selectedTime}
-            onChange={handleTimeChange}
-            className="input bg-brand-black font-semibold"
-          >
-            <option value="">Any</option>
-            {timeOptions.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <div className="font-semibold mb-2">Language:</div>
-          <select
-            value={selectedLanguage}
-            onChange={handleLanguageChange}
-            className="input bg-brand-black font-semibold"
-          >
-            <option value="">Any</option>
-            {languages.map((lang) => (
-              <option key={lang} value={lang}>
-                {lang.charAt(0).toUpperCase() + lang.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit" className="button button-active mt-2">
-          Search
+    <div className="max-w-[1440px] font-primary mb-30 w-full flex flex-col lg:flex-row gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
+      {/* Mobile filter toggle button */}
+      <div className="block lg:hidden mb-4">
+        <button
+          type="button"
+          className="button button-active w-full"
+          onClick={() => setShowMobileFilter((v) => !v)}
+        >
+          {showMobileFilter ? "Hide Filters" : "Show Filters"}
         </button>
-      </form>
+      </div>
+      {/* Filter form: sidebar on lg+, dropdown on md- */}
+      <div
+        className={`w-full lg:max-w-[300px] flex-col gap-5 border p-4 rounded-md bg-white dark:bg-brand-black z-20
+          ${
+            showMobileFilter ? "flex" : "hidden"
+          } lg:flex lg:static lg:mt-0 lg:mr-0 lg:mb-0 lg:ml-0`}
+      >
+        <form onSubmit={handleFilter} className="flex flex-col gap-5">
+          <h2 className="headlineTwo">Filter recipes</h2>
+          <div className="flex flex-col  sm:flex-row lg:flex-col gap-5 md:gap-10">
+            <div className="flex-1">
+              <div className="font-semibold mb-2">Meal types:</div>
+              <div className="flex flex-col gap-2">
+                {mealTypes.map((type) => (
+                  <label
+                    key={type}
+                    className={`flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition-colors duration-150 ${
+                      selectedTags.includes(type)
+                        ? "bg-brand-black text-brand-white border-1 border-brand-black dark:bg-brand-white dark:text-brand-black dark:border-brand-white"
+                        : "bg-transparent text-brand-black border-1 border-brand-black dark:text-brand-white dark:border-brand-white hover:bg-brand-black/10"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      value={type}
+                      checked={selectedTags.includes(type)}
+                      onChange={() => handleTagChange(type)}
+                      className="accent-brand-black dark:accent-brand-white w-4 h-4"
+                    />
+                    <span className="font-semibold select-none">
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col flex-1">
+              <div>
+                <div className="font-semibold mb-2">Time (minutes):</div>
+                <select
+                  value={selectedTime}
+                  onChange={handleTimeChange}
+                  className="input bg-brand-black font-semibold"
+                >
+                  <option value="">Any</option>
+                  {timeOptions.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <div className="font-semibold mb-2">Language:</div>
+                <select
+                  value={selectedLanguage}
+                  onChange={handleLanguageChange}
+                  className="input bg-brand-black font-semibold"
+                >
+                  <option value="">Any</option>
+                  {languages.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <button type="submit" className="button button-active mt-2">
+            Search
+          </button>
+        </form>
+      </div>
+      {/* Recipes grid */}
       <div className="w-full flex flex-col gap-2">
         <h1 className="headline">All Recipes</h1>
         {loading ? (
