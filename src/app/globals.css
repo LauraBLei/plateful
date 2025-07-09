@@ -30,7 +30,7 @@
   @apply w-full font-semibold text-lg md:text-2xl border-b-1 text-brand-black dark:text-brand-white border-brand-black dark:border-brand-white;
 }
 
-.createButton {
+.regButton {
   @apply rounded-md text-center py-2 font-bold bg-brand-orange text-brand-black w-full;
 }
 

@@ -116,7 +116,7 @@ export const IngredientGroupsInput = ({
             <button
               type="button"
               onClick={() => addIngredient(groupIdx)}
-              className="createButton hover-effect"
+              className="regButton hover-effect"
             >
               + Add Ingredient
             </button>
@@ -126,7 +126,7 @@ export const IngredientGroupsInput = ({
       <button
         type="button"
         onClick={addIngredientGroup}
-        className="createButton hover-effect"
+        className="regButton hover-effect"
       >
         + Add Ingredient Group
       </button>

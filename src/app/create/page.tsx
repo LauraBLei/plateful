@@ -174,7 +174,7 @@ const CreateRecipe = () => {
         </div>
 
         {/* Submit */}
-        <button type="submit" className="createButton hover-effect">
+        <button type="submit" className="regButton hover-effect">
           {isEdit ? "Update Recipe" : "Submit Recipe"}
         </button>
       </form>

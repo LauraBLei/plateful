@@ -74,7 +74,7 @@ export const StepsInput = ({ steps, setSteps }: StepsInputProps) => {
         <button
           type="button"
           onClick={addStep}
-          className="createButton hover-effect"
+          className="regButton hover-effect"
         >
           + Add Step
         </button>

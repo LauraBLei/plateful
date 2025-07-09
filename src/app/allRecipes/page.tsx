@@ -117,7 +117,7 @@ const AllRecipes = () => {
                 ))}
               </div>
             </div>
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-col flex-1 gap-5">
               <div>
                 <div className="font-semibold mb-2">Time (minutes):</div>
                 <select
@@ -150,7 +150,7 @@ const AllRecipes = () => {
               </div>
             </div>
           </div>
-          <button type="submit" className="button button-active mt-2">
+          <button type="submit" className="regButton hover-effect mt-2">
             Search
           </button>
         </form>
