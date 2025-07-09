@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
       const ids = idParams.map(Number);
       const { data, error } = await supabase
         .from("recipes")
-        .select("*")
+        .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
         .in("id", ids);
       if (error) throw error;
       return NextResponse.json(data, { status: 200 });
@@ -23,13 +23,15 @@ export async function GET(req: NextRequest) {
       // Get recipes by user
       const { data, error } = await supabase
         .from("recipes")
-        .select("*")
+        .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
         .eq("owner_id", userId);
       if (error) throw error;
       return NextResponse.json(data, { status: 200 });
     } else if (timeParams.length > 0 || tagParams.length > 0 || language) {
       // Flexible filter: support multiple tags, multiple times, and language
-      let query = supabase.from("recipes").select("*");
+      let query = supabase
+        .from("recipes")
+        .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)");
       if (tagParams.length > 0) query = query.in("tag", tagParams);
       if (timeParams.length > 0)
         query = query.in("time", timeParams.map(Number));
@@ -39,7 +41,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(data, { status: 200 });
     } else {
       // Get all recipes
-      const { data, error } = await supabase.from("recipes").select();
+      const { data, error } = await supabase
+        .from("recipes")
+        .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)");
       if (error) throw error;
       return NextResponse.json(data, { status: 200 });
     }

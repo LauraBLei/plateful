@@ -10,6 +10,21 @@ import Loader from "@/components/loader";
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
 import { readRecipe, checkUser, updateUser } from "@/api/recipePageApi";
 
+const getCookingTimeLabel = (minutes: number) => {
+  switch (minutes) {
+    case 30:
+      return "30 min";
+    case 60:
+      return "1 hour";
+    case 90:
+      return "1.5 hours";
+    case 120:
+      return "2 hours";
+    default:
+      return "> 2 hours";
+  }
+};
+
 const Recipe = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [owner, setOwner] = useState<UserProfile | null>(null);
@@ -24,20 +39,6 @@ const Recipe = () => {
   );
   const [loading, setLoading] = useState(true);
 
-  const getCookingTimeLabel = (minutes: number) => {
-    switch (minutes) {
-      case 30:
-        return "30 min";
-      case 60:
-        return "1 hour";
-      case 90:
-        return "1.5 hours";
-      case 120:
-        return "2 hours";
-      default:
-        return "> 2 hours";
-    }
-  };
   const cookingTime = getCookingTimeLabel(recipe?.time ? recipe.time : 30);
 
   useEffect(() => {
