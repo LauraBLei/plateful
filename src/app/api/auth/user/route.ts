@@ -29,9 +29,53 @@ export async function GET(req: NextRequest) {
       .eq("id", id)
       .single();
     if (error) throw error;
-    return NextResponse.json(existingUser, { status: 200 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+
+    // Fetch followers and following user info if present
+    let followersInfo: Array<{
+      id: string;
+      name: string;
+      avatar: string;
+      bio: string;
+    }> = [];
+    let followingInfo: Array<{
+      id: string;
+      name: string;
+      avatar: string;
+      bio: string;
+    }> = [];
+
+    // Combine all user IDs we need to fetch
+    const allUserIds = [
+      ...(existingUser?.followers || []),
+      ...(existingUser?.following || []),
+    ];
+
+    if (allUserIds.length > 0) {
+      const { data: usersData } = await supabase
+        .from("users")
+        .select("id, name, avatar, bio")
+        .in("id", allUserIds);
+
+      if (usersData) {
+        // Split the users into followers and following
+        followersInfo = usersData.filter((user) =>
+          existingUser?.followers?.includes(user.id)
+        );
+        followingInfo = usersData.filter((user) =>
+          existingUser?.following?.includes(user.id)
+        );
+      }
+    }
+
+    return NextResponse.json(
+      { ...existingUser, followersInfo, followingInfo },
+      { status: 200 }
+    );
+  } catch (err) {
+    return NextResponse.json(
+      { error: (err as Error).message },
+      { status: 500 }
+    );
   }
 }
 
@@ -50,7 +94,10 @@ export async function PATCH(req: NextRequest) {
       .eq("id", id);
     if (error) throw error;
     return NextResponse.json(data, { status: 200 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json(
+      { error: (err as Error).message },
+      { status: 500 }
+    );
   }
 }

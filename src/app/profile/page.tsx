@@ -37,6 +37,7 @@ const Profile = () => {
     otherProfile &&
     profile.following?.includes(otherProfile.id)
   );
+  console.log("user Info:", profile);
 
   useEffect(() => {
     setLoading(true);
