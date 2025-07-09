@@ -37,23 +37,28 @@ const CreateRecipe = () => {
   const [ingredientGroups, setIngredientGroups] = useState<IngredientGroup[]>([
     { groupName: "", ingredients: [""] },
   ]);
+  console.log("recipe: ", existingRecipe);
+  console.log("isEdit: ", isEdit);
 
   useEffect(() => {
     if (isEdit) {
-      fetchRecipeById(Number(recipeIdFromUrl)).then((data: Recipe | null) => {
-        if (data) {
-          setExistingRecipe(data);
-          setTitle(data.name || "");
-          setTime(data.time || 30);
-          setTag(data.tag || "breakfast");
-          setSteps(data.steps || [""]);
-          setLanguage(data.language || "");
-          setPortion(data.portions || 1);
-          setIngredientGroups(
-            data.ingredients || [{ groupName: "", ingredients: [""] }]
-          );
+      fetchRecipeById(Number(recipeIdFromUrl)).then(
+        (data: Recipe | null | Recipe[]) => {
+          const recipe = Array.isArray(data) ? data[0] : data;
+          if (recipe) {
+            setExistingRecipe(recipe);
+            setTitle(recipe.name || "");
+            setTime(recipe.time || 30);
+            setTag(recipe.tag || "breakfast");
+            setSteps(recipe.steps || [""]);
+            setLanguage(recipe.language || "");
+            setPortion(recipe.portions || 1);
+            setIngredientGroups(
+              recipe.ingredients || [{ groupName: "", ingredients: [""] }]
+            );
+          }
         }
-      });
+      );
     }
   }, [isEdit, recipeIdFromUrl]);
 
