@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Suspense } from "react";
 import type { Recipe } from "@/types/recipe";
 import type { UserProfile } from "@/types/user";
 import { useSearchParams } from "next/navigation";
@@ -25,7 +25,7 @@ const getCookingTimeLabel = (minutes: number) => {
   }
 };
 
-const Recipe = () => {
+const RecipeContent = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [owner, setOwner] = useState<UserProfile | null>(null);
   const [checkedSteps, setCheckedSteps] = useState<boolean[]>([]);
@@ -200,6 +200,14 @@ const Recipe = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Recipe = () => {
+  return (
+    <Suspense fallback={<Loader />}>
+      <RecipeContent />
+    </Suspense>
   );
 };
 

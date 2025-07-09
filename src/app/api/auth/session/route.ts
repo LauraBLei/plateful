@@ -8,7 +8,7 @@ export async function GET() {
       return NextResponse.json(null, { status: 200 });
     }
     return NextResponse.json(data?.user ?? null, { status: 200 });
-  } catch (err: any) {
+  } catch {
     return NextResponse.json(null, { status: 200 });
   }
 }

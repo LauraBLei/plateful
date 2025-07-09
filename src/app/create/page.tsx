@@ -1,6 +1,6 @@
 "use client";
 import { AuthContext } from "@/components/contextTypes";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, Suspense } from "react";
 import { ImageInput } from "@/components/create/image";
 import { TimeSelect } from "@/components/create/time";
 import { TagSelect } from "@/components/create/tag";
@@ -10,6 +10,7 @@ import { PortionSize } from "@/components/create/portions";
 import { LanguageSelect } from "@/components/create/language";
 import { useSearchParams } from "next/navigation";
 import { Recipe } from "@/types/recipe";
+import Loader from "@/components/loader";
 import {
   fetchRecipeById,
   updateRecipe,
@@ -21,7 +22,7 @@ type IngredientGroup = {
   groupName: string;
   ingredients: string[];
 };
-const CreateRecipe = () => {
+const CreateRecipeContent = () => {
   const { user } = useContext(AuthContext);
   const searchParams = useSearchParams();
   const recipeIdFromUrl = searchParams.get("id");
@@ -179,6 +180,14 @@ const CreateRecipe = () => {
         </button>
       </form>
     </div>
+  );
+};
+
+const CreateRecipe = () => {
+  return (
+    <Suspense fallback={<Loader />}>
+      <CreateRecipeContent />
+    </Suspense>
   );
 };
 

@@ -3,7 +3,7 @@
 import { AuthContext } from "@/components/contextTypes";
 import { OtherProfile } from "@/components/otherProfile";
 import { UserProfilePage } from "@/components/userProfile";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Suspense } from "react";
 import { Recipe } from "@/types/recipe";
 import { useSearchParams } from "next/navigation";
 import type { UserProfile } from "@/types/user";
@@ -15,7 +15,7 @@ import {
   updateUser,
 } from "@/api/profileApi";
 
-const Profile = () => {
+const ProfileContent = () => {
   const { profile, updateProfile } = useContext(AuthContext);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [favorites, setFavorites] = useState<Recipe[]>([]);
@@ -150,6 +150,14 @@ const Profile = () => {
         />
       )}
     </div>
+  );
+};
+
+const Profile = () => {
+  return (
+    <Suspense fallback={<Loader />}>
+      <ProfileContent />
+    </Suspense>
   );
 };
 
