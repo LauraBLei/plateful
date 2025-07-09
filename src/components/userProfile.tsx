@@ -76,7 +76,7 @@ export const UserProfilePage = ({
                     title={recipe.name}
                     image={recipe.image}
                     id={recipe.id}
-                    isOwnRecipe
+                    owner={recipe.owner}
                   />
                 ))
               : "You have no recipes yet!"}
@@ -95,6 +95,7 @@ export const UserProfilePage = ({
                     image={recipe.image}
                     title={recipe.name}
                     time={recipe.time}
+                    owner={recipe.owner}
                   />
                 ))
               : "You have no favorites"}

@@ -92,6 +92,7 @@ const Home = () => {
                   id={recipe.id}
                   title={recipe.name}
                   time={recipe.time}
+                  owner={recipe.owner}
                 />
               ))
             ) : (
@@ -112,6 +113,7 @@ const Home = () => {
               id={recipe.id}
               title={recipe.name}
               time={recipe.time}
+              owner={recipe.owner}
             />
           ))}
         </div>
@@ -126,6 +128,7 @@ const Home = () => {
               id={recipe.id}
               title={recipe.name}
               time={recipe.time}
+              owner={recipe.owner}
             />
           ))}
         </div>

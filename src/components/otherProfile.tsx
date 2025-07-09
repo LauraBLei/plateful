@@ -50,6 +50,7 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
                   title={recipe.name}
                   image={recipe.image}
                   id={recipe.id}
+                  owner={recipe.owner}
                 />
               ))
             : `${otherProfile.name} has no recipes yet!`}

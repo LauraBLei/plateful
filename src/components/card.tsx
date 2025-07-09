@@ -12,7 +12,12 @@ interface RecipeCardProps {
   title: string;
   time: number;
   id: number;
-  isOwnRecipe?: boolean;
+
+  owner?: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
 }
 
 export const RecipeCard = ({
@@ -20,9 +25,14 @@ export const RecipeCard = ({
   title,
   time,
   id,
-  isOwnRecipe = false,
+
+  owner,
 }: RecipeCardProps) => {
   const { profile } = useContext(AuthContext);
+
+  // Automatically determine if this is the user's own recipe
+  const isOwnRecipe = profile && owner && profile.id === owner.id;
+
   const getCookingTimeLabel = (minutes: number) => {
     switch (minutes) {
       case 30:
@@ -37,6 +47,7 @@ export const RecipeCard = ({
         return "> 2 hours";
     }
   };
+
   const onDelete = async () => {
     if (!profile) return;
     const confirmed = confirm("are you sure you wanna delete this?");
@@ -60,7 +71,7 @@ export const RecipeCard = ({
             className="object-cover w-full h-full"
             priority={false}
           />
-        </Link>
+        </Link>{" "}
         {isOwnRecipe && (
           <div className="w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10">
             <Link
@@ -82,7 +93,26 @@ export const RecipeCard = ({
             </button>
           </div>
         )}
+        {owner && !isOwnRecipe && (
+          <Link
+            href={`/profile?id=${owner.id}`}
+            className={`w-full flex absolute bottom-0 bg-brand-black/50 z-10 p-2 items-center gap-2 hover:bg-brand-black/80 transition-opacity`}
+          >
+            <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+              <Image
+                fill
+                src={owner.avatar || "/default.jpg"}
+                alt={owner.name}
+                className="object-cover"
+              />
+            </div>
+            <span className="text-base text-brand-white font-semibold truncate">
+              {owner.name}
+            </span>
+          </Link>
+        )}
       </div>
+
       <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
         <div className="flex items-center gap-2 whitespace-nowrap">

@@ -11,6 +11,13 @@ export type Recipe = {
   portions: number;
   tag: string;
   language: string;
+  owner: Owner;
+};
+
+export type Owner = {
+  id: string;
+  name: string;
+  avatar: string;
 };
 
 export type Ingredient = {
