@@ -10,7 +10,6 @@ export async function readUserRecipes(
 }
 
 export async function readFavoriteRecipes({
-  id,
   favorites,
 }: {
   id: string;

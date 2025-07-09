@@ -5,8 +5,7 @@ import { AuthContext, CommonContext } from "./contextTypes";
 import { LogOut, Moon, Sun, User2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { supabase } from "../../lib/supabase";
-import { signOut } from "@/api/authApi";
+import { signInWithGoogle, signOut } from "@/api/authApi";
 
 export const Header = () => {
   const { profile } = useContext(AuthContext);
@@ -34,10 +33,6 @@ export const Header = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen]);
-
-  const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "google" });
-  };
 
   const signOutHandler = async () => {
     await signOut();

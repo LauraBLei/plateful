@@ -4,18 +4,28 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
-  const id = searchParams.get("id");
+  const idParams = searchParams.getAll("id");
   const time = searchParams.get("time");
   const tag = searchParams.get("tag");
 
   try {
-    if (id) {
-      // Get single recipe by id
+    if (idParams.length === 1) {
+      // Single id
+      const id = idParams[0];
       const { data, error } = await supabase
         .from("recipes")
         .select("*")
-        .eq("id", id)
+        .eq("id", Number(id))
         .single();
+      if (error) throw error;
+      return NextResponse.json(data, { status: 200 });
+    } else if (idParams.length > 1) {
+      // Multiple ids
+      const ids = idParams.map(Number);
+      const { data, error } = await supabase
+        .from("recipes")
+        .select("*")
+        .in("id", ids);
       if (error) throw error;
       return NextResponse.json(data, { status: 200 });
     } else if (userId) {
@@ -40,7 +50,10 @@ export async function GET(req: NextRequest) {
       if (error) throw error;
       return NextResponse.json(data, { status: 200 });
     }
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : String(error) },
+      { status: 500 }
+    );
   }
 }

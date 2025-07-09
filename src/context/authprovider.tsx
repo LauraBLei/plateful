@@ -46,6 +46,8 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
         } else {
           setProfile(existingUser);
         }
+      } else {
+        setProfile(null); // <-- clear profile on logout
       }
     };
 
