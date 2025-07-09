@@ -2,7 +2,8 @@ import { RecipeCard } from "@/components/card";
 import Link from "next/link";
 import { Edit } from "lucide-react";
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { FollowModal } from "./follow";
 
 import type { UserProfile } from "@/types/user";
 import type { Recipe } from "@/types/recipe";
@@ -32,6 +33,9 @@ export const UserProfilePage = ({
   recipes,
   favorites,
 }: UserProfileProps) => {
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [showFollowingModal, setShowFollowingModal] = useState(false);
+
   const recipeTab = activeTab === "recipes";
   const favTab = activeTab === "favorites";
   return (
@@ -45,6 +49,8 @@ export const UserProfilePage = ({
         handleBioSubmit={handleBioSubmit}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onShowFollowers={() => setShowFollowersModal(true)}
+        onShowFollowing={() => setShowFollowingModal(true)}
       />
       <Tablet
         profile={profile}
@@ -55,6 +61,8 @@ export const UserProfilePage = ({
         handleBioSubmit={handleBioSubmit}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onShowFollowers={() => setShowFollowersModal(true)}
+        onShowFollowing={() => setShowFollowingModal(true)}
       />
       {recipeTab && (
         <div className="h-full flex flex-col gap-5 w-full">
@@ -93,6 +101,24 @@ export const UserProfilePage = ({
           </div>
         </div>
       )}
+
+      {/* Followers Modal */}
+      <FollowModal
+        isOpen={showFollowersModal}
+        onClose={() => setShowFollowersModal(false)}
+        title="Followers"
+        users={profile.followersInfo || []}
+        emptyMessage="No followers yet."
+      />
+
+      {/* Following Modal */}
+      <FollowModal
+        isOpen={showFollowingModal}
+        onClose={() => setShowFollowingModal(false)}
+        title="Following"
+        users={profile.followingInfo || []}
+        emptyMessage="Not following anyone yet."
+      />
     </div>
   );
 };
@@ -106,6 +132,8 @@ interface DesktopProps {
   handleBioSubmit: (e: React.FormEvent) => void;
   activeTab: "recipes" | "favorites";
   setActiveTab: Dispatch<SetStateAction<"recipes" | "favorites">>;
+  onShowFollowers: () => void;
+  onShowFollowing: () => void;
 }
 
 const Desktop = ({
@@ -117,6 +145,8 @@ const Desktop = ({
   handleBioSubmit,
   activeTab,
   setActiveTab,
+  onShowFollowers,
+  onShowFollowing,
 }: DesktopProps) => {
   const profileImage = profile ? profile.avatar : "/default.jpg";
   return (
@@ -133,18 +163,24 @@ const Desktop = ({
         <div className="flex flex-col gap-5">
           <h1 className="text-center text-2xl">{profile?.name}</h1>
           <div className="flex gap-5">
-            <p className="text-sm flex gap-2">
+            <button
+              onClick={onShowFollowers}
+              className="text-sm flex gap-2 hover:text-brand-orange cursor-pointer"
+            >
               {profile.followers ? profile.followers.length : 0}
               {profile.followers && profile.followers.length === 1
                 ? " Follower"
                 : " Followers"}
-            </p>
-            <p className="text-sm">
+            </button>
+            <button
+              onClick={onShowFollowing}
+              className="text-sm hover:text-brand-orange cursor-pointer"
+            >
               {profile.following ? profile.following.length : 0}
               {profile.following && profile.following.length === 1
                 ? " Following"
                 : " Following"}
-            </p>
+            </button>
           </div>
         </div>
         <div className="relative flex w-full justify-center items-center">
@@ -222,6 +258,8 @@ const Tablet = ({
   handleBioSubmit,
   activeTab,
   setActiveTab,
+  onShowFollowers,
+  onShowFollowing,
 }: DesktopProps) => {
   const profileImage = profile ? profile.avatar : "/default.jpg";
 
@@ -240,18 +278,24 @@ const Tablet = ({
           <div className="w-full flex flex-col gap-2">
             <h1 className="headline w-full">{profile.name}</h1>
             <div className="flex items-center w-full gap-5">
-              <p className="text-sm flex gap-2">
+              <button
+                onClick={onShowFollowers}
+                className="text-sm flex gap-2 hover:text-brand-orange cursor-pointer"
+              >
                 {profile.followers ? profile.followers.length : 0}
                 {profile.followers && profile.followers.length === 1
                   ? " Follower"
                   : " Followers"}
-              </p>
-              <p className="text-sm">
+              </button>
+              <button
+                onClick={onShowFollowing}
+                className="text-sm hover:text-brand-orange cursor-pointer"
+              >
                 {profile.following ? profile.following.length : 0}
                 {profile.following && profile.following.length === 1
                   ? " Following"
                   : " Following"}
-              </p>
+              </button>
             </div>
           </div>
         </div>
