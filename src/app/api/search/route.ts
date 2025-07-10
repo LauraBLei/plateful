@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/supabase";
+import { supabase } from "@/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // Search recipes by name or tag
-    const { data: recipes, error: recipesError } = await supabaseAdmin
+    const { data: recipes, error: recipesError } = await supabase
       .from("recipes")
       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
       .ilike("name", `%${searchTerm}%`);
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Search users by name or bio
-    const { data: users, error: usersError } = await supabaseAdmin
+    const { data: users, error: usersError } = await supabase
       .from("users")
       .select("id, name, avatar, bio")
       .ilike("name", `%${searchTerm}%`);
