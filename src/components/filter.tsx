@@ -78,7 +78,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
 
       {/* Filter form: dropdown/mobile layout when forceMobileLayout is true, otherwise sidebar on lg+ */}
       <div
-        className={`w-full flex-col gap-5 border p-4 rounded-md bg-white dark:bg-brand-black z-20 ${
+        className={`w-full flex-col gap-5 border p-4 rounded-md bg-brand-white dark:bg-brand-black z-20 ${
           forceMobileLayout
             ? `${showMobileFilter ? "flex" : "hidden"}`
             : `lg:max-w-[300px] ${
@@ -125,7 +125,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 <select
                   value={selectedTime}
                   onChange={onTimeChange}
-                  className="input bg-brand-black font-semibold"
+                  className="input bg-brand-black dark:bg-brand-white font-semibold"
                 >
                   <option value="">Any</option>
                   {timeOptions.map((t) => (
