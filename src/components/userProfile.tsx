@@ -2,8 +2,9 @@ import { RecipeCard } from "@/components/card";
 import Link from "next/link";
 import { Edit } from "lucide-react";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useMemo } from "react";
 import { FollowModal } from "./follow";
+import { RecipeFilter, useRecipeFilter } from "./filter";
 
 import type { UserProfile } from "@/types/user";
 import type { Recipe } from "@/types/recipe";
@@ -36,6 +37,19 @@ export const UserProfilePage = ({
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
 
+  // Filter hooks for recipes and favorites
+  const recipesFilter = useRecipeFilter();
+  const favoritesFilter = useRecipeFilter();
+
+  // Filter recipes locally based on applied filters (only when search button is pressed)
+  const filteredRecipes = useMemo(() => {
+    return recipesFilter.filterRecipesLocally(recipes);
+  }, [recipes, recipesFilter]);
+
+  const filteredFavorites = useMemo(() => {
+    return favoritesFilter.filterRecipesLocally(favorites);
+  }, [favorites, favoritesFilter]);
+
   const recipeTab = activeTab === "recipes";
   const favTab = activeTab === "favorites";
   return (
@@ -65,40 +79,78 @@ export const UserProfilePage = ({
         onShowFollowing={() => setShowFollowingModal(true)}
       />
       {recipeTab && (
-        <div className="h-full flex flex-col gap-5 w-full">
-          <h1 className="headline ">Your Recipes</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
-            {recipes.length > 0
-              ? recipes.map((recipe) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    time={recipe.time}
-                    title={recipe.name}
-                    image={recipe.image}
-                    id={recipe.id}
-                    owner={recipe.owner}
-                  />
-                ))
-              : "You have no recipes yet!"}
+        <div className="h-full flex flex-col  gap-5 w-full">
+          {/* Filter for recipes */}
+          <RecipeFilter
+            selectedTags={recipesFilter.selectedTags}
+            selectedLanguage={recipesFilter.selectedLanguage}
+            selectedTime={recipesFilter.selectedTime}
+            showMobileFilter={recipesFilter.showMobileFilter}
+            onTagChange={recipesFilter.handleTagChange}
+            onLanguageChange={recipesFilter.handleLanguageChange}
+            onTimeChange={recipesFilter.handleTimeChange}
+            onFilter={recipesFilter.handleFilter}
+            onToggleMobileFilter={recipesFilter.handleToggleMobileFilter}
+            title="Filter your recipes"
+            forceMobileLayout={true}
+          />
+
+          <div className="w-full flex flex-col gap-5">
+            <h1 className="headline">Your Recipes</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {filteredRecipes.length > 0
+                ? filteredRecipes.map((recipe) => (
+                    <RecipeCard
+                      key={recipe.id}
+                      time={recipe.time}
+                      title={recipe.name}
+                      image={recipe.image}
+                      id={recipe.id}
+                      owner={recipe.owner}
+                    />
+                  ))
+                : recipes.length > 0
+                ? "No recipes match your filters."
+                : "You have no recipes yet!"}
+            </div>
           </div>
         </div>
       )}
       {favTab && (
-        <div className="h-full flex flex-col gap-5 w-full">
-          <h1 className="headline ">Your Favorites</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
-            {favorites.length > 0
-              ? favorites.map((recipe) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    id={recipe.id}
-                    image={recipe.image}
-                    title={recipe.name}
-                    time={recipe.time}
-                    owner={recipe.owner}
-                  />
-                ))
-              : "You have no favorites"}
+        <div className="h-full flex flex-col  gap-5 w-full">
+          {/* Filter for favorites */}
+          <RecipeFilter
+            selectedTags={favoritesFilter.selectedTags}
+            selectedLanguage={favoritesFilter.selectedLanguage}
+            selectedTime={favoritesFilter.selectedTime}
+            showMobileFilter={favoritesFilter.showMobileFilter}
+            onTagChange={favoritesFilter.handleTagChange}
+            onLanguageChange={favoritesFilter.handleLanguageChange}
+            onTimeChange={favoritesFilter.handleTimeChange}
+            onFilter={favoritesFilter.handleFilter}
+            onToggleMobileFilter={favoritesFilter.handleToggleMobileFilter}
+            title="Filter your favorites"
+            forceMobileLayout={true}
+          />
+
+          <div className="w-full flex flex-col gap-5">
+            <h1 className="headline">Your Favorites</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {filteredFavorites.length > 0
+                ? filteredFavorites.map((recipe) => (
+                    <RecipeCard
+                      key={recipe.id}
+                      id={recipe.id}
+                      image={recipe.image}
+                      title={recipe.name}
+                      time={recipe.time}
+                      owner={recipe.owner}
+                    />
+                  ))
+                : favorites.length > 0
+                ? "No favorites match your filters."
+                : "You have no favorites"}
+            </div>
           </div>
         </div>
       )}

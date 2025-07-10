@@ -2,9 +2,9 @@ import Image from "next/image";
 import { RecipeCard } from "@/components/card";
 import type { UserProfile } from "../../lib/types/user";
 import type { Recipe } from "../../lib/types/recipe";
-import React, { useState, useContext } from "react";
+import React, { useState, useMemo } from "react";
 import { FollowModal } from "./follow";
-import { AuthContext } from "@/components/contextTypes";
+import { RecipeFilter, useRecipeFilter } from "./filter";
 
 interface OtherProfileProps {
   otherProfile: UserProfile;
@@ -19,11 +19,18 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
   isFollowingUser,
   handleFollow,
   recipes,
+  isLoggedIn,
 }) => {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
-  const { profile } = useContext(AuthContext);
-  const isLoggedIn = !!profile;
+
+  // Filter functionality for other user's recipes
+  const recipesFilter = useRecipeFilter();
+
+  // Filter recipes locally based on applied filters (only when search button is pressed)
+  const filteredRecipes = useMemo(() => {
+    return recipesFilter.filterRecipesLocally(recipes);
+  }, [recipes, recipesFilter]);
 
   return (
     <div className="px-2 flex flex-col lg:flex-row w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
@@ -46,20 +53,39 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
         />
       </div>
       <div className="w-full flex flex-col gap-5">
-        <h1 className="headline ">{otherProfile.name}&apos;s Recipes</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
-          {recipes.length > 0
-            ? recipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  time={recipe.time}
-                  title={recipe.name}
-                  image={recipe.image}
-                  id={recipe.id}
-                  owner={recipe.owner}
-                />
-              ))
-            : `${otherProfile.name} has no recipes yet!`}
+        {/* Filter for other user's recipes */}
+        <RecipeFilter
+          selectedTags={recipesFilter.selectedTags}
+          selectedLanguage={recipesFilter.selectedLanguage}
+          selectedTime={recipesFilter.selectedTime}
+          showMobileFilter={recipesFilter.showMobileFilter}
+          onTagChange={recipesFilter.handleTagChange}
+          onLanguageChange={recipesFilter.handleLanguageChange}
+          onTimeChange={recipesFilter.handleTimeChange}
+          onFilter={recipesFilter.handleFilter}
+          onToggleMobileFilter={recipesFilter.handleToggleMobileFilter}
+          title={`Filter ${otherProfile.name}'s recipes`}
+          forceMobileLayout={true}
+        />
+
+        <div className="w-full flex flex-col gap-5">
+          <h1 className="headline">{otherProfile.name}&apos;s Recipes</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            {filteredRecipes.length > 0
+              ? filteredRecipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    time={recipe.time}
+                    title={recipe.name}
+                    image={recipe.image}
+                    id={recipe.id}
+                    owner={recipe.owner}
+                  />
+                ))
+              : recipes.length > 0
+              ? "No recipes match your filters."
+              : `${otherProfile.name} has no recipes yet!`}
+          </div>
         </div>
       </div>
 

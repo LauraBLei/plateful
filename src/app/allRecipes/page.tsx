@@ -5,33 +5,26 @@ import { Recipe } from "@/types/recipe";
 import { RecipeCard } from "@/components/card";
 import Loader from "@/components/loader";
 import { fetchAllRecipes } from "@/api/allRecipesApi";
-
-const mealTypes = [
-  "dinner",
-  "lunch",
-  "breakfast",
-  "dessert",
-  "drink",
-  "salad",
-  "snack",
-];
-const languages = ["danish", "norwegian", "english"];
-const timeOptions = [
-  { value: "15", label: "Less than 30 minutes" },
-  { value: "30", label: "30 minutes" },
-  { value: "60", label: "1 hour" },
-  { value: "90", label: "1.5 hours" },
-  { value: "120", label: "2 hours" },
-  { value: "180", label: "More than 2 hours" },
-];
+import { RecipeFilter, useRecipeFilter } from "@/components/filter";
 
 const AllRecipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
-  const [selectedTime, setSelectedTime] = useState<string>("");
-  const [showMobileFilter, setShowMobileFilter] = useState(false);
+
+  const {
+    selectedTags,
+    selectedLanguage,
+    selectedTime,
+    showMobileFilter,
+    handleTagChange,
+    handleLanguageChange,
+    handleTimeChange,
+    handleFilter,
+    handleToggleMobileFilter,
+  } = useRecipeFilter((filteredRecipes) => {
+    setRecipes(filteredRecipes);
+    setLoading(false);
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -41,120 +34,27 @@ const AllRecipes = () => {
     });
   }, []);
 
-  const handleTagChange = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
-  };
-
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedLanguage(e.target.value);
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTime(e.target.value);
-  };
-
-  const handleFilter = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onFilter = async (e: React.FormEvent) => {
     setLoading(true);
-    // Build query params
-    const params = new URLSearchParams();
-    selectedTags.forEach((tag) => params.append("tag", tag));
-    if (selectedLanguage) params.append("language", selectedLanguage);
-    if (selectedTime) params.append("time", selectedTime);
-    const res = await fetch(`/api/recipe/read?${params.toString()}`);
-    const data = await res.json();
-    setRecipes(data || []);
-    setLoading(false);
+    await handleFilter(e);
   };
 
   return (
     <div className="max-w-[1440px] font-primary mb-30 w-full flex flex-col lg:flex-row gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
-      {/* Mobile filter toggle button */}
-      <div className="block lg:hidden mb-4">
-        <button
-          type="button"
-          className="button button-active w-full"
-          onClick={() => setShowMobileFilter((v) => !v)}
-        >
-          {showMobileFilter ? "Hide Filters" : "Show Filters"}
-        </button>
-      </div>
-      {/* Filter form: sidebar on lg+, dropdown on md- */}
-      <div
-        className={`w-full lg:max-w-[300px] flex-col gap-5 border p-4 rounded-md bg-white dark:bg-brand-black z-20
-          ${
-            showMobileFilter ? "flex" : "hidden"
-          } lg:flex lg:static lg:mt-0 lg:mr-0 lg:mb-0 lg:ml-0`}
-      >
-        <form onSubmit={handleFilter} className="flex flex-col gap-5">
-          <h2 className="headlineTwo">Filter recipes</h2>
-          <div className="flex flex-col  sm:flex-row lg:flex-col gap-5 md:gap-10">
-            <div className="flex-1">
-              <div className="font-semibold mb-2">Meal types:</div>
-              <div className="flex flex-col gap-2">
-                {mealTypes.map((type) => (
-                  <label
-                    key={type}
-                    className={`flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition-colors duration-150 ${
-                      selectedTags.includes(type)
-                        ? "bg-brand-black text-brand-white border-1 border-brand-black dark:bg-brand-white dark:text-brand-black dark:border-brand-white"
-                        : "bg-transparent text-brand-black border-1 border-brand-black dark:text-brand-white dark:border-brand-white hover:bg-brand-black/10"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      value={type}
-                      checked={selectedTags.includes(type)}
-                      onChange={() => handleTagChange(type)}
-                      className="accent-brand-black dark:accent-brand-white w-4 h-4"
-                    />
-                    <span className="font-semibold select-none">
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col flex-1 gap-5">
-              <div>
-                <div className="font-semibold mb-2">Time (minutes):</div>
-                <select
-                  value={selectedTime}
-                  onChange={handleTimeChange}
-                  className="input bg-brand-black font-semibold"
-                >
-                  <option value="">Any</option>
-                  {timeOptions.map((t) => (
-                    <option key={t.value} value={t.value}>
-                      {t.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <div className="font-semibold mb-2">Language:</div>
-                <select
-                  value={selectedLanguage}
-                  onChange={handleLanguageChange}
-                  className="input bg-brand-black font-semibold"
-                >
-                  <option value="">Any</option>
-                  {languages.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang.charAt(0).toUpperCase() + lang.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-          <button type="submit" className="regButton hover-effect mt-2">
-            Search
-          </button>
-        </form>
-      </div>
+      {/* Filter component */}
+      <RecipeFilter
+        selectedTags={selectedTags}
+        selectedLanguage={selectedLanguage}
+        selectedTime={selectedTime}
+        showMobileFilter={showMobileFilter}
+        onTagChange={handleTagChange}
+        onLanguageChange={handleLanguageChange}
+        onTimeChange={handleTimeChange}
+        onFilter={onFilter}
+        onToggleMobileFilter={handleToggleMobileFilter}
+        title="Filter recipes"
+      />
+
       {/* Recipes grid */}
       <div className="w-full flex flex-col gap-2">
         <h1 className="headline">All Recipes</h1>
@@ -163,7 +63,7 @@ const AllRecipes = () => {
             <Loader />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {recipes && recipes.length > 0 ? (
               recipes.map((recipe) => (
                 <RecipeCard
@@ -172,6 +72,7 @@ const AllRecipes = () => {
                   id={recipe.id}
                   title={recipe.name}
                   time={recipe.time}
+                  owner={recipe.owner}
                 />
               ))
             ) : (
