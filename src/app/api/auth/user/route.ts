@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/supabase";
+import { authenticateRequest } from "@/api/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -81,7 +82,12 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
+    // Authenticate the request
+    await authenticateRequest(req);
+
     const fields = await req.json();
+    console.log("User update fields:", fields);
+
     const { id, bio, name, updatedList, followersUpdated, followingUpdated } =
       fields;
     const updateObj: { [key: string]: unknown } = {};
@@ -90,13 +96,23 @@ export async function PATCH(req: NextRequest) {
     if (updatedList !== undefined) updateObj.favorites = updatedList;
     if (followersUpdated !== undefined) updateObj.followers = followersUpdated;
     if (followingUpdated !== undefined) updateObj.following = followingUpdated;
+
+    console.log("Update object:", updateObj);
+
     const { error, data } = await supabase
       .from("users")
       .update(updateObj)
       .eq("id", id);
-    if (error) throw error;
+
+    if (error) {
+      console.error("User update error:", error);
+      throw error;
+    }
+
+    console.log("User update success:", data);
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
+    console.error("User update exception:", err);
     return NextResponse.json(
       { error: (err as Error).message },
       { status: 500 }

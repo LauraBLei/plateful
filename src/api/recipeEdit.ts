@@ -1,4 +1,5 @@
 import { Recipe } from "@/types/recipe";
+import { getAuthHeaders } from "./headers";
 
 export async function fetchRecipeById(
   recipeId: number
@@ -17,18 +18,20 @@ export async function updateRecipe({
   userId: string;
   updateData: any;
 }): Promise<boolean> {
+  const headers = await getAuthHeaders();
   const response = await fetch("/api/recipe/update", {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({ recipeId, userId, updateData }),
   });
   return response.ok;
 }
 
 export async function createRecipe(recipeData: any): Promise<any> {
+  const headers = await getAuthHeaders();
   const response = await fetch("/api/recipe/create", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(recipeData),
   });
   if (!response.ok) throw new Error("Failed to create recipe");

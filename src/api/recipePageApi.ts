@@ -1,5 +1,6 @@
 // API logic for recipe and user in recipe page
 import { Recipe } from "@/types/recipe";
+import { getAuthHeaders } from "./headers";
 
 export async function readRecipe(id: number): Promise<Recipe | null> {
   const res = await fetch(`/api/recipe/read?id=${id}`);
@@ -22,9 +23,10 @@ export async function updateUser(fields: {
   bio?: string;
   updatedList?: number[];
 }) {
+  const headers = await getAuthHeaders();
   await fetch("/api/auth/user", {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(fields),
   });
 }
