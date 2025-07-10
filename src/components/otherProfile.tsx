@@ -171,7 +171,11 @@ const Desktop = ({
       {isLoggedIn && (
         <button
           className="button max-w-[150px]"
-          onClick={handleFollow}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleFollow();
+          }}
           disabled={followActionInProgress}
         >
           {followActionInProgress
@@ -230,7 +234,11 @@ const Tablet = ({
               {isLoggedIn && (
                 <button
                   className="button text-sm max-w-[150px]"
-                  onClick={handleFollow}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleFollow();
+                  }}
                   disabled={followActionInProgress}
                 >
                   {followActionInProgress

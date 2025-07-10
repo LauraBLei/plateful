@@ -3,7 +3,14 @@
 import { AuthContext } from "@/components/contextTypes";
 import { OtherProfile } from "@/components/otherProfile";
 import { UserProfilePage } from "@/components/userProfile";
-import { useContext, useEffect, useState, Suspense } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  Suspense,
+  useCallback,
+  useRef,
+} from "react";
 import { Recipe } from "@/types/recipe";
 import { useSearchParams } from "next/navigation";
 import type { UserProfile } from "@/types/user";
@@ -29,6 +36,7 @@ const ProfileContent = () => {
   const [nameUpdateSuccess, setNameUpdateSuccess] = useState(false);
   const [isFollowingLocal, setIsFollowingLocal] = useState(false);
   const [followActionInProgress, setFollowActionInProgress] = useState(false);
+  const lastFollowActionRef = useRef<number>(0);
 
   const searchParams = useSearchParams();
   const profileIdFromUrl = searchParams.get("id");
@@ -134,7 +142,15 @@ const ProfileContent = () => {
     setNameInput(e.target.value);
   };
 
-  const handleFollow = async () => {
+  const handleFollow = useCallback(async () => {
+    const now = Date.now();
+
+    // Debounce: prevent multiple clicks within 1 second
+    if (now - lastFollowActionRef.current < 1000) {
+      console.log("Follow action debounced - too soon after last action");
+      return;
+    }
+
     if (!profile || !otherProfile || followActionInProgress) {
       console.log("Follow action blocked:", {
         hasProfile: !!profile,
@@ -144,13 +160,20 @@ const ProfileContent = () => {
       return;
     }
 
-    setFollowActionInProgress(true);
+    lastFollowActionRef.current = now;
+    const actionId = now;
 
-    console.log("Follow action started:", {
+    console.log(`Follow action ${actionId} started:`, {
       currentUser: profile.id,
       targetUser: otherProfile.id,
-      isCurrentlyFollowing: profile.following?.includes(otherProfile.id),
+      isCurrentlyFollowing: isFollowingLocal,
+      followActionInProgress,
     });
+
+    setFollowActionInProgress(true);
+
+    // Use the local follow state instead of profile.following for consistency
+    const isCurrentlyFollowing = isFollowingLocal;
 
     // Ensure arrays are always arrays, not null
     let newFollowing = Array.isArray(profile.following)
@@ -159,14 +182,19 @@ const ProfileContent = () => {
     let newFollowers = Array.isArray(otherProfile.followers)
       ? [...otherProfile.followers]
       : [];
-    const isFollowing = newFollowing.includes(otherProfile.id);
 
-    if (isFollowing) {
+    if (isCurrentlyFollowing) {
+      // Unfollowing
       newFollowing = newFollowing.filter((id) => id !== otherProfile.id);
       newFollowers = newFollowers.filter((id) => id !== profile.id);
     } else {
-      newFollowing.push(otherProfile.id);
-      newFollowers.push(profile.id);
+      // Following
+      if (!newFollowing.includes(otherProfile.id)) {
+        newFollowing.push(otherProfile.id);
+      }
+      if (!newFollowers.includes(profile.id)) {
+        newFollowers.push(profile.id);
+      }
     }
 
     try {
@@ -182,23 +210,41 @@ const ProfileContent = () => {
         }),
       ]);
 
-      console.log("Follow update results:", { result1, result2 });
+      console.log(`Follow action ${actionId} update results:`, {
+        result1,
+        result2,
+      });
 
       // Only update local state if both succeeded
       if (result1.status === "fulfilled" && result2.status === "fulfilled") {
         if (updateProfile) updateProfile({ following: newFollowing });
         setOtherProfile({ ...otherProfile, followers: newFollowers });
-        setIsFollowingLocal(!isFollowing); // Update local follow state
-        console.log("Follow action completed successfully");
+        setIsFollowingLocal(!isCurrentlyFollowing); // Update local follow state
+        console.log(
+          `Follow action ${actionId} completed successfully. New state:`,
+          !isCurrentlyFollowing
+        );
       } else {
-        console.error("Follow action failed:", { result1, result2 });
+        console.error(`Follow action ${actionId} failed:`, {
+          result1,
+          result2,
+        });
       }
     } catch (error) {
-      console.error("Follow action error:", error);
+      console.error(`Follow action ${actionId} error:`, error);
     } finally {
       setFollowActionInProgress(false);
+      console.log(
+        `Follow action ${actionId} finished, followActionInProgress set to false`
+      );
     }
-  };
+  }, [
+    profile,
+    otherProfile,
+    followActionInProgress,
+    isFollowingLocal,
+    updateProfile,
+  ]);
 
   const handleBioSubmit = (e: React.FormEvent) => {
     e.preventDefault();
