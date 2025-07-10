@@ -87,11 +87,11 @@ export const Header = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search recipes or users..."
-              className="w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-brand-black dark:text-brand-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+              className="input pr-10"
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-brand-orange dark:hover:text-brand-orange transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-black dark:text-brand-white hover:text-brand-orange transition-colors"
             >
               <Search size={20} />
             </button>
@@ -223,11 +223,11 @@ export const Header = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search recipes or users..."
-                    className="w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-brand-black dark:text-brand-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="input pr-10"
                   />
                   <button
                     type="submit"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-brand-orange dark:hover:text-brand-orange transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-black dark:text-brand-white hover:text-brand-orange transition-colors"
                   >
                     <Search size={20} />
                   </button>
