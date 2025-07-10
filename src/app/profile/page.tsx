@@ -86,7 +86,7 @@ const ProfileContent = () => {
     }
   }, [profile]);
 
-  // Initialize follow state when data loads
+  // Keep isFollowingLocal in sync with profile.following changes
   useEffect(() => {
     if (profile && otherProfile && !isOwnProfile) {
       const isFollowing = !!(
