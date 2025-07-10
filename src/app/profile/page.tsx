@@ -126,6 +126,13 @@ const ProfileContent = () => {
 
   const handleFollow = async () => {
     if (!profile || !otherProfile) return;
+
+    console.log("Follow action started:", {
+      currentUser: profile.id,
+      targetUser: otherProfile.id,
+      isCurrentlyFollowing: profile.following?.includes(otherProfile.id),
+    });
+
     let newFollowing = profile.following ? [...profile.following] : [];
     let newFollowers = otherProfile.followers
       ? [...otherProfile.followers]
@@ -140,17 +147,32 @@ const ProfileContent = () => {
       newFollowers.push(profile.id);
     }
 
-    // Only update what is needed
-    await updateUser({
-      id: profile.id,
-      followingUpdated: newFollowing,
-    });
-    await updateUser({
-      id: otherProfile.id,
-      followersUpdated: newFollowers,
-    });
-    if (updateProfile) updateProfile({ following: newFollowing });
-    setOtherProfile({ ...otherProfile, followers: newFollowers });
+    try {
+      // Update both users in parallel but handle errors
+      const [result1, result2] = await Promise.allSettled([
+        updateUser({
+          id: profile.id,
+          followingUpdated: newFollowing,
+        }),
+        updateUser({
+          id: otherProfile.id,
+          followersUpdated: newFollowers,
+        }),
+      ]);
+
+      console.log("Follow update results:", { result1, result2 });
+
+      // Only update local state if both succeeded
+      if (result1.status === "fulfilled" && result2.status === "fulfilled") {
+        if (updateProfile) updateProfile({ following: newFollowing });
+        setOtherProfile({ ...otherProfile, followers: newFollowers });
+        console.log("Follow action completed successfully");
+      } else {
+        console.error("Follow action failed:", { result1, result2 });
+      }
+    } catch (error) {
+      console.error("Follow action error:", error);
+    }
   };
 
   const handleBioSubmit = (e: React.FormEvent) => {

@@ -75,8 +75,15 @@ const RecipeContent = () => {
     });
   };
 
-  const handleSetFavorite = () => {
+  const handleSetFavorite = async () => {
     if (profile && recipe) {
+      console.log("Favorites action started:", {
+        userId: profile.id,
+        recipeId: recipe.id,
+        currentFavorites: profile.favorites,
+        isFavorite: isFavorite,
+      });
+
       let updatedFavorites;
       if (isFavorite) {
         // Remove favorite if it exists
@@ -85,12 +92,31 @@ const RecipeContent = () => {
         // Add favorite if it doesn't exist
         updatedFavorites = [...profile?.favorites, recipe.id];
       }
-      if (updatedFavorites && updateProfile)
-        updateProfile({ favorites: updatedFavorites });
-      updateUser({
-        id: profile.id,
-        bio: profile.bio,
-        updatedList: updatedFavorites,
+
+      console.log("Updated favorites list:", updatedFavorites);
+
+      try {
+        await updateUser({
+          id: profile.id,
+          bio: profile.bio,
+          updatedList: updatedFavorites,
+        });
+
+        // Only update local state if API call succeeded
+        if (updatedFavorites && updateProfile) {
+          updateProfile({ favorites: updatedFavorites });
+        }
+
+        console.log("Favorites updated successfully");
+      } catch (error) {
+        console.error("Failed to update favorites:", error);
+      }
+    } else {
+      console.log("Cannot update favorites:", {
+        hasProfile: !!profile,
+        hasRecipe: !!recipe,
+        profileId: profile?.id,
+        recipeId: recipe?.id,
       });
     }
   };
