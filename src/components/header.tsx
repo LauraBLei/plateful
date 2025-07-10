@@ -58,7 +58,10 @@ export const Header = () => {
     <header className="max-w-[1440px] w-full p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
       {/* Desktop/Header Nav */}
       <div className="hidden md:flex w-full justify-between items-center">
-        <div className="relative aspect-[5/2] w-[120px] p-2 flex justify-center items-center">
+        <Link
+          href="/"
+          className="relative aspect-[5/2] w-[120px] p-2 flex justify-center items-center cursor-pointer"
+        >
           {darkMode ? (
             <Image
               fill
@@ -74,7 +77,7 @@ export const Header = () => {
               alt="Plateful Logo"
             />
           )}
-        </div>
+        </Link>
 
         {/* Search Bar */}
         <div className="flex-1 max-w-md mx-4">
@@ -148,7 +151,10 @@ export const Header = () => {
       </div>
       {/* Mobile Nav */}
       <div className="flex md:hidden w-full justify-between items-center">
-        <div className="relative aspect-[5/2] w-[120px]  p-2 flex justify-center items-center">
+        <Link
+          href="/"
+          className="relative aspect-[5/2] w-[120px] p-2 flex justify-center items-center cursor-pointer"
+        >
           {darkMode ? (
             <Image
               fill
@@ -164,7 +170,7 @@ export const Header = () => {
               alt="Plateful Logo"
             />
           )}
-        </div>
+        </Link>
         <button
           className="p-4 focus:outline-none"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
