@@ -27,6 +27,7 @@ const ProfileContent = () => {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(profile?.name || "");
   const [nameUpdateSuccess, setNameUpdateSuccess] = useState(false);
+  const [isFollowingLocal, setIsFollowingLocal] = useState(false);
 
   const searchParams = useSearchParams();
   const profileIdFromUrl = searchParams.get("id");
@@ -35,11 +36,8 @@ const ProfileContent = () => {
 
   const isOwnProfile = !profileIdFromUrl || profileIdFromUrl === profile?.id;
 
-  const isFollowingUser = !!(
-    profile &&
-    otherProfile &&
-    profile.following?.includes(otherProfile.id)
-  );
+  // Use local state for follow status to prevent race conditions
+  const isFollowingUser = isFollowingLocal;
 
   useEffect(() => {
     setLoading(true);
@@ -78,6 +76,17 @@ const ProfileContent = () => {
       setNameInput(profile.name || "");
     }
   }, [profile]);
+
+  // Initialize follow state when data loads
+  useEffect(() => {
+    if (profile && otherProfile && !isOwnProfile) {
+      const isFollowing = !!(
+        Array.isArray(profile.following) &&
+        profile.following.includes(otherProfile.id)
+      );
+      setIsFollowingLocal(isFollowing);
+    }
+  }, [profile, otherProfile, isOwnProfile]);
 
   const updateBio = (newBio: string) => {
     if (profile && updateProfile) {
@@ -169,6 +178,7 @@ const ProfileContent = () => {
       if (result1.status === "fulfilled" && result2.status === "fulfilled") {
         if (updateProfile) updateProfile({ following: newFollowing });
         setOtherProfile({ ...otherProfile, followers: newFollowers });
+        setIsFollowingLocal(!isFollowing); // Update local follow state
         console.log("Follow action completed successfully");
       } else {
         console.error("Follow action failed:", { result1, result2 });
