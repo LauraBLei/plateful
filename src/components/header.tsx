@@ -2,18 +2,21 @@
 
 import { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext, CommonContext } from "./contextTypes";
-import { LogOut, Moon, Sun, User2 } from "lucide-react";
+import { LogOut, Moon, Sun, User2, Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { signInWithGoogle, signOut } from "@/api/authApi";
+import { useRouter } from "next/navigation";
 
 export const Header = () => {
   const { profile } = useContext(AuthContext);
   const { darkMode, toggleDarkMode } = useContext(CommonContext);
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   const [isHydrated, setHydrated] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,6 +42,14 @@ export const Header = () => {
     // You may want to trigger a page reload or redirect after logout
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery(""); // Clear search after navigating
+    }
+  };
+
   if (!isHydrated) {
     return <></>;
   }
@@ -47,7 +58,7 @@ export const Header = () => {
     <header className="max-w-[1440px] w-full p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
       {/* Desktop/Header Nav */}
       <div className="hidden md:flex w-full justify-between items-center">
-        <div className="relative aspect-[5/2] w-[120px]  p-2 flex justify-center items-center">
+        <div className="relative aspect-[5/2] w-[120px] p-2 flex justify-center items-center">
           {darkMode ? (
             <Image
               fill
@@ -64,7 +75,27 @@ export const Header = () => {
             />
           )}
         </div>
-        <nav className="flex  items-center gap-5 ">
+
+        {/* Search Bar */}
+        <div className="flex-1 max-w-md mx-4">
+          <form onSubmit={handleSearch} className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search recipes or users..."
+              className="w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-brand-black dark:text-brand-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+            />
+            <button
+              type="submit"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-brand-orange dark:hover:text-brand-orange transition-colors"
+            >
+              <Search size={20} />
+            </button>
+          </form>
+        </div>
+
+        <nav className="flex items-center gap-5">
           <Link href="/" className="hover-effect dark:hover:text-brand-orange ">
             Home
           </Link>
@@ -172,6 +203,31 @@ export const Header = () => {
               &times;
             </button>
             <nav className="flex flex-col gap-6">
+              {/* Mobile Search Bar */}
+              <div className="mb-2">
+                <form
+                  onSubmit={(e) => {
+                    handleSearch(e);
+                    setMenuOpen(false);
+                  }}
+                  className="relative"
+                >
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search recipes or users..."
+                    className="w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-brand-black dark:text-brand-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-brand-orange dark:hover:text-brand-orange transition-colors"
+                  >
+                    <Search size={20} />
+                  </button>
+                </form>
+              </div>
+
               <Link
                 href="/"
                 className="hover-effect dark:hover:text-brand-orange"
