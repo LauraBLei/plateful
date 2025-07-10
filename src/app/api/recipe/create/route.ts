@@ -1,9 +1,18 @@
 import { supabase } from "@/supabase";
+import { authenticateRequest } from "@/api/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
+    // Authenticate the request
+    await authenticateRequest(req);
+
     const recipeData = await req.json();
+    console.log("Recipe data:", {
+      ...recipeData,
+      ingredients: "[REDACTED]",
+      steps: "[REDACTED]",
+    });
 
     const { data, error } = await supabase
       .from("recipes")

@@ -1,5 +1,6 @@
 // API logic for user and favorite recipes in profile
 import { Recipe } from "@/types/recipe";
+import { getAuthHeaders } from "./headers";
 
 export async function readUserRecipes(
   userId: string
@@ -29,9 +30,10 @@ export async function getUser(id: string) {
 }
 
 export async function updateUser(fields: any) {
+  const headers = await getAuthHeaders();
   await fetch("/api/auth/user", {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(fields),
   });
 }

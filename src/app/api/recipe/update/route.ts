@@ -1,9 +1,13 @@
 import { supabase } from "@/supabase";
+import { authenticateRequest } from "@/api/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { deleteImageFromStorage } from "@/api/storageUtils";
 
 export async function PATCH(req: NextRequest) {
   try {
+    // Authenticate the request
+    await authenticateRequest(req);
+
     const { recipeId, userId, updateData } = await req.json();
 
     // If image is being updated, we need to handle old image deletion

@@ -1,4 +1,6 @@
 // API logic for recipe deletion
+import { getAuthHeaders } from "./headers";
+
 export async function deleteRecipe({
   userId,
   recipeId,
@@ -6,9 +8,10 @@ export async function deleteRecipe({
   userId: string;
   recipeId: number;
 }): Promise<boolean> {
+  const headers = await getAuthHeaders();
   const response = await fetch("/api/recipe/delete", {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({ userId, recipeId }),
   });
   if (!response.ok) throw new Error("Failed to delete recipe");

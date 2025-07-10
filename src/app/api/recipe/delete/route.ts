@@ -1,9 +1,13 @@
 import { supabase } from "@/supabase";
+import { authenticateRequest } from "@/api/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { deleteImageFromStorage } from "@/api/storageUtils";
 
 export async function DELETE(req: NextRequest) {
   try {
+    // Authenticate the request
+    await authenticateRequest(req);
+
     const { userId, recipeId } = await req.json();
 
     // First, get the recipe to retrieve the image URL
@@ -26,7 +30,9 @@ export async function DELETE(req: NextRequest) {
     if (recipe.image) {
       const deleted = await deleteImageFromStorage(recipe.image);
       if (!deleted) {
-        console.error("Failed to delete image, but continuing with recipe deletion");
+        console.error(
+          "Failed to delete image, but continuing with recipe deletion"
+        );
       }
     }
 
