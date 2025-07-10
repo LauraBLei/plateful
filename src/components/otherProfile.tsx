@@ -12,6 +12,7 @@ interface OtherProfileProps {
   handleFollow: () => void;
   recipes: Recipe[];
   isLoggedIn: boolean;
+  followActionInProgress?: boolean;
 }
 
 export const OtherProfile: React.FC<OtherProfileProps> = ({
@@ -20,6 +21,7 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
   handleFollow,
   recipes,
   isLoggedIn,
+  followActionInProgress = false,
 }) => {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
@@ -42,6 +44,7 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
           onShowFollowers={() => setShowFollowersModal(true)}
           onShowFollowing={() => setShowFollowingModal(true)}
           isLoggedIn={isLoggedIn}
+          followActionInProgress={followActionInProgress}
         />
         <Tablet
           handleFollow={handleFollow}
@@ -50,6 +53,7 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
           onShowFollowers={() => setShowFollowersModal(true)}
           onShowFollowing={() => setShowFollowingModal(true)}
           isLoggedIn={isLoggedIn}
+          followActionInProgress={followActionInProgress}
         />
       </div>
       <div className="w-full flex flex-col gap-5">
@@ -117,6 +121,7 @@ interface Props {
   onShowFollowers: () => void;
   onShowFollowing: () => void;
   isLoggedIn: boolean;
+  followActionInProgress?: boolean;
 }
 const Desktop = ({
   isFollowingUser,
@@ -125,6 +130,7 @@ const Desktop = ({
   onShowFollowers,
   onShowFollowing,
   isLoggedIn,
+  followActionInProgress = false,
 }: Props) => {
   return (
     <div className="p-10 hidden lg:flex lg:min-h-[800px]  flex-col items-center shadow-md lg:max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full">
@@ -163,8 +169,16 @@ const Desktop = ({
         </p>
       </div>
       {isLoggedIn && (
-        <button className="button max-w-[150px]" onClick={handleFollow}>
-          {isFollowingUser ? "Unfollow" : "Follow"}
+        <button
+          className="button max-w-[150px]"
+          onClick={handleFollow}
+          disabled={followActionInProgress}
+        >
+          {followActionInProgress
+            ? "..."
+            : isFollowingUser
+            ? "Unfollow"
+            : "Follow"}
         </button>
       )}
     </div>
@@ -178,6 +192,7 @@ const Tablet = ({
   onShowFollowers,
   onShowFollowing,
   isLoggedIn,
+  followActionInProgress = false,
 }: Props) => {
   return (
     <div className="flex flex-col w-full px-2 lg:hidden">
@@ -216,8 +231,13 @@ const Tablet = ({
                 <button
                   className="button text-sm max-w-[150px]"
                   onClick={handleFollow}
+                  disabled={followActionInProgress}
                 >
-                  {isFollowingUser ? "Unfollow" : "Follow"}
+                  {followActionInProgress
+                    ? "..."
+                    : isFollowingUser
+                    ? "Unfollow"
+                    : "Follow"}
                 </button>
               )}
             </div>

@@ -28,6 +28,7 @@ const ProfileContent = () => {
   const [nameInput, setNameInput] = useState(profile?.name || "");
   const [nameUpdateSuccess, setNameUpdateSuccess] = useState(false);
   const [isFollowingLocal, setIsFollowingLocal] = useState(false);
+  const [followActionInProgress, setFollowActionInProgress] = useState(false);
 
   const searchParams = useSearchParams();
   const profileIdFromUrl = searchParams.get("id");
@@ -134,7 +135,16 @@ const ProfileContent = () => {
   };
 
   const handleFollow = async () => {
-    if (!profile || !otherProfile) return;
+    if (!profile || !otherProfile || followActionInProgress) {
+      console.log("Follow action blocked:", {
+        hasProfile: !!profile,
+        hasOtherProfile: !!otherProfile,
+        inProgress: followActionInProgress,
+      });
+      return;
+    }
+
+    setFollowActionInProgress(true);
 
     console.log("Follow action started:", {
       currentUser: profile.id,
@@ -185,6 +195,8 @@ const ProfileContent = () => {
       }
     } catch (error) {
       console.error("Follow action error:", error);
+    } finally {
+      setFollowActionInProgress(false);
     }
   };
 
@@ -211,6 +223,7 @@ const ProfileContent = () => {
         handleFollow={handleFollow}
         recipes={recipes}
         isLoggedIn={!!profile}
+        followActionInProgress={followActionInProgress}
       />
     );
   }
