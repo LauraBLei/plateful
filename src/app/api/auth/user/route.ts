@@ -1,6 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/supabase";
-import { authenticateRequest } from "@/api/headers";
+import { createAuthenticatedSupabaseClient } from "@/api/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -82,8 +82,8 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    // Authenticate the request
-    await authenticateRequest(req);
+    // Create authenticated Supabase client
+    const authSupabase = createAuthenticatedSupabaseClient(req);
 
     const fields = await req.json();
     console.log("User update fields:", fields);
@@ -99,7 +99,7 @@ export async function PATCH(req: NextRequest) {
 
     console.log("Update object:", updateObj);
 
-    const { error, data } = await supabase
+    const { error, data } = await authSupabase
       .from("users")
       .update(updateObj)
       .eq("id", id);
