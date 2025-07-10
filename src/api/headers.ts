@@ -1,4 +1,5 @@
 import { supabase } from "@/supabase";
+import { createClient } from "@supabase/supabase-js";
 import { NextRequest } from "next/server";
 
 export async function getAuthHeaders() {
@@ -17,16 +18,26 @@ export async function getAuthHeaders() {
   return headers;
 }
 
-// Helper function to authenticate API requests
-export async function authenticateRequest(req: NextRequest) {
+// Helper function to create an authenticated Supabase client for API routes
+export function createAuthenticatedSupabaseClient(req: NextRequest) {
   const authHeader = req.headers.get("Authorization");
   if (authHeader?.startsWith("Bearer ")) {
     const token = authHeader.substring(7);
-    await supabase.auth.setSession({
-      access_token: token,
-      refresh_token: "", // Not needed for server-side
-    });
-    return true;
+
+    // Create a new Supabase client with the user's access token
+    return createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      }
+    );
   }
-  return false;
+
+  // Return regular client if no auth token
+  return supabase;
 }
