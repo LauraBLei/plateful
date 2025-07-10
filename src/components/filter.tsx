@@ -125,7 +125,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 <select
                   value={selectedTime}
                   onChange={onTimeChange}
-                  className="input bg-brand-black dark:bg-brand-white font-semibold"
+                  className="input dark:bg-brand-black bg-brand-white font-semibold"
                 >
                   <option value="">Any</option>
                   {timeOptions.map((t) => (
@@ -140,7 +140,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 <select
                   value={selectedLanguage}
                   onChange={onLanguageChange}
-                  className="input bg-brand-black font-semibold"
+                  className="input dark:bg-brand-black bg-brand-white font-semibold"
                 >
                   <option value="">Any</option>
                   {languages.map((lang) => (
