@@ -2,14 +2,16 @@ import Image from "next/image";
 import { RecipeCard } from "@/components/card";
 import type { UserProfile } from "../../lib/types/user";
 import type { Recipe } from "../../lib/types/recipe";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FollowModal } from "./follow";
+import { AuthContext } from "@/components/contextTypes";
 
 interface OtherProfileProps {
   otherProfile: UserProfile;
   isFollowingUser: boolean;
   handleFollow: () => void;
   recipes: Recipe[];
+  isLoggedIn: boolean;
 }
 
 export const OtherProfile: React.FC<OtherProfileProps> = ({
@@ -20,6 +22,8 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
 }) => {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
+  const { profile } = useContext(AuthContext);
+  const isLoggedIn = !!profile;
 
   return (
     <div className="px-2 flex flex-col lg:flex-row w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
@@ -30,6 +34,7 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
           otherProfile={otherProfile}
           onShowFollowers={() => setShowFollowersModal(true)}
           onShowFollowing={() => setShowFollowingModal(true)}
+          isLoggedIn={isLoggedIn}
         />
         <Tablet
           handleFollow={handleFollow}
@@ -37,6 +42,7 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
           otherProfile={otherProfile}
           onShowFollowers={() => setShowFollowersModal(true)}
           onShowFollowing={() => setShowFollowingModal(true)}
+          isLoggedIn={isLoggedIn}
         />
       </div>
       <div className="w-full flex flex-col gap-5">
@@ -84,6 +90,7 @@ interface Props {
   otherProfile: UserProfile;
   onShowFollowers: () => void;
   onShowFollowing: () => void;
+  isLoggedIn: boolean;
 }
 const Desktop = ({
   isFollowingUser,
@@ -91,6 +98,7 @@ const Desktop = ({
   otherProfile,
   onShowFollowers,
   onShowFollowing,
+  isLoggedIn,
 }: Props) => {
   return (
     <div className="p-10 hidden lg:flex lg:min-h-[800px]  flex-col items-center shadow-md lg:max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full">
@@ -128,9 +136,11 @@ const Desktop = ({
           {otherProfile.bio}
         </p>
       </div>
-      <button className="button max-w-[150px]" onClick={handleFollow}>
-        {isFollowingUser ? "Unfollow" : "Follow"}
-      </button>
+      {isLoggedIn && (
+        <button className="button max-w-[150px]" onClick={handleFollow}>
+          {isFollowingUser ? "Unfollow" : "Follow"}
+        </button>
+      )}
     </div>
   );
 };
@@ -141,6 +151,7 @@ const Tablet = ({
   otherProfile,
   onShowFollowers,
   onShowFollowing,
+  isLoggedIn,
 }: Props) => {
   return (
     <div className="flex flex-col w-full px-2 lg:hidden">
@@ -175,12 +186,14 @@ const Tablet = ({
                   ? " Following"
                   : " Following"}
               </button>
-              <button
-                className="button text-sm max-w-[150px]"
-                onClick={handleFollow}
-              >
-                {isFollowingUser ? "Unfollow" : "Follow"}
-              </button>
+              {isLoggedIn && (
+                <button
+                  className="button text-sm max-w-[150px]"
+                  onClick={handleFollow}
+                >
+                  {isFollowingUser ? "Unfollow" : "Follow"}
+                </button>
+              )}
             </div>
           </div>
         </div>

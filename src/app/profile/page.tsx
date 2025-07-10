@@ -129,6 +129,7 @@ const ProfileContent = () => {
         isFollowingUser={isFollowingUser}
         handleFollow={handleFollow}
         recipes={recipes}
+        isLoggedIn={!!profile}
       />
     );
   }
