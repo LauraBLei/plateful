@@ -217,8 +217,15 @@ const ProfileContent = () => {
 
       // Only update local state if both succeeded
       if (result1.status === "fulfilled" && result2.status === "fulfilled") {
+        // Update the current user's following list in context
         if (updateProfile) updateProfile({ following: newFollowing });
-        setOtherProfile({ ...otherProfile, followers: newFollowers });
+
+        // Refresh the other user's profile data from database to get accurate follower info
+        const refreshedProfile = await getUser(otherProfile.id);
+        if (refreshedProfile) {
+          setOtherProfile(refreshedProfile);
+        }
+
         setIsFollowingLocal(!isCurrentlyFollowing); // Update local follow state
         console.log(
           `Follow action ${actionId} completed successfully. New state:`,
