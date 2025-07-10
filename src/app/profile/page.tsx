@@ -65,7 +65,14 @@ const ProfileContent = () => {
       }).then((x) => {
         if (x) setFavorites(x);
       });
-    } else if (profileIdFromUrl) {
+    } else if (profileIdFromUrl && profile) {
+      // Get fresh profile data for the current user to ensure following list is up to date
+      getUser(profile.id).then((currentUserData) => {
+        if (currentUserData && updateProfile) {
+          updateProfile(currentUserData);
+        }
+      });
+
       getUser(profileIdFromUrl).then((x) => {
         if (x) setOtherProfile(x);
       });
@@ -76,7 +83,7 @@ const ProfileContent = () => {
       setFavorites([]);
     }
     setLoading(false);
-  }, [profile, profileIdFromUrl, isOwnProfile]);
+  }, [profile, profileIdFromUrl, isOwnProfile, updateProfile]);
 
   // Sync input fields when profile data changes
   useEffect(() => {
@@ -93,8 +100,16 @@ const ProfileContent = () => {
         Array.isArray(profile.following) &&
         profile.following.includes(otherProfile.id)
       );
+      console.log("Follow state sync:", {
+        profileId: profile.id,
+        otherProfileId: otherProfile.id,
+        currentFollowing: profile.following,
+        isFollowing,
+        currentIsFollowingLocal: isFollowingLocal,
+      });
       setIsFollowingLocal(isFollowing);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, otherProfile, isOwnProfile]);
 
   const updateBio = (newBio: string) => {
@@ -220,13 +235,9 @@ const ProfileContent = () => {
         // Update the current user's following list in context
         if (updateProfile) updateProfile({ following: newFollowing });
 
-        // Refresh the other user's profile data from database to get accurate follower info
-        const refreshedProfile = await getUser(otherProfile.id);
-        if (refreshedProfile) {
-          setOtherProfile(refreshedProfile);
-        }
+        // Update the other user's followers list locally
+        setOtherProfile({ ...otherProfile, followers: newFollowers });
 
-        setIsFollowingLocal(!isCurrentlyFollowing); // Update local follow state
         console.log(
           `Follow action ${actionId} completed successfully. New state:`,
           !isCurrentlyFollowing
