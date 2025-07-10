@@ -133,8 +133,11 @@ const ProfileContent = () => {
       isCurrentlyFollowing: profile.following?.includes(otherProfile.id),
     });
 
-    let newFollowing = profile.following ? [...profile.following] : [];
-    let newFollowers = otherProfile.followers
+    // Ensure arrays are always arrays, not null
+    let newFollowing = Array.isArray(profile.following)
+      ? [...profile.following]
+      : [];
+    let newFollowers = Array.isArray(otherProfile.followers)
       ? [...otherProfile.followers]
       : [];
     const isFollowing = newFollowing.includes(otherProfile.id);

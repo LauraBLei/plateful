@@ -84,13 +84,18 @@ const RecipeContent = () => {
         isFavorite: isFavorite,
       });
 
+      // Ensure favorites is always an array
+      const currentFavorites = Array.isArray(profile.favorites)
+        ? profile.favorites
+        : [];
+
       let updatedFavorites;
       if (isFavorite) {
         // Remove favorite if it exists
-        updatedFavorites = profile.favorites.filter((f) => f !== recipe.id);
+        updatedFavorites = currentFavorites.filter((f) => f !== recipe.id);
       } else {
         // Add favorite if it doesn't exist
-        updatedFavorites = [...profile?.favorites, recipe.id];
+        updatedFavorites = [...currentFavorites, recipe.id];
       }
 
       console.log("Updated favorites list:", updatedFavorites);
