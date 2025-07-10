@@ -36,7 +36,10 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
 
   // Wrap handleFollow to prevent double execution from multiple components
   const wrappedHandleFollow = useCallback(() => {
-    console.log("Follow button clicked from OtherProfile component");
+    console.log(
+      "Follow button clicked from OtherProfile component at:",
+      new Date().toISOString()
+    );
     handleFollow();
   }, [handleFollow]);
 

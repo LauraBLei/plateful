@@ -171,17 +171,23 @@ const ProfileContent = () => {
     lastFollowActionRef.current = now;
     const actionId = now;
 
+    // Use the current follow state (get fresh value each time instead of depending on it)
+    const currentIsFollowing = !!(
+      Array.isArray(profile.following) &&
+      profile.following.includes(otherProfile.id)
+    );
+
     console.log(`Follow action ${actionId} started:`, {
       currentUser: profile.id,
       targetUser: otherProfile.id,
-      isCurrentlyFollowing: isFollowingLocal,
+      isCurrentlyFollowing: currentIsFollowing,
       followActionInProgress,
     });
 
     setFollowActionInProgress(true);
 
-    // Use the local follow state instead of profile.following for consistency
-    const isCurrentlyFollowing = isFollowingLocal;
+    // Use the current follow state instead of isFollowingLocal
+    const isCurrentlyFollowing = currentIsFollowing;
 
     // Ensure arrays are always arrays, not null
     let newFollowing = Array.isArray(profile.following)
@@ -249,13 +255,8 @@ const ProfileContent = () => {
         `Follow action ${actionId} finished, followActionInProgress set to false`
       );
     }
-  }, [
-    profile,
-    otherProfile,
-    followActionInProgress,
-    isFollowingLocal,
-    updateProfile,
-  ]);
+    // Note: intentionally NOT including isFollowingLocal to prevent circular dependency
+  }, [profile, otherProfile, followActionInProgress, updateProfile]);
 
   const handleBioSubmit = (e: React.FormEvent) => {
     e.preventDefault();
