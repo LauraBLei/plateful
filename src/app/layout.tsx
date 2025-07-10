@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/header";
 import Providers from "./providers";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Plateful",
@@ -20,6 +21,7 @@ export default function RootLayout({
           <div className="min-h-screen items-center flex flex-col gap-5 transition-colors duration-500 dark:bg-brand-black bg-brand-white">
             <Header />
             {children}
+            <Footer />
           </div>
         </body>
       </Providers>

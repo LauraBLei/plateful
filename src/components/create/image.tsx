@@ -1,13 +1,26 @@
 import Image from "next/image";
 import { useRef } from "react";
+import type { Recipe } from "@/types/recipe";
 
 interface ImageInputProps {
   setImage: (input: File | null) => void;
   image: File | null;
+  existingRecipe?: Recipe | null;
 }
 
-export const ImageInput = ({ setImage, image }: ImageInputProps) => {
+export const ImageInput = ({
+  setImage,
+  image,
+  existingRecipe,
+}: ImageInputProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // If editing and no new image is selected, use the existing image URL for preview
+  const imagePreviewUrl = image
+    ? URL.createObjectURL(image)
+    : existingRecipe && existingRecipe.image
+    ? existingRecipe.image
+    : null;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -18,15 +31,13 @@ export const ImageInput = ({ setImage, image }: ImageInputProps) => {
     fileInputRef.current?.click();
   };
 
-  const imagePreviewUrl = image ? URL.createObjectURL(image) : null;
-
   return (
     <div>
-      <label className="block mb-1 font-semibold">Upload Image</label>
+      <label className="headlineTwo">Upload Image</label>
 
       <div
         onClick={triggerFileSelect}
-        className="relative aspect-[308/181] w-full  overflow-hidden max-h-[200px] md:max-h-[400px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded cursor-pointer hover:bg-gray-100 transition"
+        className="relative aspect-[308/181] w-full  overflow-hidden max-h-[200px] md:max-h-[400px] flex items-center justify-center border-2 border-dashed border-brand-black dark:border-brand-white rounded cursor-pointer bg-brand-white lg:bg-transparent lg:hover:bg-gray-100 transition"
       >
         {imagePreviewUrl ? (
           <Image
@@ -36,7 +47,7 @@ export const ImageInput = ({ setImage, image }: ImageInputProps) => {
             className="object-cover"
           />
         ) : (
-          <span className="text-gray-500">Click to upload image</span>
+          <span className="text-brand-black">Click to upload image</span>
         )}
       </div>
 

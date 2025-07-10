@@ -4,20 +4,37 @@ interface TagSelectProps {
 }
 
 export const TagSelect = ({ tag, setTag }: TagSelectProps) => (
-  <div>
-    <label className="block mb-1 font-semibold" htmlFor="tag">
-      Tag / Meal Type
+  <div className="w-full flex flex-col gap-2">
+    <label className="headlineTwo" htmlFor="tag">
+      Meal Type
     </label>
     <select
       id="tag"
       value={tag}
       onChange={(e) => setTag(e.target.value)}
-      className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+      className="input cursor-pointer"
     >
-      <option value="breakfast">Breakfast</option>
-      <option value="lunch">Lunch</option>
-      <option value="dinner">Dinner</option>
-      <option value="dessert">Dessert</option>
+      <option className="text-brand-black" value="breakfast">
+        Breakfast
+      </option>
+      <option className="text-brand-black" value="lunch">
+        Lunch
+      </option>
+      <option className="text-brand-black" value="dinner">
+        Dinner
+      </option>
+      <option className="text-brand-black" value="dessert">
+        Dessert
+      </option>
+      <option className="text-brand-black" value="salad">
+        Salad
+      </option>
+      <option className="text-brand-black" value="drink">
+        Drink
+      </option>
+      <option className="text-brand-black" value="snack">
+        Snack
+      </option>
     </select>
   </div>
 );

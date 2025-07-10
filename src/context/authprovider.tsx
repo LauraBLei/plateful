@@ -4,63 +4,69 @@ import {
   type ContextProviderProps,
 } from "../components/contextTypes";
 import type { User } from "@supabase/supabase-js";
-import type { UserProfile } from "../../lib/types/user";
-import { checkUser } from "../app/api/auth/user";
-import { setUser as SetSupaUser } from "../app/api/auth/user";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "@/supabase";
+import type { UserProfile } from "@/types/user";
+import { fetchUserProfile, createUserProfile } from "@/api/userProfile";
 
 export const AuthProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null); // optional: typed interface for your users table
 
+  const updateProfile = (fields: Partial<UserProfile>) => {
+    if (!profile) return;
+    const updated: UserProfile = {
+      id: profile.id,
+      created_at: profile.created_at,
+      name: profile.name,
+      email: profile.email,
+      bio: profile.bio,
+      avatar: profile.avatar,
+      favorites: profile.favorites,
+      followers: profile.followers,
+      following: profile.following,
+      ...fields,
+    };
+    setProfile(updated);
+  };
+
   useEffect(() => {
     const syncUser = async () => {
+      // Use supabase client to get the current user session
       const { data } = await supabase.auth.getUser();
       const user = data?.user ?? null;
       setUser(user);
 
       if (user) {
-        // Check if the user exists in your custom users table
-        const existingUser = await checkUser(user);
+        // Check if the user exists in your custom users table via API
+        const existingUser = await fetchUserProfile(user.id);
 
         if (!existingUser) {
-          SetSupaUser(user);
+          // Create user in users table via API
+          await createUserProfile(user);
         } else {
           setProfile(existingUser);
         }
+      } else {
+        setProfile(null); // <-- clear profile on logout
       }
     };
 
     syncUser();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        const user = session?.user ?? null;
-        setUser(user);
-
-        // Repeat sync on auth state change
-        if (user) {
-          supabase
-            .from("users")
-            .select("*")
-            .eq("id", user.id)
-            .single()
-            .then(({ data }) => {
-              setProfile(data);
-            });
-        } else {
-          setProfile(null);
-        }
-      }
-    );
+    // Listen for auth state changes and sync user
+    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
+      syncUser();
+    });
 
     return () => {
-      authListener.subscription.unsubscribe();
+      authListener?.subscription.unsubscribe();
     };
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, profile, setProfile }}>
+    <AuthContext.Provider
+      value={{ user, setUser, profile, setProfile, updateProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );
