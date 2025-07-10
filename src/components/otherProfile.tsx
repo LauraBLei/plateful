@@ -2,7 +2,7 @@ import Image from "next/image";
 import { RecipeCard } from "@/components/card";
 import type { UserProfile } from "../../lib/types/user";
 import type { Recipe } from "../../lib/types/recipe";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { FollowModal } from "./follow";
 import { RecipeFilter, useRecipeFilter } from "./filter";
 
@@ -34,27 +34,51 @@ export const OtherProfile: React.FC<OtherProfileProps> = ({
     return recipesFilter.filterRecipesLocally(recipes);
   }, [recipes, recipesFilter]);
 
+  // Wrap handleFollow to prevent double execution from multiple components
+  const wrappedHandleFollow = useCallback(() => {
+    console.log("Follow button clicked from OtherProfile component");
+    handleFollow();
+  }, [handleFollow]);
+
+  // Determine if we should show desktop or mobile layout
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Check screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   return (
     <div className="px-2 flex flex-col lg:flex-row w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
       <div>
-        <Desktop
-          handleFollow={handleFollow}
-          isFollowingUser={isFollowingUser}
-          otherProfile={otherProfile}
-          onShowFollowers={() => setShowFollowersModal(true)}
-          onShowFollowing={() => setShowFollowingModal(true)}
-          isLoggedIn={isLoggedIn}
-          followActionInProgress={followActionInProgress}
-        />
-        <Tablet
-          handleFollow={handleFollow}
-          isFollowingUser={isFollowingUser}
-          otherProfile={otherProfile}
-          onShowFollowers={() => setShowFollowersModal(true)}
-          onShowFollowing={() => setShowFollowingModal(true)}
-          isLoggedIn={isLoggedIn}
-          followActionInProgress={followActionInProgress}
-        />
+        {isDesktop ? (
+          <Desktop
+            handleFollow={wrappedHandleFollow}
+            isFollowingUser={isFollowingUser}
+            otherProfile={otherProfile}
+            onShowFollowers={() => setShowFollowersModal(true)}
+            onShowFollowing={() => setShowFollowingModal(true)}
+            isLoggedIn={isLoggedIn}
+            followActionInProgress={followActionInProgress}
+          />
+        ) : (
+          <Tablet
+            handleFollow={wrappedHandleFollow}
+            isFollowingUser={isFollowingUser}
+            otherProfile={otherProfile}
+            onShowFollowers={() => setShowFollowersModal(true)}
+            onShowFollowing={() => setShowFollowingModal(true)}
+            isLoggedIn={isLoggedIn}
+            followActionInProgress={followActionInProgress}
+          />
+        )}
       </div>
       <div className="w-full flex flex-col gap-5">
         {/* Filter for other user's recipes */}
@@ -133,7 +157,7 @@ const Desktop = ({
   followActionInProgress = false,
 }: Props) => {
   return (
-    <div className="p-10 hidden lg:flex lg:min-h-[800px]  flex-col items-center shadow-md lg:max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full">
+    <div className="p-10 flex min-h-[800px] flex-col items-center shadow-md max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full">
       <div className="relative rounded-full aspect-square max-w-[130px] md:max-w-[170px] w-full overflow-hidden">
         <Image
           fill
@@ -199,7 +223,7 @@ const Tablet = ({
   followActionInProgress = false,
 }: Props) => {
   return (
-    <div className="flex flex-col w-full px-2 lg:hidden">
+    <div className="flex flex-col w-full px-2">
       <div className="w-full flex flex-col gap-5 mb-5 ">
         <div className="flex gap-10 items-center w-full">
           <div className="relative rounded-full aspect-square max-w-[100px] w-full overflow-hidden">
