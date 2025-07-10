@@ -24,6 +24,9 @@ const ProfileContent = () => {
   );
   const [editingBio, setEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState(profile?.bio || "");
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(profile?.name || "");
+  const [nameUpdateSuccess, setNameUpdateSuccess] = useState(false);
 
   const searchParams = useSearchParams();
   const profileIdFromUrl = searchParams.get("id");
@@ -41,6 +44,11 @@ const ProfileContent = () => {
   useEffect(() => {
     setLoading(true);
     if (isOwnProfile && profile) {
+      // Fetch complete user data with follower info, even for own profile
+      getUser(profile.id).then((x) => {
+        if (x) setOtherProfile(x);
+      });
+
       readUserRecipes(profile.id).then((x) => {
         if (x) setRecipes(x);
       });
@@ -50,7 +58,6 @@ const ProfileContent = () => {
       }).then((x) => {
         if (x) setFavorites(x);
       });
-      setOtherProfile(null);
     } else if (profileIdFromUrl) {
       getUser(profileIdFromUrl).then((x) => {
         if (x) setOtherProfile(x);
@@ -64,6 +71,14 @@ const ProfileContent = () => {
     setLoading(false);
   }, [profile, profileIdFromUrl, isOwnProfile]);
 
+  // Sync input fields when profile data changes
+  useEffect(() => {
+    if (profile) {
+      setBioInput(profile.bio || "");
+      setNameInput(profile.name || "");
+    }
+  }, [profile]);
+
   const updateBio = (newBio: string) => {
     if (profile && updateProfile) {
       updateUser({
@@ -75,13 +90,38 @@ const ProfileContent = () => {
     }
   };
 
+  const updateName = async (newName: string) => {
+    if (profile && updateProfile) {
+      await updateUser({
+        id: profile?.id,
+        name: newName,
+        updatedList: profile?.favorites,
+      });
+      // Show success message
+      setNameUpdateSuccess(true);
+      // Wait 2 seconds then reload the page
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
+  };
+
   const handleBioClick = () => {
     setBioInput(profile?.bio || "");
     setEditingBio(true);
   };
 
+  const handleNameClick = () => {
+    setNameInput(profile?.name || "");
+    setEditingName(true);
+  };
+
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBioInput(e.target.value);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNameInput(e.target.value);
   };
 
   const handleFollow = async () => {
@@ -118,6 +158,12 @@ const ProfileContent = () => {
     updateBio(bioInput);
     setEditingBio(false);
   };
+
+  const handleNameSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateName(nameInput);
+    setEditingName(false);
+  };
   if (loading) {
     return <Loader />;
   }
@@ -136,14 +182,20 @@ const ProfileContent = () => {
 
   return (
     <div className="px-2 mb-30 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
-      {isOwnProfile && profile && (
+      {isOwnProfile && profile && otherProfile && (
         <UserProfilePage
-          profile={profile}
+          profile={otherProfile}
           editingBio={editingBio}
           bioInput={bioInput}
           handleBioClick={handleBioClick}
           handleBioChange={handleBioChange}
           handleBioSubmit={handleBioSubmit}
+          editingName={editingName}
+          nameInput={nameInput}
+          handleNameClick={handleNameClick}
+          handleNameChange={handleNameChange}
+          handleNameSubmit={handleNameSubmit}
+          nameUpdateSuccess={nameUpdateSuccess}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           recipes={recipes}

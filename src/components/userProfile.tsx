@@ -16,6 +16,12 @@ interface UserProfileProps {
   handleBioClick: () => void;
   handleBioChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBioSubmit: (e: React.FormEvent) => void;
+  editingName: boolean;
+  nameInput: string;
+  handleNameClick: () => void;
+  handleNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleNameSubmit: (e: React.FormEvent) => void;
+  nameUpdateSuccess: boolean;
   activeTab: "recipes" | "favorites";
   setActiveTab: Dispatch<SetStateAction<"recipes" | "favorites">>;
   recipes: Recipe[];
@@ -29,6 +35,12 @@ export const UserProfilePage = ({
   handleBioClick,
   handleBioChange,
   handleBioSubmit,
+  editingName,
+  nameInput,
+  handleNameClick,
+  handleNameChange,
+  handleNameSubmit,
+  nameUpdateSuccess,
   activeTab,
   setActiveTab,
   recipes,
@@ -61,6 +73,12 @@ export const UserProfilePage = ({
         handleBioClick={handleBioClick}
         handleBioChange={handleBioChange}
         handleBioSubmit={handleBioSubmit}
+        editingName={editingName}
+        nameInput={nameInput}
+        handleNameClick={handleNameClick}
+        handleNameChange={handleNameChange}
+        handleNameSubmit={handleNameSubmit}
+        nameUpdateSuccess={nameUpdateSuccess}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onShowFollowers={() => setShowFollowersModal(true)}
@@ -73,6 +91,12 @@ export const UserProfilePage = ({
         handleBioClick={handleBioClick}
         handleBioChange={handleBioChange}
         handleBioSubmit={handleBioSubmit}
+        editingName={editingName}
+        nameInput={nameInput}
+        handleNameClick={handleNameClick}
+        handleNameChange={handleNameChange}
+        handleNameSubmit={handleNameSubmit}
+        nameUpdateSuccess={nameUpdateSuccess}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onShowFollowers={() => setShowFollowersModal(true)}
@@ -183,6 +207,12 @@ interface DesktopProps {
   handleBioClick: () => void;
   handleBioChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBioSubmit: (e: React.FormEvent) => void;
+  editingName: boolean;
+  nameInput: string;
+  handleNameClick: () => void;
+  handleNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleNameSubmit: (e: React.FormEvent) => void;
+  nameUpdateSuccess: boolean;
   activeTab: "recipes" | "favorites";
   setActiveTab: Dispatch<SetStateAction<"recipes" | "favorites">>;
   onShowFollowers: () => void;
@@ -196,6 +226,12 @@ const Desktop = ({
   handleBioClick,
   handleBioChange,
   handleBioSubmit,
+  editingName,
+  nameInput,
+  handleNameClick,
+  handleNameChange,
+  handleNameSubmit,
+  nameUpdateSuccess,
   activeTab,
   setActiveTab,
   onShowFollowers,
@@ -214,7 +250,51 @@ const Desktop = ({
           />
         </div>
         <div className="flex flex-col gap-5">
-          <h1 className="text-center text-2xl">{profile?.name}</h1>
+          <div className="relative flex justify-center items-center">
+            {editingName ? (
+              <form
+                onSubmit={handleNameSubmit}
+                className="flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  value={nameInput}
+                  onChange={handleNameChange}
+                  className="input text-center text-2xl font-semibold"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="absolute cursor-pointer right-0 top-1/2 -translate-y-1/2"
+                  aria-label="Save name"
+                >
+                  <Edit size={16} />
+                </button>
+              </form>
+            ) : (
+              <div className="flex items-center gap-2">
+                <h1
+                  className="text-center text-2xl cursor-pointer pr-6"
+                  onClick={handleNameClick}
+                >
+                  {profile?.name}
+                </h1>
+                <button
+                  type="button"
+                  className=" cursor-pointer"
+                  aria-label="Edit name"
+                  onClick={handleNameClick}
+                >
+                  <Edit size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+          {nameUpdateSuccess && (
+            <div className="text-center font-primary text-brand-orange text-sm ">
+              Name updated
+            </div>
+          )}
           <div className="flex gap-5">
             <button
               onClick={onShowFollowers}
@@ -309,6 +389,12 @@ const Tablet = ({
   handleBioClick,
   handleBioChange,
   handleBioSubmit,
+  editingName,
+  nameInput,
+  handleNameClick,
+  handleNameChange,
+  handleNameSubmit,
+  nameUpdateSuccess,
   activeTab,
   setActiveTab,
   onShowFollowers,
@@ -329,7 +415,51 @@ const Tablet = ({
             />
           </div>
           <div className="w-full flex flex-col gap-2">
-            <h1 className="headline w-full">{profile.name}</h1>
+            <div className="relative flex items-center w-full">
+              {editingName ? (
+                <form
+                  onSubmit={handleNameSubmit}
+                  className="flex items-center gap-2 w-full"
+                >
+                  <input
+                    type="text"
+                    value={nameInput}
+                    onChange={handleNameChange}
+                    className="input headline w-full"
+                    autoFocus
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-0 top-1/2 -translate-y-1/2"
+                    aria-label="Save name"
+                  >
+                    <Edit size={16} />
+                  </button>
+                </form>
+              ) : (
+                <div className="flex items-center gap-2 w-full">
+                  <h1
+                    className="headline w-full cursor-pointer pr-6"
+                    onClick={handleNameClick}
+                  >
+                    {profile.name}
+                  </h1>
+                  <button
+                    type="button"
+                    className="cursor-pointer"
+                    aria-label="Edit name"
+                    onClick={handleNameClick}
+                  >
+                    <Edit size={16} />
+                  </button>
+                </div>
+              )}
+            </div>
+            {nameUpdateSuccess && (
+              <div className="font-primary text-brand-orange text-sm">
+                Name updated
+              </div>
+            )}
             <div className="flex items-center w-full gap-5">
               <button
                 onClick={onShowFollowers}

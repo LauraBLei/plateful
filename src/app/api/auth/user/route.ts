@@ -82,9 +82,11 @@ export async function GET(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const fields = await req.json();
-    const { id, bio, updatedList, followersUpdated, followingUpdated } = fields;
+    const { id, bio, name, updatedList, followersUpdated, followingUpdated } =
+      fields;
     const updateObj: { [key: string]: unknown } = {};
     if (bio !== undefined) updateObj.bio = bio;
+    if (name !== undefined) updateObj.name = name;
     if (updatedList !== undefined) updateObj.favorites = updatedList;
     if (followersUpdated !== undefined) updateObj.followers = followersUpdated;
     if (followingUpdated !== undefined) updateObj.following = followingUpdated;
