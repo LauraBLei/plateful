@@ -100,17 +100,10 @@ const ProfileContent = () => {
         Array.isArray(profile.following) &&
         profile.following.includes(otherProfile.id)
       );
-      console.log("Follow state sync:", {
-        profileId: profile.id,
-        otherProfileId: otherProfile.id,
-        currentFollowing: profile.following,
-        isFollowing,
-        currentIsFollowingLocal: isFollowingLocal,
-      });
       setIsFollowingLocal(isFollowing);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile, otherProfile, isOwnProfile]);
+  }, [profile?.following, otherProfile?.id, profile?.id, isOwnProfile]);
 
   const updateBio = (newBio: string) => {
     if (profile && updateProfile) {
