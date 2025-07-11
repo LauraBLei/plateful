@@ -1,14 +1,14 @@
 import { Recipe } from "@/types/recipe";
 
 export async function fetchTimeRecipes(): Promise<Recipe[]> {
-  const res = await fetch("/api/recipe/read?time=30");
+  const res = await fetch("/api/recipe/search?time=30");
   if (!res.ok) return [];
   const data = await res.json();
   return Array.isArray(data) ? data.slice(0, 4) : [];
 }
 
 export async function fetchRecentRecipes(): Promise<Recipe[]> {
-  const res = await fetch("/api/recipe/read");
+  const res = await fetch("/api/recipe/all");
   if (!res.ok) return [];
   const data = await res.json();
   if (Array.isArray(data) && data.length > 0) {
@@ -34,7 +34,7 @@ export async function fetchFollowingRecipes(
   const userRes = await fetch(`/api/auth/user?id=${selected[0]}`);
   const userData = userRes.ok ? await userRes.json() : null;
   if (userData && userData.name) setFollowingName(userData.name);
-  const allRecipesRes = await fetch("/api/recipe/read");
+  const allRecipesRes = await fetch("/api/recipe/all");
   const allRecipes = allRecipesRes.ok ? await allRecipesRes.json() : [];
   if (Array.isArray(allRecipes) && allRecipes.length > 0) {
     const followingPosts = allRecipes.filter((r: any) =>
