@@ -23,7 +23,7 @@ interface RecipeFilterProps {
   // Optional customization
   title?: string;
   className?: string;
-  forceMobileLayout?: boolean; // Forces mobile/dropdown layout even on desktop
+  forceMobileLayout?: boolean;
 }
 
 const mealTypes = [

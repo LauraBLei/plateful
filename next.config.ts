@@ -3,7 +3,16 @@ import { resolve } from "path";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["xyggcchvvljyjoothces.supabase.co", "lh3.googleusercontent.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "xyggcchvvljyjoothces.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+    ],
   },
   webpack: (config) => {
     config.resolve = config.resolve || {};

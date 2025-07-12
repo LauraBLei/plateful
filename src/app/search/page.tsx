@@ -1,6 +1,6 @@
 "use client";
 
-import { searchContent, SearchResults } from "@/api/searchApi";
+import { searchContent, SearchResults } from "@/api/storageActions";
 import { RecipeCard } from "@/components/shared/RecipeCard";
 import Loader from "@/helpers/loader";
 import { Recipe } from "@/types/recipe";

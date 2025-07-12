@@ -142,12 +142,15 @@ export async function fetchFollowingRecipes(
     return [];
   const shuffled = [...profile.following].sort(() => 0.5 - Math.random());
   const selected = shuffled.slice(0, 1);
+
   if (selected.length === 0) return [];
   const userRes = await fetch(`/api/auth/user?id=${selected[0]}`);
   const userData = userRes.ok ? await userRes.json() : null;
+
   if (userData && userData.name) setFollowingName(userData.name);
   const allRecipesRes = await fetch("/api/recipe/all");
   const allRecipes = allRecipesRes.ok ? await allRecipesRes.json() : [];
+
   if (Array.isArray(allRecipes) && allRecipes.length > 0) {
     const followingPosts = allRecipes.filter((r: any) =>
       selected.includes(r.owner_id)

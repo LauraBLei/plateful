@@ -1,11 +1,11 @@
 "use client";
+import { fetchFollowingRecipes } from "@/api/recipeActions";
+import { Recipe } from "@/types/recipe";
 import { useContext, useEffect, useState } from "react";
+import { Loader } from "../../helpers/loader";
+import { AuthContext } from "../../providers/contextTypes";
 import { SectionComponent } from "../home/section";
 import { WelcomeSection } from "../home/welcomeSection";
-import { AuthContext } from "../../providers/contextTypes";
-import { Recipe } from "@/types/recipe";
-import { Loader } from "../../helpers/loader";
-import { fetchFollowingRecipes } from "@/api/recipeActions";
 
 interface HomepageProps {
   recentRecipes: Recipe[];
@@ -23,7 +23,7 @@ export const Homepage = ({ recentRecipes, timeRecipes }: HomepageProps) => {
       setFollowerRecipes(recipes)
     );
     setLoading(false);
-  }, [profile]);
+  }, []);
 
   if (loading) {
     return <Loader />;

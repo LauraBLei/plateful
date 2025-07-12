@@ -1,12 +1,8 @@
 import RecipePage from "@/components/pages/recipe";
 import { supabase } from "@/supabase";
 
-interface RecipeProps {
-  params: { id: string };
-}
-
-export default async function Recipe({ params }: RecipeProps) {
-  const { id } = params;
+export default async function Recipe({ params }) {
+  const { id } = await params;
   const { data: recipe, error } = await supabase
     .from("recipes")
     .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")

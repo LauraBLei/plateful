@@ -1,14 +1,17 @@
+import { Recipe } from "@/types/recipe";
+import Image from "next/image";
 import React from "react";
 import { ListOfIngredients } from "./ListOfIngredients";
 
 interface IngredientsInfoProps {
-  recipe: any;
+  recipe: Recipe;
 }
 
 export const IngredientsInfo: React.FC<IngredientsInfoProps> = ({ recipe }) => (
   <div className="flex flex-col gap-5 md:gap-10 w-full">
     <div className="relative aspect-[308/181] w-full rounded-md overflow-hidden shadow-md">
-      <img
+      <Image
+        fill
         src={recipe?.image || "/default.jpg"}
         alt={recipe?.name || "no image found"}
         className="object-cover w-full h-full"
