@@ -37,6 +37,7 @@ const ProfileContent = () => {
   const [isFollowingLocal, setIsFollowingLocal] = useState(false);
   const [followActionInProgress, setFollowActionInProgress] = useState(false);
   const lastFollowActionRef = useRef<number>(0);
+  const followActionInProgressRef = useRef<boolean>(false);
 
   const searchParams = useSearchParams();
   const profileIdFromUrl = searchParams.get("id");
@@ -153,20 +154,35 @@ const ProfileContent = () => {
   const handleFollow = useCallback(async () => {
     const now = Date.now();
 
+    console.log(`🔄 handleFollow called at ${now}`, {
+      lastAction: lastFollowActionRef.current,
+      timeSinceLastAction: now - lastFollowActionRef.current,
+      followActionInProgress,
+      refInProgress: followActionInProgressRef.current,
+    });
+
+    const stackTrace = new Error().stack;
+    console.log(`Call stack:`, {
+      stackTrace: stackTrace?.split('\n').slice(0, 5).join('\n'),
+    });
+
     // Debounce: prevent multiple clicks within 1 second
     if (now - lastFollowActionRef.current < 1000) {
       console.log("Follow action debounced - too soon after last action");
       return;
     }
 
-    if (!profile || !otherProfile || followActionInProgress) {
+    if (!profile || !otherProfile || followActionInProgress || followActionInProgressRef.current) {
       console.log("Follow action blocked:", {
         hasProfile: !!profile,
         hasOtherProfile: !!otherProfile,
         inProgress: followActionInProgress,
+        refInProgress: followActionInProgressRef.current,
       });
       return;
     }
+
+    followActionInProgressRef.current = true;
 
     lastFollowActionRef.current = now;
     const actionId = now;
@@ -251,6 +267,7 @@ const ProfileContent = () => {
       console.error(`Follow action ${actionId} error:`, error);
     } finally {
       setFollowActionInProgress(false);
+      followActionInProgressRef.current = false;
       console.log(
         `Follow action ${actionId} finished, followActionInProgress set to false`
       );

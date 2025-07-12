@@ -209,7 +209,7 @@ export const useRecipeFilter = (onFilterApply?: (recipes: any[]) => void) => {
       if (selectedLanguage) params.append("language", selectedLanguage);
       if (selectedTime) params.append("time", selectedTime);
 
-      const res = await fetch(`/api/recipe/read?${params.toString()}`);
+      const res = await fetch(`/api/recipe/search?${params.toString()}`);
       const data = await res.json();
 
       onFilterApply(data || []);

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/header";
-import Providers from "./providers";
+
 import { Footer } from "@/components/footer";
+import Providers from "@/providers/providers";
 
 export const metadata: Metadata = {
   title: "Plateful",

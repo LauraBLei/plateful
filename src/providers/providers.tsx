@@ -1,8 +1,7 @@
 "use client";
 
-import "./globals.css";
-import { CommonProvider } from "@/context/common";
-import { AuthProvider } from "@/context/authprovider";
+import { AuthProvider } from "./authprovider";
+import { CommonProvider } from "./common";
 
 export default function Providers({
   children,
