@@ -3,9 +3,9 @@ import { useContext, useEffect, useState } from "react";
 import { SectionComponent } from "../home/section";
 import { WelcomeSection } from "../home/welcomeSection";
 import { AuthContext } from "../contextTypes";
-import { fetchFollowingRecipes } from "@/api/homeFetch";
 import { Recipe } from "@/types/recipe";
 import { Loader } from "../loader";
+import { fetchFollowingRecipes } from "@/api/recipeActions";
 
 interface HomepageProps {
   recentRecipes: Recipe[];

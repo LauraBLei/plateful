@@ -1,7 +1,8 @@
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/supabase";
-import { createAuthenticatedSupabaseClient } from "@/api/headers";
+
 import { NextRequest, NextResponse } from "next/server";
+import { createAuthenticatedSupabaseClient } from "@/api/headerActions";
 
 export async function POST(req: NextRequest) {
   try {

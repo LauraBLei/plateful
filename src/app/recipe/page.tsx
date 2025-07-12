@@ -8,7 +8,8 @@ import { AuthContext } from "@/components/contextTypes";
 import Link from "next/link";
 import Loader from "@/components/loader";
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
-import { readRecipe, checkUser, updateUser } from "@/api/recipePageApi";
+import { readRecipe } from "@/api/recipeActions";
+import { getUser, updateUser } from "@/api/userActions";
 
 const getCookingTimeLabel = (minutes: number) => {
   switch (minutes) {
@@ -55,7 +56,7 @@ const RecipeContent = () => {
 
   useEffect(() => {
     if (recipe && recipe.owner_id) {
-      checkUser(recipe.owner_id).then((x) => {
+      getUser(recipe.owner_id).then((x) => {
         if (x) setOwner(x);
       });
     }

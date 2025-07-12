@@ -1,6 +1,6 @@
-import { createAuthenticatedSupabaseClient } from "@/api/headers";
+import { createAuthenticatedSupabaseClient } from "@/api/headerActions";
+import { deleteImageFromStorage } from "@/api/storageActions";
 import { NextRequest, NextResponse } from "next/server";
-import { deleteImageFromStorage } from "@/api/storageUtils";
 
 export async function PATCH(req: NextRequest) {
   try {

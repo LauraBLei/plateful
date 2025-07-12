@@ -1,12 +1,13 @@
 "use client";
 
-import { useContext, useEffect, useState, useRef } from "react";
-import { AuthContext, CommonContext } from "./contextTypes";
-import { LogOut, Moon, Sun, User2, Search } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { signInWithGoogle, signOut } from "@/api/authApi";
+import { Search, Moon, Sun, User2, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useContext, useState, useRef, useEffect } from "react";
+import { AuthContext, CommonContext } from "./contextTypes";
+
+import Image from "next/image";
+import { signInWithGoogle, signOut } from "@/api/authActions";
+import Link from "next/link";
 
 export const Header = () => {
   const { profile } = useContext(AuthContext);

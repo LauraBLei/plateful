@@ -15,12 +15,8 @@ import { Recipe } from "@/types/recipe";
 import { useSearchParams } from "next/navigation";
 import type { UserProfile } from "@/types/user";
 import Loader from "@/components/loader";
-import {
-  readUserRecipes,
-  readFavoriteRecipes,
-  getUser,
-  updateUser,
-} from "@/api/profileApi";
+import { readUserRecipes, readFavoriteRecipes } from "@/api/recipeActions";
+import { getUser, updateUser } from "@/api/userActions";
 
 const ProfileContent = () => {
   const { profile, updateProfile } = useContext(AuthContext);
@@ -163,7 +159,7 @@ const ProfileContent = () => {
 
     const stackTrace = new Error().stack;
     console.log(`Call stack:`, {
-      stackTrace: stackTrace?.split('\n').slice(0, 5).join('\n'),
+      stackTrace: stackTrace?.split("\n").slice(0, 5).join("\n"),
     });
 
     // Debounce: prevent multiple clicks within 1 second
@@ -172,7 +168,12 @@ const ProfileContent = () => {
       return;
     }
 
-    if (!profile || !otherProfile || followActionInProgress || followActionInProgressRef.current) {
+    if (
+      !profile ||
+      !otherProfile ||
+      followActionInProgress ||
+      followActionInProgressRef.current
+    ) {
       console.log("Follow action blocked:", {
         hasProfile: !!profile,
         hasOtherProfile: !!otherProfile,
