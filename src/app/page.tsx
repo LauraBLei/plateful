@@ -1,9 +1,12 @@
+import { fetchRecentRecipes, fetchTimeRecipes } from "@/api/homeFetch";
 import { Homepage } from "@/components/pages/home";
+import { Recipe } from "@/types/recipe";
 
-const Home = () => {
+const Home = async () => {
   console.log("This is logged on the server side.");
-
-  return <Homepage />;
+  const recentRecipes: Recipe[] = await fetchRecentRecipes();
+  const timeRecipes: Recipe[] = await fetchTimeRecipes();
+  return <Homepage recentRecipes={recentRecipes} timeRecipes={timeRecipes} />;
 };
 
 export default Home;

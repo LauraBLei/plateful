@@ -3,31 +3,26 @@ import { useContext, useEffect, useState } from "react";
 import { SectionComponent } from "../home/section";
 import { WelcomeSection } from "../home/welcomeSection";
 import { AuthContext } from "../contextTypes";
-import {
-  fetchTimeRecipes,
-  fetchRecentRecipes,
-  fetchFollowingRecipes,
-} from "@/api/homeFetch";
+import { fetchFollowingRecipes } from "@/api/homeFetch";
 import { Recipe } from "@/types/recipe";
 import { Loader } from "../loader";
 
-export const Homepage = () => {
+interface HomepageProps {
+  recentRecipes: Recipe[];
+  timeRecipes: Recipe[];
+}
+
+export const Homepage = ({ recentRecipes, timeRecipes }: HomepageProps) => {
   const { profile } = useContext(AuthContext);
   const [followerRecipes, setFollowerRecipes] = useState<Recipe[]>([]);
-  const [timeRecipes, setTimeRecipes] = useState<Recipe[]>([]);
-  const [recentRecipes, setRecentRecipes] = useState<Recipe[]>([]);
   const [followingName, setFollowingName] = useState<string>("");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);
-    fetchTimeRecipes().then((x) => setTimeRecipes(x));
-    fetchRecentRecipes().then((x) => {
-      setRecentRecipes(x);
-      setLoading(false);
-    });
     fetchFollowingRecipes(profile, setFollowingName).then((recipes) =>
       setFollowerRecipes(recipes)
     );
+    setLoading(false);
   }, [profile]);
 
   if (loading) {
