@@ -3,7 +3,7 @@
 import { Search, Moon, Sun, User2, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useState, useRef, useEffect } from "react";
-import { AuthContext, CommonContext } from "./contextTypes";
+import { AuthContext, CommonContext } from "../providers/contextTypes";
 
 import Image from "next/image";
 import { signInWithGoogle, signOut } from "@/api/authActions";
@@ -40,7 +40,6 @@ export const Header = () => {
 
   const signOutHandler = async () => {
     await signOut();
-    // You may want to trigger a page reload or redirect after logout
   };
 
   const handleSearch = (e: React.FormEvent) => {

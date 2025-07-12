@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthContext } from "@/components/contextTypes";
+import { AuthContext } from "@/providers/contextTypes";
 import { OtherProfile } from "@/components/otherProfile";
 import { UserProfilePage } from "@/components/userProfile";
 import {
@@ -14,7 +14,7 @@ import {
 import { Recipe } from "@/types/recipe";
 import { useSearchParams } from "next/navigation";
 import type { UserProfile } from "@/types/user";
-import Loader from "@/components/loader";
+import Loader from "@/helpers/loader";
 import { readUserRecipes, readFavoriteRecipes } from "@/api/recipeActions";
 import { getUser, updateUser } from "@/api/userActions";
 
@@ -215,11 +215,9 @@ const ProfileContent = () => {
       : [];
 
     if (isCurrentlyFollowing) {
-      // Unfollowing
       newFollowing = newFollowing.filter((id) => id !== otherProfile.id);
       newFollowers = newFollowers.filter((id) => id !== profile.id);
     } else {
-      // Following
       if (!newFollowing.includes(otherProfile.id)) {
         newFollowing.push(otherProfile.id);
       }
@@ -229,7 +227,6 @@ const ProfileContent = () => {
     }
 
     try {
-      // Update both users in parallel but handle errors
       const [result1, result2] = await Promise.allSettled([
         updateUser({
           id: profile.id,

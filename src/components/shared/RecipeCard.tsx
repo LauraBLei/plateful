@@ -1,11 +1,11 @@
 "use client";
 
+import { deleteRecipe } from "@/api/recipeActions";
+import { AuthContext } from "@/providers/contextTypes";
 import { Clock, Edit, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
-import { AuthContext } from "@/components/contextTypes";
-import { deleteRecipe } from "@/api/recipeActions";
 
 interface RecipeCardProps {
   image: string;
@@ -20,6 +20,20 @@ interface RecipeCardProps {
   };
 }
 
+const getCookingTimeLabel = (minutes: number): string => {
+  switch (minutes) {
+    case 30:
+      return "30 min";
+    case 60:
+      return "1 hour";
+    case 90:
+      return "1.5 hours";
+    case 120:
+      return "2 hours";
+    default:
+      return "> 2 hours";
+  }
+};
 export const RecipeCard = ({
   image,
   title,
@@ -29,24 +43,7 @@ export const RecipeCard = ({
   owner,
 }: RecipeCardProps) => {
   const { profile } = useContext(AuthContext);
-
-  // Automatically determine if this is the user's own recipe
   const isOwnRecipe = profile && owner && profile.id === owner.id;
-
-  const getCookingTimeLabel = (minutes: number) => {
-    switch (minutes) {
-      case 30:
-        return "30 min";
-      case 60:
-        return "1 hour";
-      case 90:
-        return "1.5 hours";
-      case 120:
-        return "2 hours";
-      default:
-        return "> 2 hours";
-    }
-  };
 
   const onDelete = async () => {
     if (!profile) return;
@@ -63,7 +60,7 @@ export const RecipeCard = ({
   return (
     <div className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white">
       <div className="relative  aspect-[308/181] w-full  rounded-md overflow-hidden shadow-md mx-auto">
-        <Link href={`/recipe?id=${id}`} className="block w-full h-full">
+        <Link href={`/recipe/${id}`} className="block w-full h-full">
           <Image
             fill
             src={image ? image : "/default.jpg"}
@@ -71,7 +68,7 @@ export const RecipeCard = ({
             className="object-cover w-full h-full"
             priority={false}
           />
-        </Link>{" "}
+        </Link>
         {isOwnRecipe && (
           <div className="w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10">
             <Link

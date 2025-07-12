@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "@/components/contextTypes";
+import { AuthContext } from "@/providers/contextTypes";
 import {
   uploadRecipeImage,
   createRecipe,

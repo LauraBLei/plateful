@@ -1,13 +1,13 @@
-import { RecipeCard } from "@/components/card";
-import Link from "next/link";
+import { RecipeCard } from "@/components/shared/RecipeCard";
 import { Edit } from "lucide-react";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState, useMemo } from "react";
-import { FollowModal } from "./follow";
+import Link from "next/link";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { RecipeFilter, useRecipeFilter } from "./filter";
+import { FollowModal } from "./follow";
 
-import type { UserProfile } from "@/types/user";
 import type { Recipe } from "@/types/recipe";
+import type { UserProfile } from "@/types/user";
 
 interface UserProfileProps {
   profile: UserProfile;

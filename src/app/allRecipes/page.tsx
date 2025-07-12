@@ -1,4 +1,4 @@
-import { getAllRecipes } from "@/api/allRecipesApi";
+import { getAllRecipes } from "@/api/recipeActions";
 import AllRecipes from "@/components/pages/allrecipes";
 import { Recipe } from "@/types/recipe";
 

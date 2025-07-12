@@ -1,10 +1,10 @@
+import { RecipeCard } from "@/components/shared/RecipeCard";
 import Image from "next/image";
-import { RecipeCard } from "@/components/card";
-import type { UserProfile } from "../../lib/types/user";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import type { Recipe } from "../../lib/types/recipe";
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { FollowModal } from "./follow";
+import type { UserProfile } from "../../lib/types/user";
 import { RecipeFilter, useRecipeFilter } from "./filter";
+import { FollowModal } from "./follow";
 
 interface OtherProfileProps {
   otherProfile: UserProfile;

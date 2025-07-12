@@ -76,3 +76,19 @@ export async function searchContent(
     return null;
   }
 }
+
+export async function uploadRecipeImage(
+  image: File,
+  userId: string
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", image);
+  formData.append("userId", userId);
+  const response = await fetch("/api/recipe/uploadImage", {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) throw new Error("Failed to upload image");
+  const data = await response.json();
+  return data.publicUrl;
+}

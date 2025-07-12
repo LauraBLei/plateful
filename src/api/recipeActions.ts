@@ -94,22 +94,6 @@ export async function createRecipe(recipeData: any): Promise<any> {
   return await response.json();
 }
 
-export async function uploadRecipeImage(
-  image: File,
-  userId: string
-): Promise<string> {
-  const formData = new FormData();
-  formData.append("file", image);
-  formData.append("userId", userId);
-  const response = await fetch("/api/recipe/uploadImage", {
-    method: "POST",
-    body: formData,
-  });
-  if (!response.ok) throw new Error("Failed to upload image");
-  const data = await response.json();
-  return data.publicUrl;
-}
-
 export async function fetchTimeRecipes(): Promise<Recipe[]> {
   try {
     const { data, error } = await supabase

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { CreatePageContent } from "@/components/pages/create";
-import Loader from "@/components/loader";
+import Loader from "@/helpers/loader";
 
 const CreateRecipe = () => {
   return (

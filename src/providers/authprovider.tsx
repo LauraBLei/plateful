@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  AuthContext,
-  type ContextProviderProps,
-} from "../components/contextTypes";
+import { AuthContext, type ContextProviderProps } from "./contextTypes";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/supabase";
 import type { UserProfile } from "@/types/user";
@@ -31,23 +28,19 @@ export const AuthProvider = ({ children }: ContextProviderProps) => {
 
   useEffect(() => {
     const syncUser = async () => {
-      // Use supabase client to get the current user session
       const { data } = await supabase.auth.getUser();
       const user = data?.user ?? null;
       setUser(user);
 
       if (user) {
-        // Check if the user exists in your custom users table via API
         const existingUser = await getUser(user.id);
-
         if (!existingUser) {
-          // Create user in users table via API
           await createUserProfile(user);
         } else {
           setProfile(existingUser);
         }
       } else {
-        setProfile(null); // <-- clear profile on logout
+        setProfile(null);
       }
     };
 

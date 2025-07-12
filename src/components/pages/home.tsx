@@ -2,9 +2,9 @@
 import { useContext, useEffect, useState } from "react";
 import { SectionComponent } from "../home/section";
 import { WelcomeSection } from "../home/welcomeSection";
-import { AuthContext } from "../contextTypes";
+import { AuthContext } from "../../providers/contextTypes";
 import { Recipe } from "@/types/recipe";
-import { Loader } from "../loader";
+import { Loader } from "../../helpers/loader";
 import { fetchFollowingRecipes } from "@/api/recipeActions";
 
 interface HomepageProps {

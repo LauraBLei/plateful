@@ -51,9 +51,7 @@ export const CreatePageContent = () => {
   return (
     <div className="max-w-[1440px] mb-30 flex flex-col gap-10 w-full px-2">
       <h1 className="headline">{isEdit ? "Edit Recipe!" : "Create Recipe!"}</h1>
-
       <ErrorDisplay error={displayError} onClear={clearError} />
-
       <form
         onSubmit={handleSubmit}
         className="w-full space-y-6 font-primary text-brand-black dark:text-brand-white"
@@ -63,7 +61,6 @@ export const CreatePageContent = () => {
           updateField={updateField}
           existingRecipe={existingRecipe}
         />
-
         <RecipeFormActions isEdit={isEdit} isSubmitting={isSubmitting} />
       </form>
     </div>

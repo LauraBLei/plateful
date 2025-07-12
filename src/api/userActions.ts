@@ -14,11 +14,16 @@ export async function getUser(id: string) {
   return await res.json();
 }
 
-export async function updateUser(fields: {
+export type UpdateUserRequest = {
   id: string;
   bio?: string;
+  name?: string;
+  followingUpdated?: string[];
+  followersUpdated?: string[];
   updatedList?: number[];
-}) {
+};
+
+export async function updateUser(fields: UpdateUserRequest) {
   const headers = await getAuthHeaders();
   await fetch("/api/auth/user", {
     method: "PATCH",

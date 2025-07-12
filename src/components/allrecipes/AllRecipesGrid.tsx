@@ -1,7 +1,7 @@
-import React from "react";
+import { RecipeCard } from "@/components/shared/RecipeCard";
+import Loader from "@/helpers/loader";
 import { Recipe } from "@/types/recipe";
-import { RecipeCard } from "@/components/card";
-import Loader from "@/components/loader";
+import React from "react";
 
 interface AllRecipesGridProps {
   recipes: Recipe[];

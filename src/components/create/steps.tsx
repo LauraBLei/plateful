@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TextCounter } from "../textCounter";
+import { TextCounter } from "../../helpers/textCounter";
 
 interface StepsInputProps {
   steps: string[];
