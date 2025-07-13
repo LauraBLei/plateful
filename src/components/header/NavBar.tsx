@@ -30,7 +30,7 @@ const NavBar: React.FC<NavBarProps> = ({ user }) => {
       {user ? (
         <Link
           className="relative rounded-full aspect-square overflow-hidden w-[40px] hover-effect"
-          href={`/profile?id=${user.id}`}
+          href={`/profile/${user.id}`}
         >
           <Image
             fill

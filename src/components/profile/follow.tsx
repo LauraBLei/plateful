@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import Image from "next/image";
 import { X } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 interface FollowUser {
   id: string;
@@ -44,8 +44,8 @@ export const FollowModal: React.FC<FollowModalProps> = ({
   }, [isOpen, onClose]);
 
   const handleUserClick = (userId: string) => {
-    onClose(); // Close the modal first
-    router.push(`/profile?id=${userId}`); // Navigate to the user's profile
+    onClose();
+    router.push(`/profile/${userId}`);
   };
 
   if (!isOpen) return null;

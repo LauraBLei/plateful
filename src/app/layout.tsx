@@ -2,7 +2,7 @@ import { Header } from "@/components/header/header";
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { Footer } from "@/components/footer";
+import { Footer } from "@/components/footer/footer";
 import Providers from "@/providers/providers";
 
 export const metadata: Metadata = {

@@ -92,7 +92,7 @@ export const RecipeCard = ({
         )}
         {owner && !isOwnRecipe && (
           <Link
-            href={`/profile?id=${owner.id}`}
+            href={`/profile/${owner.id}`}
             className={`w-full flex absolute bottom-0 bg-brand-black/50 z-10 p-2 items-center gap-2 hover:bg-brand-black/80 transition-opacity`}
           >
             <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">

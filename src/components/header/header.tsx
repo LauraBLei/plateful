@@ -23,10 +23,6 @@ export const Header = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAuthenticated = !!user;
-
-  console.log("Server-side auth check:", { isAuthenticated, userId: user?.id });
-
   return (
     <header className="max-w-[1440px] w-full p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
       <div className="hidden md:flex w-full justify-between items-center">

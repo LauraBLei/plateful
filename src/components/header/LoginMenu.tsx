@@ -68,7 +68,7 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ user }) => {
             {profile ? (
               <Link
                 className="flex items-center gap-2 hover-effect"
-                href={`/profile?id=${profile.id}`}
+                href={`/profile/${profile.id}`}
                 onClick={() => setMenuOpen(false)}
               >
                 <Image

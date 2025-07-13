@@ -104,7 +104,7 @@ const SearchPage = () => {
                 {results.users.map((user: UserProfile) => (
                   <Link
                     key={user.id}
-                    href={`/profile?id=${user.id}`}
+                    href={`/profile/${user.id}`}
                     className="group block p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:shadow-lg hover:border-brand-orange dark:hover:border-brand-orange transition-all duration-200 bg-white dark:bg-gray-800"
                   >
                     <div className="flex items-center gap-3">

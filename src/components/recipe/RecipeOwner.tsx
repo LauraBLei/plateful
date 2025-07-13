@@ -1,7 +1,7 @@
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
 import type { UserProfile } from "@/types/user";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
 interface RecipeOwnerProps {
   owner?: UserProfile | null;
@@ -9,7 +9,7 @@ interface RecipeOwnerProps {
 
 export const RecipeOwner: React.FC<RecipeOwnerProps> = ({ owner }) => (
   <Link
-    href={`/profile?id=${owner?.id}`}
+    href={`/profile/${owner?.id}`}
     className="flex gap-5 items-center py-2 border-b-1 border-brand-black dark:border-brand-white"
   >
     <div className="relative aspect-square w-[50px] rounded-full overflow-hidden shadow-md">
