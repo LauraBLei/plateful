@@ -1,11 +1,12 @@
 import type { User } from "@supabase/supabase-js";
 
 import { createAuthenticatedSupabaseClient } from "@/api/headerActions";
-import supabase from "lib/supabase";
+import { createServerSupabaseClient } from "@/helpers/ServerAuthHelper";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = await createServerSupabaseClient();
     const user: User = await req.json();
     await supabase.from("users").insert({
       id: user.id,
@@ -20,11 +21,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
+export async function GET(_: NextRequest, { params }) {
+  const { id } = await params;
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
   try {
+    const supabase = await createServerSupabaseClient();
     const { data: existingUser, error } = await supabase
       .from("users")
       .select("*")
@@ -81,15 +82,16 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function PATCH(req: NextRequest, { params }) {
   try {
-    // Create authenticated Supabase client
+    // Use authenticated client for follow operations
     const authSupabase = createAuthenticatedSupabaseClient(req);
+    const { id: userId } = await params;
 
     const fields = await req.json();
     console.log("User update fields:", fields);
 
-    const { id, bio, name, updatedList, followersUpdated, followingUpdated } =
+    const { bio, name, updatedList, followersUpdated, followingUpdated } =
       fields;
     const updateObj: { [key: string]: unknown } = {};
     if (bio !== undefined) updateObj.bio = bio;
@@ -99,14 +101,17 @@ export async function PATCH(req: NextRequest) {
     if (followingUpdated !== undefined) updateObj.following = followingUpdated;
 
     console.log("Update object:", updateObj);
+    console.log("Updating user ID:", userId);
 
     const { error, data } = await authSupabase
       .from("users")
       .update(updateObj)
-      .eq("id", id);
+      .eq("id", userId)
+      .select();
 
     if (error) {
       console.error("User update error:", error);
+      console.error("Error details:", JSON.stringify(error, null, 2));
       throw error;
     }
 

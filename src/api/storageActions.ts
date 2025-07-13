@@ -1,6 +1,6 @@
-import { supabase } from "@/supabase";
 import { Recipe } from "@/types/recipe";
 import { UserProfile } from "@/types/user";
+import supabase from "lib/supabase";
 
 /**
  * Deletes an image from Supabase storage given its public URL

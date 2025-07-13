@@ -16,8 +16,6 @@ export const RecipeGrid: React.FC<RecipeGridProps> = ({
   emptyMessage = "No recipes yet!",
   noResultsMessage = "No recipes match your filters.",
 }) => {
-  console.log("current recipes:", recipes);
-
   return (
     <div className="w-full flex flex-col gap-5">
       <h1 className="headline">{title}</h1>

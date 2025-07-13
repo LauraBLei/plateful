@@ -1,23 +1,10 @@
 import { fetchRecentRecipes, fetchTimeRecipes } from "@/api/recipeActions";
 import { Homepage } from "@/components/pages/home";
+import { createServerSupabaseClient } from "@/helpers/ServerAuthHelper";
 import { Recipe } from "@/types/recipe";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 
 const Home = async () => {
-  const supabase = createServerComponentClient(
-    { cookies },
-    {
-      cookieOptions: {
-        name: "plateful-auth-token",
-        domain:
-          process.env.NODE_ENV === "production" ? ".plateful.com" : undefined,
-        path: "/",
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-      },
-    }
-  );
+  const supabase = await createServerSupabaseClient();
 
   const {
     data: { user },

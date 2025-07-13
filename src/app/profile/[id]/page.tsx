@@ -1,9 +1,9 @@
+import { getUser } from "@/api/userActions";
 import ProfilePage from "@/components/profile/profile";
+import { createServerSupabaseClient } from "@/helpers/ServerAuthHelper";
 import Loader from "@/helpers/loader";
 import type { Recipe } from "@/types/recipe";
 import type { UserProfile } from "@/types/user";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 import { Suspense } from "react";
 
 interface ServerProfileData {
@@ -12,22 +12,9 @@ interface ServerProfileData {
 }
 
 async function getUserDataFromServer(
+  supabase: any,
   userId: string
 ): Promise<ServerProfileData> {
-  const supabase = createServerComponentClient(
-    { cookies },
-    {
-      cookieOptions: {
-        name: "plateful-auth-token",
-        domain:
-          process.env.NODE_ENV === "production" ? ".plateful.com" : undefined,
-        path: "/",
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-      },
-    }
-  );
-
   try {
     const { data, error } = await supabase
       .from("users")
@@ -59,13 +46,29 @@ async function getUserDataFromServer(
 }
 
 const Profile = async ({ params }) => {
+  const supabase = await createServerSupabaseClient();
   const { id } = await params;
+  const { user: targetUser, recipes } = await getUserDataFromServer(
+    supabase,
+    id
+  );
 
-  const { user, recipes } = await getUserDataFromServer(id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let loggedInUser: UserProfile | null = null;
+  if (user) {
+    loggedInUser = await getUser(user.id);
+  }
 
   return (
     <Suspense fallback={<Loader />}>
-      <ProfilePage serverUserData={user} serverRecipes={recipes} />
+      <ProfilePage
+        targetUser={targetUser}
+        recipes={recipes}
+        loggedInUser={loggedInUser}
+      />
     </Suspense>
   );
 };

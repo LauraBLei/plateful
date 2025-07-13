@@ -4,12 +4,12 @@ import { Edit } from "lucide-react";
 import { useState } from "react";
 
 interface ProfileNameProps {
-  profile: UserProfile;
+  targetUser: UserProfile;
   variant?: "desktop" | "tablet";
 }
 
 export const ProfileName = ({
-  profile,
+  targetUser: profile,
   variant = "desktop",
 }: ProfileNameProps) => {
   const [editingName, setEditingName] = useState(false);

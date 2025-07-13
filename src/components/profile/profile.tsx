@@ -3,7 +3,6 @@
 import { Recipe } from "@/types/recipe";
 import type { UserProfile } from "@/types/user";
 import { useMemo, useState } from "react";
-import { useIsOwnProfile } from "../../hooks/useAuth";
 import { Avatar } from "../shared/Avatar";
 import { RecipeFilter, useRecipeFilter } from "../shared/filter";
 import { RecipeGrid } from "../shared/RecipeGrid";
@@ -14,20 +13,22 @@ import { Options } from "./Options";
 import { ProfileName } from "./ProfileName";
 
 interface ProfilePageProps {
-  serverUserData?: UserProfile | null;
-  serverRecipes?: Recipe[];
+  targetUser: UserProfile | null;
+  recipes?: Recipe[];
+  loggedInUser?: UserProfile | null;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
-  serverUserData: profile,
-  serverRecipes: recipes,
+  targetUser: targetUser,
+  recipes: recipes,
+  loggedInUser: loggedInUser,
 }) => {
   const [activeTab, setActiveTab] = useState<"recipes" | "favorites">(
     "recipes"
   );
   const [currectRecipes, setCurrentRecipes] = useState<Recipe[]>(recipes || []);
 
-  const isOwnProfile = useIsOwnProfile(profile?.id);
+  const isOwnProfile = targetUser?.id === loggedInUser?.id;
   const isFabTabActive = activeTab === "favorites";
   const filter = useRecipeFilter();
 
@@ -40,17 +41,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   return (
     <div className="px-2 mb-30 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
       <div className="flex flex-col gap-5 lg:flex-row w-full">
-        <Desktop
-          profile={profile}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          setCurrentRecipes={setCurrentRecipes}
-          isFabTabActive={isFabTabActive}
-          serverRecipes={recipes || []}
-          isOwnProfile={isOwnProfile}
-        />
-        <Tablet
-          profile={profile}
+        <ProfileSidebar
+          targetUser={targetUser}
+          loggedInUser={loggedInUser}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           setCurrentRecipes={setCurrentRecipes}
@@ -85,8 +78,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
                   ? "Your favourites"
                   : "Your Recipes"
                 : isFabTabActive
-                ? `${profile?.name}'s favourites`
-                : `${profile?.name}'s Recipes`
+                ? `${targetUser?.name}'s favourites`
+                : `${targetUser?.name}'s Recipes`
             }
             emptyMessage={"No recipes!"}
             noResultsMessage={"No recipes match your filters."}
@@ -98,7 +91,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 };
 
 interface Props {
-  profile: UserProfile;
+  targetUser: UserProfile | null;
+  loggedInUser?: UserProfile | null;
   activeTab: "recipes" | "favorites";
   setActiveTab: (tab: "recipes" | "favorites") => void;
   setCurrentRecipes: (recipes: Recipe[]) => void;
@@ -107,85 +101,88 @@ interface Props {
   isOwnProfile?: boolean;
 }
 
-const Desktop = ({
-  profile,
+const ProfileSidebar = ({
+  targetUser,
+  loggedInUser,
   setActiveTab,
   setCurrentRecipes,
   isFabTabActive,
   serverRecipes,
   isOwnProfile = false,
 }: Props) => {
-  return (
-    <div className="p-10 lg:min-h-[800px] hidden lg:flex  flex-col shadow-md lg:max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full">
-      <div className="w-full items-center flex flex-col gap-5 mb-10">
-        <Avatar
-          src={profile?.avatar ?? "/default.jpg"}
-          alt={profile?.name ?? "profile name not found"}
-          size="large"
-        />
-        <div className="flex flex-col gap-5">
-          <ProfileName profile={profile} variant="desktop" />
-          <FollowerInfo profile={profile} variant="desktop" />
-        </div>
-        <BioText profile={profile} variant="desktop" />
-      </div>
-      {!isOwnProfile ? (
-        <FollowButton isFollowingUser={false} />
-      ) : (
-        <Options
-          variant="desktop"
-          setActiveTab={setActiveTab}
-          setCurrentRecipes={setCurrentRecipes}
-          isFabTabActive={isFabTabActive}
-          profile={profile}
-          serverRecipes={serverRecipes}
-          isOwnProfile={isOwnProfile}
-        />
-      )}
-    </div>
-  );
-};
-
-const Tablet = ({
-  profile,
-  setActiveTab,
-  setCurrentRecipes,
-  isFabTabActive,
-  serverRecipes,
-  isOwnProfile = false,
-}: Props) => {
-  const profileImage = profile ? profile.avatar : "/default.jpg";
+  const profileImage = targetUser?.avatar ?? "/default.jpg";
 
   return (
-    <div className="flex lg:hidden w-full">
-      <div className="w-full">
-        <div className="flex w-full gap-10 items-center">
+    <>
+      <div
+        className="p-10 lg:min-h-[800px] hidden lg:flex flex-col items-center
+       shadow-md lg:max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full"
+      >
+        <div className="w-full items-center flex flex-col gap-5 mb-10">
           <Avatar
             src={profileImage}
-            alt={profile?.name ?? "profile name not found"}
-            size="medium"
+            alt={targetUser?.name ?? "profile name not found"}
+            size="large"
           />
-          <div className="w-full flex flex-col gap-2">
-            <ProfileName profile={profile} variant="tablet" />
-            <FollowerInfo profile={profile} variant="tablet" />
+          <div className="flex flex-col gap-5">
+            <ProfileName targetUser={targetUser} variant="desktop" />
+            <FollowerInfo targetUser={targetUser} variant="desktop" />
           </div>
+          <BioText profile={targetUser} variant="desktop" />
         </div>
-        <BioText profile={profile} variant="tablet" />
-        {!isOwnProfile ? (
-          <FollowButton isFollowingUser={false} variant="tablet" />
+        {!isOwnProfile && targetUser ? (
+          <FollowButton targetUser={targetUser} loggedInUser={loggedInUser} />
         ) : (
-          <Options
-            variant="tablet"
-            setActiveTab={setActiveTab}
-            setCurrentRecipes={setCurrentRecipes}
-            isFabTabActive={isFabTabActive}
-            profile={profile}
-            serverRecipes={serverRecipes}
-            isOwnProfile={isOwnProfile}
-          />
+          isOwnProfile && (
+            <Options
+              variant="desktop"
+              setActiveTab={setActiveTab}
+              setCurrentRecipes={setCurrentRecipes}
+              isFabTabActive={isFabTabActive}
+              profile={targetUser}
+              serverRecipes={serverRecipes}
+              isOwnProfile={isOwnProfile}
+            />
+          )
         )}
       </div>
-    </div>
+
+      <div className="flex lg:hidden w-full">
+        <div className="w-full">
+          <div className="flex w-full gap-10 items-center">
+            <Avatar
+              src={profileImage}
+              alt={targetUser?.name ?? "profile name not found"}
+              size="medium"
+            />
+            <div className="w-full flex flex-col gap-2">
+              <ProfileName targetUser={targetUser} variant="tablet" />
+              <FollowerInfo targetUser={targetUser} variant="tablet" />
+            </div>
+          </div>
+          <BioText profile={targetUser} variant="tablet" />
+          {!isOwnProfile && targetUser ? (
+            <FollowButton
+              targetUser={targetUser}
+              loggedInUser={loggedInUser}
+              variant="tablet"
+            />
+          ) : (
+            isOwnProfile && (
+              <Options
+                variant="tablet"
+                setActiveTab={setActiveTab}
+                setCurrentRecipes={setCurrentRecipes}
+                isFabTabActive={isFabTabActive}
+                profile={targetUser}
+                serverRecipes={serverRecipes}
+                isOwnProfile={isOwnProfile}
+              />
+            )
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 

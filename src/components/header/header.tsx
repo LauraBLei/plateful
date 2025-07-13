@@ -1,24 +1,11 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createServerSupabaseClient } from "@/helpers/ServerAuthHelper";
 import LoginMenu from "./LoginMenu";
 import Logo from "./logo";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
 
 export const Header = async () => {
-  const supabase = createServerComponentClient(
-    { cookies },
-    {
-      cookieOptions: {
-        name: "plateful-auth-token",
-        domain:
-          process.env.NODE_ENV === "production" ? ".plateful.com" : undefined,
-        path: "/",
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-      },
-    }
-  );
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

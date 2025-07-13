@@ -3,12 +3,12 @@ import { useState } from "react";
 import { FollowModal } from "./follow";
 
 interface FollowerInfoProps {
-  profile: UserProfile;
+  targetUser: UserProfile;
   variant?: "desktop" | "tablet";
 }
 
 export const FollowerInfo = ({
-  profile,
+  targetUser,
   variant = "desktop",
 }: FollowerInfoProps) => {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
@@ -18,16 +18,16 @@ export const FollowerInfo = ({
     variant === "desktop" ? "flex gap-5" : "flex items-center w-full gap-5";
 
   const followersText =
-    profile.followers && profile.followers.length === 1
+    targetUser.followers && targetUser.followers.length === 1
       ? " Follower"
       : " Followers";
-  const followersCount = profile.followers ? profile.followers.length : 0;
+  const followersCount = targetUser.followers ? targetUser.followers.length : 0;
 
   const followingText =
-    profile.following && profile.following.length === 1
+    targetUser.following && targetUser.following.length === 1
       ? " Following"
       : " Following";
-  const followingCount = profile.following ? profile.following.length : 0;
+  const followingCount = targetUser.following ? targetUser.following.length : 0;
   return (
     <>
       <div className={containerClasses}>
@@ -51,7 +51,7 @@ export const FollowerInfo = ({
         isOpen={showFollowersModal}
         onClose={() => setShowFollowersModal(false)}
         title="Followers"
-        users={profile.followersInfo || []}
+        users={targetUser.followersInfo || []}
         emptyMessage="No followers yet."
       />
 
@@ -59,7 +59,7 @@ export const FollowerInfo = ({
         isOpen={showFollowingModal}
         onClose={() => setShowFollowingModal(false)}
         title="Following"
-        users={profile.followingInfo || []}
+        users={targetUser.followingInfo || []}
         emptyMessage="Not following anyone yet."
       />
     </>

@@ -69,46 +69,47 @@ export const RecipeCard = ({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
-        {isOwnRecipe && (
-          <div className="w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10">
-            <Link
-              href={`/create?id=${id}`}
-              type="button"
-              className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
-            >
-              <Edit />
-            </Link>
-            <button
-              type="button"
-              className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
-              onClick={async (e) => {
-                e.preventDefault();
-                await onDelete();
-              }}
-            >
-              <Trash2Icon />
-            </button>
-          </div>
-        )}
-        {owner && !isOwnRecipe && (
-          <Link
-            href={`/profile/${owner.id}`}
-            className={`w-full flex absolute bottom-0 bg-brand-black/50 z-10 p-2 items-center gap-2 hover:bg-brand-black/80 transition-opacity`}
-          >
-            <ImageContainer className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-              <FillImage
-                src={owner.avatar || "/default.jpg"}
-                alt={owner.name}
-                className="object-cover"
-                sizes="40px"
-              />
-            </ImageContainer>
-            <span className="text-base text-brand-white font-semibold truncate">
-              {owner.name}
-            </span>
-          </Link>
-        )}
       </ImageContainer>
+
+      {isOwnRecipe && (
+        <div className="w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10">
+          <Link
+            href={`/create?id=${id}`}
+            type="button"
+            className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
+          >
+            <Edit />
+          </Link>
+          <button
+            type="button"
+            className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-black dark:text-brand-white"
+            onClick={async (e) => {
+              e.preventDefault();
+              await onDelete();
+            }}
+          >
+            <Trash2Icon />
+          </button>
+        </div>
+      )}
+      {owner && !isOwnRecipe && (
+        <Link
+          href={`/profile/${owner.id}`}
+          className={`w-full flex absolute bottom-0 bg-brand-black/50 z-10 p-2 items-center gap-2 hover:bg-brand-black/80 transition-opacity`}
+        >
+          <ImageContainer className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+            <FillImage
+              src={owner.avatar || "/default.jpg"}
+              alt={owner.name}
+              className="object-cover"
+              sizes="40px"
+            />
+          </ImageContainer>
+          <span className="text-base text-brand-white font-semibold truncate">
+            {owner.name}
+          </span>
+        </Link>
+      )}
 
       <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
