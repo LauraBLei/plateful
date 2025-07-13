@@ -21,11 +21,16 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(_: NextRequest, { params }) {
+export async function GET(req: NextRequest, { params }) {
   const { id } = await params;
+  const { searchParams } = new URL(req.url);
+
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+
   try {
     const supabase = await createServerSupabaseClient();
+
+    // Get the main user data
     const { data: existingUser, error } = await supabase
       .from("users")
       .select("*")
@@ -33,7 +38,20 @@ export async function GET(_: NextRequest, { params }) {
       .single();
     if (error) throw error;
 
-    // Fetch followers and following user info if present
+    // Get follower and following IDs from query parameters
+    const followersParam = searchParams.get("followers");
+    const followingParam = searchParams.get("following");
+
+    const followerIds = followersParam
+      ? followersParam.split(",").filter(Boolean)
+      : [];
+    const followingIds = followingParam
+      ? followingParam.split(",").filter(Boolean)
+      : [];
+
+    // Combine all user IDs we need to fetch
+    const allUserIds = [...followerIds, ...followingIds];
+
     let followersInfo: Array<{
       id: string;
       name: string;
@@ -47,12 +65,6 @@ export async function GET(_: NextRequest, { params }) {
       bio: string;
     }> = [];
 
-    // Combine all user IDs we need to fetch
-    const allUserIds = [
-      ...(existingUser?.followers || []),
-      ...(existingUser?.following || []),
-    ];
-
     if (allUserIds.length > 0) {
       const { data: usersData } = await supabase
         .from("users")
@@ -60,12 +72,12 @@ export async function GET(_: NextRequest, { params }) {
         .in("id", allUserIds);
 
       if (usersData) {
-        // Split the users into followers and following
+        // Split the users into followers and following based on the query parameters
         followersInfo = usersData.filter((user) =>
-          existingUser?.followers?.includes(user.id)
+          followerIds.includes(user.id)
         );
         followingInfo = usersData.filter((user) =>
-          existingUser?.following?.includes(user.id)
+          followingIds.includes(user.id)
         );
       }
     }

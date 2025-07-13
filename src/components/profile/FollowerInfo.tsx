@@ -1,6 +1,14 @@
+import { getUserWithFollowData } from "@/api/userActions";
 import type { UserProfile } from "@/types/user";
 import { useState } from "react";
 import { FollowModal } from "./follow";
+
+type SimpleUserInfo = {
+  id: string;
+  name: string;
+  avatar: string;
+  bio: string;
+};
 
 interface FollowerInfoProps {
   targetUser: UserProfile;
@@ -13,6 +21,58 @@ export const FollowerInfo = ({
 }: FollowerInfoProps) => {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
+  const [followersData, setFollowersData] = useState<SimpleUserInfo[]>([]);
+  const [followingData, setFollowingData] = useState<SimpleUserInfo[]>([]);
+  const [loadingFollowers, setLoadingFollowers] = useState(false);
+  const [loadingFollowing, setLoadingFollowing] = useState(false);
+
+  const handleShowFollowers = async () => {
+    if (!targetUser.followers || targetUser.followers.length === 0) {
+      setShowFollowersModal(true);
+      return;
+    }
+
+    setLoadingFollowers(true);
+    try {
+      const data = await getUserWithFollowData(targetUser.id, {
+        followers: targetUser.followers,
+      });
+
+      if (data) {
+        setFollowersData(data.followersInfo || []);
+      }
+    } catch (error) {
+      console.error("Error fetching followers:", error);
+      setFollowersData([]);
+    } finally {
+      setLoadingFollowers(false);
+      setShowFollowersModal(true);
+    }
+  };
+
+  const handleShowFollowing = async () => {
+    if (!targetUser.following || targetUser.following.length === 0) {
+      setShowFollowingModal(true);
+      return;
+    }
+
+    setLoadingFollowing(true);
+    try {
+      const data = await getUserWithFollowData(targetUser.id, {
+        following: targetUser.following,
+      });
+
+      if (data) {
+        setFollowingData(data.followingInfo || []);
+      }
+    } catch (error) {
+      console.error("Error fetching following:", error);
+      setFollowingData([]);
+    } finally {
+      setLoadingFollowing(false);
+      setShowFollowingModal(true);
+    }
+  };
 
   const containerClasses =
     variant === "desktop" ? "flex gap-5" : "flex items-center w-full gap-5";
@@ -32,18 +92,22 @@ export const FollowerInfo = ({
     <>
       <div className={containerClasses}>
         <button
-          onClick={() => setShowFollowersModal(true)}
-          className="text-sm flex gap-2 hover:text-brand-orange cursor-pointer"
+          onClick={handleShowFollowers}
+          className="text-sm flex gap-2 hover:text-brand-orange cursor-pointer disabled:opacity-50"
+          disabled={loadingFollowers}
         >
-          {followersCount}
-          {followersText}
+          {loadingFollowers
+            ? "Loading..."
+            : `${followersCount}${followersText}`}
         </button>
         <button
-          onClick={() => setShowFollowingModal(true)}
-          className="text-sm hover:text-brand-orange cursor-pointer"
+          onClick={handleShowFollowing}
+          className="text-sm hover:text-brand-orange cursor-pointer disabled:opacity-50"
+          disabled={loadingFollowing}
         >
-          {followingCount}
-          {followingText}
+          {loadingFollowing
+            ? "Loading..."
+            : `${followingCount}${followingText}`}
         </button>
       </div>
 
@@ -51,7 +115,7 @@ export const FollowerInfo = ({
         isOpen={showFollowersModal}
         onClose={() => setShowFollowersModal(false)}
         title="Followers"
-        users={targetUser.followersInfo || []}
+        users={followersData}
         emptyMessage="No followers yet."
       />
 
@@ -59,7 +123,7 @@ export const FollowerInfo = ({
         isOpen={showFollowingModal}
         onClose={() => setShowFollowingModal(false)}
         title="Following"
-        users={targetUser.followingInfo || []}
+        users={followingData}
         emptyMessage="Not following anyone yet."
       />
     </>
