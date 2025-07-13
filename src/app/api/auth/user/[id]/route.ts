@@ -84,12 +84,9 @@ export async function GET(_: NextRequest, { params }) {
 
 export async function PATCH(req: NextRequest, { params }) {
   try {
-    // Use authenticated client for follow operations
     const authSupabase = createAuthenticatedSupabaseClient(req);
     const { id: userId } = await params;
-
     const fields = await req.json();
-    console.log("User update fields:", fields);
 
     const { bio, name, updatedList, followersUpdated, followingUpdated } =
       fields;
@@ -100,9 +97,6 @@ export async function PATCH(req: NextRequest, { params }) {
     if (followersUpdated !== undefined) updateObj.followers = followersUpdated;
     if (followingUpdated !== undefined) updateObj.following = followingUpdated;
 
-    console.log("Update object:", updateObj);
-    console.log("Updating user ID:", userId);
-
     const { error, data } = await authSupabase
       .from("users")
       .update(updateObj)
@@ -111,11 +105,9 @@ export async function PATCH(req: NextRequest, { params }) {
 
     if (error) {
       console.error("User update error:", error);
-      console.error("Error details:", JSON.stringify(error, null, 2));
       throw error;
     }
 
-    console.log("User update success:", data);
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     console.error("User update exception:", err);

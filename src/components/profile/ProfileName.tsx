@@ -1,6 +1,7 @@
 import { updateUser } from "@/api/userActions";
 import type { UserProfile } from "@/types/user";
 import { Edit } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ProfileNameProps {
@@ -14,7 +15,7 @@ export const ProfileName = ({
 }: ProfileNameProps) => {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(profile?.name || "");
-  const [nameUpdateSuccess, setNameUpdateSuccess] = useState(false);
+  const router = useRouter();
 
   const handleNameClick = () => {
     setEditingName(true);
@@ -39,9 +40,8 @@ export const ProfileName = ({
         name: nameInput.trim(),
       });
 
+      router.refresh();
       setEditingName(false);
-      setNameUpdateSuccess(true);
-      setTimeout(() => setNameUpdateSuccess(false), 3000);
     } catch (error) {
       console.error("Failed to update name:", error);
     }
@@ -98,18 +98,6 @@ export const ProfileName = ({
           >
             <Edit size={16} />
           </button>
-        </div>
-      )}
-
-      {nameUpdateSuccess && (
-        <div
-          className={`font-primary text-brand-orange text-sm ${
-            variant === "desktop"
-              ? "text-center mt-2 absolute -bottom-6"
-              : "mt-1"
-          }`}
-        >
-          Name updated
         </div>
       )}
     </div>

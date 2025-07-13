@@ -1,4 +1,5 @@
 import { Edit } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { UserProfile } from "../../../lib/types/user";
 import { updateUser } from "../../api/userActions";
@@ -11,6 +12,7 @@ interface BioTextProps {
 export const BioText = ({ profile, variant = "desktop" }: BioTextProps) => {
   const [editingBio, setEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState(profile?.bio || "");
+  const router = useRouter();
 
   const handleBioClick = () => {
     setEditingBio(true);
@@ -30,6 +32,7 @@ export const BioText = ({ profile, variant = "desktop" }: BioTextProps) => {
         bio: bioInput.trim(),
       });
 
+      router.refresh();
       setEditingBio(false);
     } catch (error) {
       console.error("Failed to update bio:", error);
