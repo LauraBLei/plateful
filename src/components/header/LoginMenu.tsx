@@ -1,10 +1,14 @@
-import { signInWithGoogle, signOut } from "@/api/authActions";
+"use client";
+
+import { signInWithGoogle } from "@/api/authActions";
+import { signOutHandler } from "@/helpers/AuthHelper";
 import useHydrated from "@/hooks/useHydrated";
 import { AuthContext } from "@/providers/contextTypes";
+import type { User } from "@supabase/supabase-js";
 import { User2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import Logo from "./logo";
 import LogOutButton from "./LogOut";
 import MenuButton from "./MenuButton";
@@ -13,24 +17,34 @@ import NavLinks from "./NavLinks";
 import SetColorMode from "./SetColorMode";
 
 interface LoginMenuProps {
-  menuOpen: boolean;
-  setMenuOpen: (open: boolean) => void;
+  user: User | null;
 }
 
-const LoginMenu: React.FC<LoginMenuProps> = ({ menuOpen, setMenuOpen }) => {
+const LoginMenu: React.FC<LoginMenuProps> = ({ user }) => {
   const { profile } = useContext(AuthContext);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const menuRef = useRef<HTMLDivElement>(null);
   const isHydrated = useHydrated();
 
-  const signOutHandler = async () => {
-    await signOut();
+  // Handler for blur event to close menu if focus leaves
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    // Only close if focus moves outside the menu
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setMenuOpen(false);
+    }
   };
 
   if (!isHydrated) {
     return <></>;
   }
   return (
-    <div className="flex md:hidden w-full justify-between items-center">
+    <div
+      className="flex md:hidden w-full justify-between items-center"
+      tabIndex={-1}
+      onBlur={handleBlur}
+      style={{ outline: "none" }}
+    >
       <Logo />
       <MenuButton menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <div
@@ -69,8 +83,8 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ menuOpen, setMenuOpen }) => {
             ) : (
               <button
                 onClick={() => {
-                  signInWithGoogle();
                   setMenuOpen(false);
+                  signInWithGoogle();
                 }}
                 className="flex items-center gap-2 hover-effect hover:text-brand-orange"
               >
@@ -80,8 +94,8 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ menuOpen, setMenuOpen }) => {
             {profile && (
               <LogOutButton
                 onClick={() => {
-                  signOutHandler();
                   setMenuOpen(false);
+                  signOutHandler();
                 }}
               />
             )}

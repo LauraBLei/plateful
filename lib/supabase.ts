@@ -1,10 +1,13 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const publicURLForPlateful = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const superSecretKeyDoNotCommit =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+export const supabase = createClientComponentClient({
+  cookieOptions: {
+    name: "plateful-auth-token",
+    domain: process.env.NODE_ENV === "production" ? ".plateful.com" : undefined,
+    path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  },
+});
 
-export const supabase = createClient(
-  publicURLForPlateful,
-  superSecretKeyDoNotCommit
-);
+export default supabase;

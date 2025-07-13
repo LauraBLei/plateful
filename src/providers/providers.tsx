@@ -1,6 +1,5 @@
 "use client";
 
-import { AuthProvider } from "./authprovider";
 import { CommonProvider } from "./common";
 
 export default function Providers({
@@ -8,9 +7,5 @@ export default function Providers({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <CommonProvider>
-      <AuthProvider>{children}</AuthProvider>
-    </CommonProvider>
-  );
+  return <CommonProvider>{children}</CommonProvider>;
 }

@@ -1,6 +1,6 @@
 // API logic for recipe deletion
-import { supabase } from "@/supabase";
 import { Recipe } from "@/types/recipe";
+import { supabase } from "lib/supabase";
 import { getAuthHeaders } from "./headerActions";
 
 export async function deleteRecipe({

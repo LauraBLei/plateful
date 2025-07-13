@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 interface MobileSearchBarProps {
-  setMenuOpen: (open: boolean) => void;
+  setMenuOpen?: (open: boolean) => void;
 }
 
 const MobileSearchBar: React.FC<MobileSearchBarProps> = ({ setMenuOpen }) => {
@@ -22,7 +22,7 @@ const MobileSearchBar: React.FC<MobileSearchBarProps> = ({ setMenuOpen }) => {
       <form
         onSubmit={(e) => {
           handleSearch(e);
-          setMenuOpen(false);
+          setMenuOpen?.(false);
         }}
         className="relative"
       >

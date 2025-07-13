@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/types/*": ["lib/types/*", "src/types/*"],
-      "@/*": ["lib/*", "src/*"]
+      "@/*": ["src/*"]
     },
     "plugins": [
       {

@@ -1,3 +1,6 @@
+"use client";
+
+import useHydrated from "@/hooks/useHydrated";
 import { CommonContext } from "@/providers/contextTypes";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,7 +8,11 @@ import React, { useContext } from "react";
 
 const Logo: React.FC = () => {
   const { darkMode } = useContext(CommonContext);
+  const isHydrated = useHydrated();
 
+  if (!isHydrated) {
+    return <></>;
+  }
   return (
     <Link
       href="/"

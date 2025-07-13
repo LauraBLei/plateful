@@ -1,44 +1,40 @@
-"use client";
-
-import useHydrated from "@/hooks/useHydrated";
-import { useRef, useState } from "react";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import LoginMenu from "./LoginMenu";
+import Logo from "./logo";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
-import Logo from "./logo";
 
-export const Header = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const isHydrated = useHydrated();
-
-  // Handler for blur event to close menu if focus leaves
-  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    // Only close if focus moves outside the menu
-    if (!e.currentTarget.contains(e.relatedTarget)) {
-      setMenuOpen(false);
+export const Header = async () => {
+  const supabase = createServerComponentClient(
+    { cookies },
+    {
+      cookieOptions: {
+        name: "plateful-auth-token",
+        domain:
+          process.env.NODE_ENV === "production" ? ".plateful.com" : undefined,
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      },
     }
-  };
+  );
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!isHydrated) {
-    return <></>;
-  }
+  const isAuthenticated = !!user;
+
+  console.log("Server-side auth check:", { isAuthenticated, userId: user?.id });
 
   return (
     <header className="max-w-[1440px] w-full p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
       <div className="hidden md:flex w-full justify-between items-center">
         <Logo />
         <SearchBar />
-        <NavBar />
+        <NavBar user={user} />
       </div>
-      <div
-        ref={menuRef}
-        tabIndex={-1}
-        onBlur={handleBlur}
-        style={{ outline: "none" }}
-      >
-        <LoginMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-      </div>
+      <LoginMenu user={user} />
     </header>
   );
 };

@@ -1,11 +1,15 @@
-import { supabase } from "@/supabase";
-
-export async function signOut() {
-  await supabase.auth.signOut();
-  await fetch("/api/auth/signOut", { method: "POST" });
-  window.location.reload();
-}
+import supabase from "lib/supabase";
 
 export async function signInWithGoogle() {
-  await supabase.auth.signInWithOAuth({ provider: "google" });
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.origin,
+    },
+  });
+
+  if (error) {
+    console.error("Sign in error:", error);
+    return;
+  }
 }

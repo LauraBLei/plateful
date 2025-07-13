@@ -1,25 +1,23 @@
-import { signInWithGoogle, signOut } from "@/api/authActions";
+"use client";
+
 import { LogOut, User2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext } from "react";
+import React from "react";
 import SetColorMode from "./SetColorMode";
 
-import { AuthContext } from "@/providers/contextTypes";
-import { useEffect, useState } from "react";
+import { signInWithGoogle } from "@/api/authActions";
+import { signOutHandler } from "@/helpers/AuthHelper";
+import useHydrated from "@/hooks/useHydrated";
+import type { User } from "@supabase/supabase-js";
 import NavLinks from "./NavLinks";
 
-const NavBar: React.FC = () => {
-  const { profile } = useContext(AuthContext);
-  const [isHydrated, setIsHydrated] = useState(false);
+interface NavBarProps {
+  user: User | null;
+}
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  const signOutHandler = async () => {
-    await signOut();
-  };
+const NavBar: React.FC<NavBarProps> = ({ user }) => {
+  const isHydrated = useHydrated();
 
   if (!isHydrated) {
     return <></>;
@@ -29,15 +27,19 @@ const NavBar: React.FC = () => {
     <nav className="flex items-center gap-5">
       <NavLinks />
       <SetColorMode />
-      {profile ? (
+      {user ? (
         <Link
           className="relative rounded-full aspect-square overflow-hidden w-[40px] hover-effect"
-          href={`/profile?id=${profile.id}`}
+          href={`/profile?id=${user.id}`}
         >
           <Image
             fill
-            src={profile.avatar ? profile.avatar : "/default.jpg"}
-            alt={profile.name}
+            src={
+              user?.user_metadata?.avatar_url
+                ? user?.user_metadata?.avatar_url
+                : "/default.jpg"
+            }
+            alt={user?.user_metadata?.full_name}
           />
         </Link>
       ) : (
@@ -46,7 +48,7 @@ const NavBar: React.FC = () => {
           <span className="sr-only">Sign in</span>
         </button>
       )}
-      {profile && (
+      {user && (
         <button onClick={signOutHandler}>
           <LogOut className="hover-effect hover:text-brand-orange" />
         </button>
