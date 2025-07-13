@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { FillImage, ImageContainer } from "../shared/FillImage";
 
 interface FollowUser {
   id: string;
@@ -77,14 +77,14 @@ export const FollowModal: React.FC<FollowModalProps> = ({
                 onClick={() => handleUserClick(user.id)}
                 className="flex items-center gap-3 rounded-md cursor-pointer hover:bg-gray-50 dark:hover:bg-brand-orange/10 p-2  transition-colors"
               >
-                <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                  <Image
-                    fill
+                <ImageContainer className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                  <FillImage
                     src={user.avatar || "/default.jpg"}
                     alt={user.name || "User"}
                     className="object-cover"
+                    sizes="40px"
                   />
-                </div>
+                </ImageContainer>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold truncate">{user.name}</p>
                   {user.bio && (

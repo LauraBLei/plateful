@@ -10,6 +10,7 @@ interface OptionsProps {
   isFabTabActive: boolean;
   profile: UserProfile;
   serverRecipes: Recipe[];
+  isOwnProfile?: boolean;
 }
 
 export const Options = ({
@@ -19,6 +20,7 @@ export const Options = ({
   isFabTabActive,
   profile,
   serverRecipes,
+  isOwnProfile = false,
 }: OptionsProps) => {
   const handleRecipesClick = () => {
     setActiveTab("recipes");
@@ -28,14 +30,10 @@ export const Options = ({
   const handleFavoritesClick = async () => {
     setActiveTab("favorites");
     try {
-      console.log("Fetching favorite recipes for user:", profile.id);
-      console.log("Fetching favorite recipes for user:", profile.favorites);
-
       const favoriteRecipes = await readFavoriteRecipes({
         id: profile.id,
         favorites: profile.favorites || [],
       });
-      console.log("Favorite recipes fetched:", favoriteRecipes);
 
       setCurrentRecipes(favoriteRecipes);
     } catch (error) {
@@ -60,7 +58,7 @@ export const Options = ({
               !isFabTabActive ? "button-active" : "hover-effect"
             }`}
           >
-            Your Recipes
+            {isOwnProfile ? "Your Recipes" : `${profile?.name}'s Recipes`}
           </button>
           <button
             onClick={handleFavoritesClick}
@@ -68,7 +66,7 @@ export const Options = ({
               isFabTabActive ? "button-active" : "hover-effect"
             }`}
           >
-            Your Favorites
+            {isOwnProfile ? "Your Favorites" : `${profile?.name}'s Favorites`}
           </button>
         </>
       ) : (
@@ -79,7 +77,7 @@ export const Options = ({
               !isFabTabActive ? "button-active" : "hover-effect"
             }`}
           >
-            Your Recipes
+            {isOwnProfile ? "Your Recipes" : `${profile?.name}'s Recipes`}
           </button>
           <button
             onClick={handleFavoritesClick}
@@ -87,14 +85,16 @@ export const Options = ({
               isFabTabActive ? "button-active" : "hover-effect"
             }`}
           >
-            Your Favorites
+            {isOwnProfile ? "Your Favorites" : `${profile?.name}'s Favorites`}
           </button>
         </div>
       )}
 
-      <Link className={`${buttonClasses} hover-effect`} href={"/create"}>
-        Add a recipe
-      </Link>
+      {isOwnProfile && (
+        <Link className={`${buttonClasses} hover-effect`} href={"/create"}>
+          Add a recipe
+        </Link>
+      )}
     </div>
   );
 };

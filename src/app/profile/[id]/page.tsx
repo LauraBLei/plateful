@@ -61,19 +61,11 @@ async function getUserDataFromServer(
 const Profile = async ({ params }) => {
   const { id } = await params;
 
-  let serverUserData: UserProfile | null = null;
-  let serverRecipes: Recipe[] = [];
-
   const { user, recipes } = await getUserDataFromServer(id);
-  serverUserData = user;
-  serverRecipes = recipes;
 
   return (
     <Suspense fallback={<Loader />}>
-      <ProfilePage
-        serverUserData={serverUserData}
-        serverRecipes={serverRecipes}
-      />
+      <ProfilePage serverUserData={user} serverRecipes={recipes} />
     </Suspense>
   );
 };

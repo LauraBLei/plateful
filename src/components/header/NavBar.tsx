@@ -1,9 +1,9 @@
 "use client";
 
 import { LogOut, User2 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { FillImage, ImageContainer } from "../shared/FillImage";
 import SetColorMode from "./SetColorMode";
 
 import { signInWithGoogle } from "@/api/authActions";
@@ -28,19 +28,19 @@ const NavBar: React.FC<NavBarProps> = ({ user }) => {
       <NavLinks />
       <SetColorMode />
       {user ? (
-        <Link
-          className="relative rounded-full aspect-square overflow-hidden w-[40px] hover-effect"
-          href={`/profile/${user.id}`}
-        >
-          <Image
-            fill
-            src={
-              user?.user_metadata?.avatar_url
-                ? user?.user_metadata?.avatar_url
-                : "/default.jpg"
-            }
-            alt={user?.user_metadata?.full_name}
-          />
+        <Link href={`/profile/${user.id}`}>
+          <ImageContainer className="rounded-full aspect-square overflow-hidden w-[40px] hover-effect">
+            <FillImage
+              src={
+                user?.user_metadata?.avatar_url
+                  ? user?.user_metadata?.avatar_url
+                  : "/default.jpg"
+              }
+              alt={user?.user_metadata?.full_name}
+              className="object-cover"
+              sizes="40px"
+            />
+          </ImageContainer>
         </Link>
       ) : (
         <button onClick={signInWithGoogle}>

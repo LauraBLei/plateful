@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FillImage, ImageContainer } from "./FillImage";
 
 interface AvatarProps {
   src: string;
@@ -20,10 +20,15 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   return (
-    <div
-      className={`relative rounded-full aspect-square w-full overflow-hidden ${sizeClasses[size]} ${className}`}
+    <ImageContainer
+      className={`rounded-full aspect-square w-full overflow-hidden ${sizeClasses[size]} ${className}`}
     >
-      <Image fill src={src} alt={alt} className="object-cover" />
-    </div>
+      <FillImage
+        src={src}
+        alt={alt}
+        className="object-cover"
+        sizes="(max-width: 768px) 100px, (max-width: 1024px) 130px, 170px"
+      />
+    </ImageContainer>
   );
 };

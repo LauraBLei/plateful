@@ -1,12 +1,12 @@
 "use client";
 
 import { searchContent, SearchResults } from "@/api/storageActions";
+import { FillImage, ImageContainer } from "@/components/shared/FillImage";
 import { RecipeCard } from "@/components/shared/RecipeCard";
 import Loader from "@/helpers/loader";
 import { Recipe } from "@/types/recipe";
 import { UserProfile } from "@/types/user";
 import { Search as SearchIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -108,14 +108,14 @@ const SearchPage = () => {
                     className="group block p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:shadow-lg hover:border-brand-orange dark:hover:border-brand-orange transition-all duration-200 bg-white dark:bg-gray-800"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-gray-200 dark:ring-gray-700 group-hover:ring-brand-orange transition-colors">
-                        <Image
-                          fill
+                      <ImageContainer className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-gray-200 dark:ring-gray-700 group-hover:ring-brand-orange transition-colors">
+                        <FillImage
                           src={user.avatar || "/default.jpg"}
                           alt={user.name}
                           className="object-cover"
+                          sizes="48px"
                         />
-                      </div>
+                      </ImageContainer>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-brand-black dark:text-brand-white truncate group-hover:text-brand-orange transition-colors">
                           {user.name}

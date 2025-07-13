@@ -3,6 +3,7 @@
 import { Recipe } from "@/types/recipe";
 import type { UserProfile } from "@/types/user";
 import { useMemo, useState } from "react";
+import { useIsOwnProfile } from "../../hooks/useAuth";
 import { Avatar } from "../shared/Avatar";
 import { RecipeFilter, useRecipeFilter } from "../shared/filter";
 import { RecipeGrid } from "../shared/RecipeGrid";
@@ -25,11 +26,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     "recipes"
   );
   const [currectRecipes, setCurrentRecipes] = useState<Recipe[]>(recipes || []);
-  const isFabTabActive = activeTab === "favorites";
 
+  const isOwnProfile = useIsOwnProfile(profile?.id);
+  const isFabTabActive = activeTab === "favorites";
   const filter = useRecipeFilter();
 
-  // Filter recipes locally based on applied filters (only when search button is pressed)
   const filteredRecipes = useMemo(() => {
     return filter.filterRecipesLocally(
       isFabTabActive ? currectRecipes : recipes || []
@@ -46,6 +47,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           setCurrentRecipes={setCurrentRecipes}
           isFabTabActive={isFabTabActive}
           serverRecipes={recipes || []}
+          isOwnProfile={isOwnProfile}
         />
         <Tablet
           profile={profile}
@@ -54,6 +56,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           setCurrentRecipes={setCurrentRecipes}
           isFabTabActive={isFabTabActive}
           serverRecipes={recipes || []}
+          isOwnProfile={isOwnProfile}
         />
 
         <div className="h-full flex flex-col  gap-5 w-full">
@@ -76,7 +79,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           <RecipeGrid
             recipes={isFabTabActive ? currectRecipes : recipes}
             filteredRecipes={filteredRecipes}
-            title={isFabTabActive ? "Your favourites" : "Your Recipes"}
+            title={
+              isOwnProfile
+                ? isFabTabActive
+                  ? "Your favourites"
+                  : "Your Recipes"
+                : isFabTabActive
+                ? `${profile?.name}'s favourites`
+                : `${profile?.name}'s Recipes`
+            }
             emptyMessage={"No recipes!"}
             noResultsMessage={"No recipes match your filters."}
           />
@@ -93,6 +104,7 @@ interface Props {
   setCurrentRecipes: (recipes: Recipe[]) => void;
   isFabTabActive: boolean;
   serverRecipes: Recipe[];
+  isOwnProfile?: boolean;
 }
 
 const Desktop = ({
@@ -101,6 +113,7 @@ const Desktop = ({
   setCurrentRecipes,
   isFabTabActive,
   serverRecipes,
+  isOwnProfile = false,
 }: Props) => {
   return (
     <div className="p-10 lg:min-h-[800px] hidden lg:flex  flex-col shadow-md lg:max-w-[350px] w-full border-1 dark:border-brand-white rounded-md h-full">
@@ -116,15 +129,19 @@ const Desktop = ({
         </div>
         <BioText profile={profile} variant="desktop" />
       </div>
-      <FollowButton isFollowingUser={false} />
-      <Options
-        variant="desktop"
-        setActiveTab={setActiveTab}
-        setCurrentRecipes={setCurrentRecipes}
-        isFabTabActive={isFabTabActive}
-        profile={profile}
-        serverRecipes={serverRecipes}
-      />
+      {!isOwnProfile ? (
+        <FollowButton isFollowingUser={false} />
+      ) : (
+        <Options
+          variant="desktop"
+          setActiveTab={setActiveTab}
+          setCurrentRecipes={setCurrentRecipes}
+          isFabTabActive={isFabTabActive}
+          profile={profile}
+          serverRecipes={serverRecipes}
+          isOwnProfile={isOwnProfile}
+        />
+      )}
     </div>
   );
 };
@@ -135,6 +152,7 @@ const Tablet = ({
   setCurrentRecipes,
   isFabTabActive,
   serverRecipes,
+  isOwnProfile = false,
 }: Props) => {
   const profileImage = profile ? profile.avatar : "/default.jpg";
 
@@ -153,15 +171,19 @@ const Tablet = ({
           </div>
         </div>
         <BioText profile={profile} variant="tablet" />
-        <FollowButton isFollowingUser={false} variant="tablet" />
-        <Options
-          variant="tablet"
-          setActiveTab={setActiveTab}
-          setCurrentRecipes={setCurrentRecipes}
-          isFabTabActive={isFabTabActive}
-          profile={profile}
-          serverRecipes={serverRecipes}
-        />
+        {!isOwnProfile ? (
+          <FollowButton isFollowingUser={false} variant="tablet" />
+        ) : (
+          <Options
+            variant="tablet"
+            setActiveTab={setActiveTab}
+            setCurrentRecipes={setCurrentRecipes}
+            isFabTabActive={isFabTabActive}
+            profile={profile}
+            serverRecipes={serverRecipes}
+            isOwnProfile={isOwnProfile}
+          />
+        )}
       </div>
     </div>
   );

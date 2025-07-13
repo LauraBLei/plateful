@@ -2,9 +2,9 @@
 
 import useHydrated from "@/hooks/useHydrated";
 import { CommonContext } from "@/providers/contextTypes";
-import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
+import { FillImage, ImageContainer } from "../shared/FillImage";
 
 const Logo: React.FC = () => {
   const { darkMode } = useContext(CommonContext);
@@ -14,25 +14,15 @@ const Logo: React.FC = () => {
     return <></>;
   }
   return (
-    <Link
-      href="/"
-      className="relative aspect-[5/2] w-[120px] p-2 flex justify-center items-center cursor-pointer"
-    >
-      {darkMode ? (
-        <Image
-          fill
+    <Link href="/">
+      <ImageContainer className="aspect-[5/2] w-[120px] p-2 flex justify-center items-center cursor-pointer">
+        <FillImage
           className="object-contain"
-          src="/logo/dark.png"
+          src={darkMode ? "/logo/dark.png" : "/logo/light.png"}
           alt="Plateful Logo"
+          sizes="120px"
         />
-      ) : (
-        <Image
-          fill
-          className="object-contain"
-          src="/logo/light.png"
-          alt="Plateful Logo"
-        />
-      )}
+      </ImageContainer>
     </Link>
   );
 };

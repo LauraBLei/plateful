@@ -3,9 +3,9 @@
 import { deleteRecipe } from "@/api/recipeActions";
 import { AuthContext } from "@/providers/contextTypes";
 import { Clock, Edit, Trash2Icon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
+import { FillImage, ImageContainer } from "./FillImage";
 
 interface RecipeCardProps {
   image: string;
@@ -59,14 +59,14 @@ export const RecipeCard = ({
   const cookingTime = getCookingTimeLabel(time);
   return (
     <div className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white">
-      <div className="relative  aspect-[308/181] w-full  rounded-md overflow-hidden shadow-md mx-auto">
+      <ImageContainer className="aspect-[308/181] w-full rounded-md overflow-hidden shadow-md mx-auto">
         <Link href={`/recipe/${id}`} className="block w-full h-full">
-          <Image
-            fill
+          <FillImage
             src={image ? image : "/default.jpg"}
             alt={title}
-            className="object-cover w-full h-full"
+            className="object-cover"
             priority={false}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
         {isOwnRecipe && (
@@ -95,20 +95,20 @@ export const RecipeCard = ({
             href={`/profile/${owner.id}`}
             className={`w-full flex absolute bottom-0 bg-brand-black/50 z-10 p-2 items-center gap-2 hover:bg-brand-black/80 transition-opacity`}
           >
-            <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-              <Image
-                fill
+            <ImageContainer className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+              <FillImage
                 src={owner.avatar || "/default.jpg"}
                 alt={owner.name}
                 className="object-cover"
+                sizes="40px"
               />
-            </div>
+            </ImageContainer>
             <span className="text-base text-brand-white font-semibold truncate">
               {owner.name}
             </span>
           </Link>
         )}
-      </div>
+      </ImageContainer>
 
       <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
