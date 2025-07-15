@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuthenticatedSupabaseClient } from "src/api/headerActions";
 import { deleteImageFromStorage } from "src/api/storageActions";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export async function PATCH(req: NextRequest) {
   try {
-    // Create authenticated Supabase client
-    const supabase = createAuthenticatedSupabaseClient(req);
-
+    const supabase = await createServerSupabaseClient();
     const { recipeId, userId, updateData } = await req.json();
 
-    // If image is being updated, we need to handle old image deletion
     if (updateData.image) {
-      // First, get the current recipe to retrieve the old image URL
       const { data: currentRecipe, error: fetchError } = await supabase
         .from("recipes")
         .select("image")
@@ -37,7 +33,6 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    // Update the recipe in the database
     const { error, data } = await supabase
       .from("recipes")
       .update(updateData)

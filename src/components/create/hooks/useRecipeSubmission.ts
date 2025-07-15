@@ -3,8 +3,7 @@ import { useContext, useState } from "react";
 import { createRecipe, updateRecipe } from "src/api/recipeActions";
 import { uploadRecipeImage } from "src/api/storageActions";
 import { AuthContext } from "src/types/contextTypes";
-import { Recipe } from "src/types/recipe";
-import { RecipeFormData } from "./useRecipeForm";
+import { Recipe, RecipeFormData } from "src/types/recipe";
 
 export const useRecipeSubmission = () => {
   const { user } = useContext(AuthContext);
@@ -92,7 +91,7 @@ export const useRecipeSubmission = () => {
 
     const data = await createRecipe(recipeData);
     if (data?.id) {
-      router.push(`/recipe?id=${data.id}`);
+      router.push(`/recipe/${data.id}`);
     } else {
       throw new Error("Failed to create recipe - no ID returned");
     }

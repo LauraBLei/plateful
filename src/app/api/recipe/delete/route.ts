@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuthenticatedSupabaseClient } from "src/api/headerActions";
 import { deleteImageFromStorage } from "src/api/storageActions";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export async function DELETE(req: NextRequest) {
   try {
-    // Create authenticated Supabase client
-    const supabase = createAuthenticatedSupabaseClient(req);
-
+    const supabase = await createServerSupabaseClient();
     const { userId, recipeId } = await req.json();
 
-    // First, get the recipe to retrieve the image URL
     const { data: recipe, error: fetchError } = await supabase
       .from("recipes")
       .select("image")
@@ -25,7 +22,6 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
     }
 
-    // Extract the file path from the image URL if it exists
     if (recipe.image) {
       const deleted = await deleteImageFromStorage(recipe.image);
       if (!deleted) {
@@ -35,7 +31,6 @@ export async function DELETE(req: NextRequest) {
       }
     }
 
-    // Delete the recipe from the database
     const { error: deleteError } = await supabase
       .from("recipes")
       .delete()

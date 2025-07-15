@@ -1,21 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Recipe } from "src/types/recipe";
-
-export type IngredientGroup = {
-  groupName: string;
-  ingredients: string[];
-};
-
-export type RecipeFormData = {
-  image: File | null;
-  title: string;
-  time: number;
-  tag: string;
-  steps: string[];
-  language: string;
-  portion: number;
-  ingredientGroups: IngredientGroup[];
-};
+import { Recipe, RecipeFormData } from "src/types/recipe";
 
 const getDefaultFormData = (): RecipeFormData => ({
   image: null,

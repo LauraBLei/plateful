@@ -24,3 +24,17 @@ export type Ingredient = {
   groupName: string;
   ingredients: string[];
 };
+export type IngredientGroup = {
+  groupName: string;
+  ingredients: string[];
+};
+export type RecipeFormData = {
+  image: File | null;
+  title: string;
+  time: number;
+  tag: string;
+  steps: string[];
+  language: string;
+  portion: number;
+  ingredientGroups: IngredientGroup[];
+};

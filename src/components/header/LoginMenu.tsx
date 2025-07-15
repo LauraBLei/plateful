@@ -9,7 +9,6 @@ import { signInWithGoogle } from "src/api/authActions";
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useMounted from "src/hooks/useMounted";
 import { AuthContext } from "src/types/contextTypes";
-import Logo from "./Logo";
 import LogOutButton from "./LogOut";
 import MenuButton from "./MenuButton";
 import MobileSearchBar from "./MobileSearchBar";
@@ -47,7 +46,6 @@ const LoginMenu: React.FC = () => {
       onBlur={handleBlur}
       style={{ outline: "none" }}
     >
-      <Logo />
       <MenuButton menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <div
         ref={menuRef}

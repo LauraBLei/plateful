@@ -1,6 +1,5 @@
 import type { User } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
-import { createAuthenticatedSupabaseClient } from "src/api/headerActions";
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export async function POST(req: NextRequest) {
@@ -95,7 +94,7 @@ export async function GET(req: NextRequest, { params }) {
 
 export async function PATCH(req: NextRequest, { params }) {
   try {
-    const authSupabase = createAuthenticatedSupabaseClient(req);
+    const authSupabase = await createServerSupabaseClient();
     const { id: userId } = await params;
     const fields = await req.json();
 

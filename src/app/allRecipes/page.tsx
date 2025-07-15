@@ -1,5 +1,5 @@
 import { getAllRecipes } from "src/api/recipeActions";
-import AllRecipes from "src/components/pages/AllRecipes";
+import AllRecipes from "src/components/pages/allrecipes";
 import { Recipe } from "src/types/recipe";
 
 const AllRecipesPage = async () => {

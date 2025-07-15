@@ -1,7 +1,7 @@
-import { RecipeFormData } from "./hooks/useRecipeForm";
-import { TimeSelect } from "./time";
-import { TagSelect } from "./tag";
+import { RecipeFormData } from "src/types/recipe";
 import { StepsInput } from "./steps";
+import { TagSelect } from "./tag";
+import { TimeSelect } from "./time";
 
 type RecipeBasicInfoSectionProps = {
   formData: RecipeFormData;

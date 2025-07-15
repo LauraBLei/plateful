@@ -1,5 +1,4 @@
-import { Recipe } from "src/types/recipe";
-import { RecipeFormData } from "./hooks/useRecipeForm";
+import { Recipe, RecipeFormData } from "src/types/recipe";
 import { RecipeBasicInfoSection } from "./RecipeBasicInfoSection";
 import { RecipeMediaSection } from "./RecipeMediaSection";
 

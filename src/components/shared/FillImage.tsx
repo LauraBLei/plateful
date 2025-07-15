@@ -23,6 +23,7 @@ export const FillImage = forwardRef<HTMLImageElement, FillImageProps>(
         className={className}
         sizes={sizes}
         {...props}
+        suppressHydrationWarning
       />
     );
   }

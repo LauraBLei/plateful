@@ -11,7 +11,6 @@ const Logo: React.FC = () => {
   const isMounted = useMounted;
 
   if (!isMounted) {
-    // default image
     return (
       <Link href="/">
         <ImageContainer className="aspect-[5/2] w-[120px] p-2 flex justify-center items-center cursor-pointer">

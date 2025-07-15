@@ -1,21 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuthenticatedSupabaseClient } from "src/api/headerActions";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export async function POST(req: NextRequest) {
   try {
-    // Create authenticated Supabase client
-    const supabase = createAuthenticatedSupabaseClient(req);
+    const supabase = await createServerSupabaseClient();
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      console.error("Authentication error:", authError);
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const recipeData = await req.json();
-    console.log("Recipe data:", {
+    const recipeWithOwner = {
       ...recipeData,
-      ingredients: "[REDACTED]",
-      steps: "[REDACTED]",
-    });
+      owner_id: user.id,
+    };
 
     const { data, error } = await supabase
       .from("recipes")
-      .insert(recipeData)
+      .insert(recipeWithOwner)
       .select("id")
       .single();
 
@@ -23,6 +31,7 @@ export async function POST(req: NextRequest) {
       console.error("Recipe creation error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
     return NextResponse.json({ id: data.id }, { status: 200 });
   } catch (err: any) {
     console.error("Recipe creation exception:", err);

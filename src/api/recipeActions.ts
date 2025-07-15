@@ -10,7 +10,7 @@ export async function deleteRecipe({
   userId: string;
   recipeId: number;
 }): Promise<boolean> {
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   const response = await fetch("/api/recipe/delete", {
     method: "DELETE",
     headers,
@@ -74,7 +74,7 @@ export async function updateRecipe({
   userId: string;
   updateData: any;
 }): Promise<boolean> {
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   const response = await fetch("/api/recipe/update", {
     method: "PATCH",
     headers,
@@ -84,14 +84,26 @@ export async function updateRecipe({
 }
 
 export async function createRecipe(recipeData: any): Promise<any> {
-  const headers = await getAuthHeaders();
-  const response = await fetch("/api/recipe/create", {
-    method: "POST",
-    headers,
-    body: JSON.stringify(recipeData),
-  });
-  if (!response.ok) throw new Error("Failed to create recipe");
-  return await response.json();
+  try {
+    const headers = getAuthHeaders();
+    const response = await fetch("/api/recipe/create", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(recipeData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage =
+        errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+      throw new Error(`Failed to create recipe: ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Create recipe error:", error);
+    throw error;
+  }
 }
 
 export async function fetchTimeRecipes(): Promise<Recipe[]> {

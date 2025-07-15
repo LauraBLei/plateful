@@ -46,7 +46,7 @@ export async function getUserWithFollowData(
 }
 
 export async function updateUser(fields: UpdateUserRequest) {
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   await fetch(`${API_BASE_URL}/api/auth/user/${fields.id}`, {
     method: "PATCH",
     headers,
