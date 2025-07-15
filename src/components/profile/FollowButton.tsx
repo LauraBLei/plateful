@@ -1,6 +1,6 @@
-import type { UserProfile } from "@/types/user";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { UserProfile } from "src/types/user";
 import { updateUser } from "../../api/userActions";
 
 interface FollowButtonProps {

@@ -1,10 +1,11 @@
 "use client";
-import { useRecipeForm } from "@/components/create/hooks/useRecipeForm";
-import { useRecipeSubmission } from "@/components/create/hooks/useRecipeSubmission";
-import { useRecipeEdit } from "@/components/create/hooks/useRecipeEdit";
-import { RecipeFormLayout } from "@/components/create/RecipeFormLayout";
-import { RecipeFormActions } from "@/components/create/RecipeFormActions";
-import { ErrorDisplay } from "@/components/create/ErrorDisplay";
+
+import { ErrorDisplay } from "../create/ErrorDisplay";
+import { useRecipeEdit } from "../create/hooks/useRecipeEdit";
+import { useRecipeForm } from "../create/hooks/useRecipeForm";
+import { useRecipeSubmission } from "../create/hooks/useRecipeSubmission";
+import { RecipeFormActions } from "../create/RecipeFormActions";
+import { RecipeFormLayout } from "../create/RecipeFormLayout";
 
 export const CreatePageContent = () => {
   const {

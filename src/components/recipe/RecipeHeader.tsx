@@ -1,10 +1,10 @@
 "use client";
 
-import { updateUser } from "@/api/userActions";
-import { AuthContext } from "@/providers/contextTypes";
-import { Recipe } from "@/types/recipe";
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
 import React, { useContext } from "react";
+import { updateUser } from "src/api/userActions";
+import { AuthContext } from "src/providers/contextTypes";
+import { Recipe } from "src/types/recipe";
 
 interface RecipeHeaderProps {
   recipe: Recipe;

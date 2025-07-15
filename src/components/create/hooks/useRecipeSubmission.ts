@@ -1,9 +1,9 @@
-import { createRecipe, updateRecipe } from "@/api/recipeActions";
-import { uploadRecipeImage } from "@/api/storageActions";
-import { AuthContext } from "@/providers/contextTypes";
-import { Recipe } from "@/types/recipe";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
+import { createRecipe, updateRecipe } from "src/api/recipeActions";
+import { uploadRecipeImage } from "src/api/storageActions";
+import { AuthContext } from "src/providers/contextTypes";
+import { Recipe } from "src/types/recipe";
 import { RecipeFormData } from "./useRecipeForm";
 
 export const useRecipeSubmission = () => {
@@ -71,7 +71,7 @@ export const useRecipeSubmission = () => {
       throw new Error("Failed to update recipe");
     }
 
-    router.push(`/recipe?id=${existingRecipe.id}`);
+    router.push(`/recipe/${existingRecipe.id}`);
   };
 
   const handleRecipeCreation = async (

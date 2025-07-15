@@ -1,15 +1,15 @@
 "use client";
 
-import { searchContent, SearchResults } from "@/api/storageActions";
-import { FillImage, ImageContainer } from "@/components/shared/FillImage";
-import { RecipeCard } from "@/components/shared/RecipeCard";
-import Loader from "@/helpers/loader";
-import { Recipe } from "@/types/recipe";
-import { UserProfile } from "@/types/user";
-import { Search as SearchIcon } from "lucide-react";
+import { Loader, Search as SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { searchContent } from "src/api/storageActions";
+import { FillImage, ImageContainer } from "src/components/shared/FillImage";
+import { RecipeCard } from "src/components/shared/RecipeCard";
+import { Recipe } from "src/types/recipe";
+import { SearchResults } from "src/types/types";
+import { UserProfile } from "src/types/user";
 
 const SearchPage = () => {
   const searchParams = useSearchParams();

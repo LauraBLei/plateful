@@ -1,6 +1,6 @@
-import type { UserProfile } from "@/types/user";
 import Link from "next/link";
 import React from "react";
+import { UserProfile } from "src/types/user";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 
 interface RecipeOwnerProps {

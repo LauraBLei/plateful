@@ -1,8 +1,8 @@
-import { updateUser } from "@/api/userActions";
-import type { UserProfile } from "@/types/user";
 import { Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { updateUser } from "src/api/userActions";
+import { UserProfile } from "src/types/user";
 
 interface ProfileNameProps {
   targetUser: UserProfile;

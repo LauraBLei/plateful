@@ -1,7 +1,7 @@
-import { useContext } from "react";
 import Link from "next/link";
+import { useContext } from "react";
+import { signInWithGoogle } from "src/api/authActions";
 import { AuthContext } from "../../providers/contextTypes";
-import { signInWithGoogle } from "@/api/authActions";
 
 const Welcome = ({ text }) => {
   return (

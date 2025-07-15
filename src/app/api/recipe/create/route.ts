@@ -1,5 +1,5 @@
-import { createAuthenticatedSupabaseClient } from "@/api/headerActions";
 import { NextRequest, NextResponse } from "next/server";
+import { createAuthenticatedSupabaseClient } from "src/api/headerActions";
 
 export async function POST(req: NextRequest) {
   try {

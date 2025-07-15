@@ -1,5 +1,5 @@
-import RecipePage from "@/components/pages/recipe";
-import supabase from "lib/supabase";
+import RecipePage from "src/components/pages/RecipePage";
+import { supabase } from "src/helpers/supaBaseBrowserClient";
 
 export default async function Recipe({ params }) {
   const { id } = await params;

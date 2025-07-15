@@ -1,6 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { useCallback, useEffect, useState } from "react";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../helpers/supaBaseBrowserClient";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);

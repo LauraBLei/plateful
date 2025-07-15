@@ -1,5 +1,5 @@
-import type { Recipe } from "@/types/recipe";
 import { useRef } from "react";
+import { Recipe } from "src/types/recipe";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 
 interface ImageInputProps {

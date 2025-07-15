@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { CommonContext, type ContextProviderProps } from "./contextTypes";
+import {
+  CommonContext,
+  type ContextProviderProps as DarkModeProviderProps,
+} from "./contextTypes";
 
-export const CommonProvider = ({ children }: ContextProviderProps) => {
+export const DarkModeProvider = ({ children }: DarkModeProviderProps) => {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("dark");

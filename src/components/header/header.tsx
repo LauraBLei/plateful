@@ -1,6 +1,6 @@
-import { createServerSupabaseClient } from "@/helpers/ServerAuthHelper";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import LoginMenu from "./LoginMenu";
-import Logo from "./logo";
+import Logo from "./Logo";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
 
@@ -17,7 +17,7 @@ export const Header = async () => {
         <SearchBar />
         <NavBar user={user} />
       </div>
-      <LoginMenu user={user} />
+      <LoginMenu />
     </header>
   );
 };

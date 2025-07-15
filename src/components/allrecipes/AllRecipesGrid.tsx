@@ -1,7 +1,7 @@
-import { RecipeCard } from "@/components/shared/RecipeCard";
-import Loader from "@/helpers/loader";
-import { Recipe } from "@/types/recipe";
+import { Loader } from "lucide-react";
 import React from "react";
+import { Recipe } from "src/types/recipe";
+import { RecipeCard } from "../shared/RecipeCard";
 
 interface AllRecipesGridProps {
   recipes: Recipe[];

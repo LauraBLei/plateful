@@ -21,3 +21,11 @@ export type UserProfile = {
     bio: string;
   }>;
 };
+export type UpdateUserRequest = {
+  id: string;
+  bio?: string;
+  name?: string;
+  followingUpdated?: string[];
+  followersUpdated?: string[];
+  updatedList?: number[];
+};

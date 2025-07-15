@@ -1,14 +1,14 @@
 "use client";
 
-import useHydrated from "@/hooks/useHydrated";
-import { CommonContext } from "@/providers/contextTypes";
 import Link from "next/link";
 import React, { useContext } from "react";
+import useMounted from "src/hooks/useMounted";
+import { CommonContext } from "src/providers/contextTypes";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 
 const Logo: React.FC = () => {
   const { darkMode } = useContext(CommonContext);
-  const isHydrated = useHydrated();
+  const isHydrated = useMounted();
 
   if (!isHydrated) {
     return <></>;

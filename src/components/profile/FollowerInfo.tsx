@@ -1,7 +1,7 @@
-import { getUserWithFollowData } from "@/api/userActions";
-import type { UserProfile } from "@/types/user";
 import { useState } from "react";
-import { FollowModal } from "./follow";
+import { getUserWithFollowData } from "src/api/userActions";
+import { UserProfile } from "src/types/user";
+import { FollowModal } from "./FollowModal";
 
 type SimpleUserInfo = {
   id: string;

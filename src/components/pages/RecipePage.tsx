@@ -1,11 +1,11 @@
-import { IngredientsInfo } from "@/components/recipe/IngredientsInfo";
-import { RecipeHeader } from "@/components/recipe/RecipeHeader";
-import { RecipeOwner } from "@/components/recipe/RecipeOwner";
-import { RecipeSteps } from "@/components/recipe/RecipeSteps";
-import Loader from "@/helpers/loader";
-import { Recipe } from "@/types/recipe";
-import type { UserProfile } from "@/types/user";
+import { Loader } from "lucide-react";
 import { Suspense } from "react";
+import { Recipe } from "src/types/recipe";
+import { UserProfile } from "src/types/user";
+import { IngredientsInfo } from "../recipe/IngredientsInfo";
+import { RecipeHeader } from "../recipe/RecipeHeader";
+import { RecipeOwner } from "../recipe/RecipeOwner";
+import { RecipeSteps } from "../recipe/RecipeSteps";
 
 interface RecipePageProps {
   recipe: Recipe;

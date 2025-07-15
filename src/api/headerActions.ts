@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import supabase from "lib/supabase";
 import { NextRequest } from "next/server";
+import { supabase } from "src/helpers/supaBaseBrowserClient";
 
 export async function getAuthHeaders() {
   const {

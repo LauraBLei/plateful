@@ -1,7 +1,7 @@
 "use client";
-import { Recipe } from "@/types/recipe";
-import { SectionComponent } from "../home/section";
-import { WelcomeSection } from "../home/welcomeSection";
+import { Recipe } from "src/types/recipe";
+import { SectionComponent } from "../home/SectionComponent";
+import { WelcomeSection } from "../home/WelcomeSection";
 
 interface HomepageProps {
   recentRecipes: Recipe[];

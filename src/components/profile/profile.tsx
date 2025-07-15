@@ -1,10 +1,10 @@
 "use client";
 
-import { Recipe } from "@/types/recipe";
-import type { UserProfile } from "@/types/user";
 import { useMemo, useState } from "react";
+import { Recipe } from "src/types/recipe";
+import { UserProfile } from "src/types/user";
 import { Avatar } from "../shared/Avatar";
-import { RecipeFilter, useRecipeFilter } from "../shared/filter";
+import { RecipeFilter, useRecipeFilter } from "../shared/RecipeFilter";
 import { RecipeGrid } from "../shared/RecipeGrid";
 import { BioText } from "./BioText";
 import { FollowButton } from "./FollowButton";

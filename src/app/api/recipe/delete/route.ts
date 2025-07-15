@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAuthenticatedSupabaseClient } from "@/api/headerActions";
-import { deleteImageFromStorage } from "@/api/storageActions";
+import { createAuthenticatedSupabaseClient } from "src/api/headerActions";
+import { deleteImageFromStorage } from "src/api/storageActions";
 
 export async function DELETE(req: NextRequest) {
   try {

@@ -1,5 +1,5 @@
-import { Recipe } from "@/types/recipe";
 import React from "react";
+import { Recipe } from "src/types/recipe";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 import { ListOfIngredients } from "./ListOfIngredients";
 

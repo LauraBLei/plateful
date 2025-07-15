@@ -1,11 +1,11 @@
 "use client";
 
-import { CommonProvider } from "./common";
+import { DarkModeProvider } from "./darkModeProvider";
 
 export default function Providers({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <CommonProvider>{children}</CommonProvider>;
+  return <DarkModeProvider>{children}</DarkModeProvider>;
 }

@@ -1,9 +1,9 @@
+import { Recipe } from "src/types/recipe";
 import { RecipeFormData } from "./hooks/useRecipeForm";
-import { Recipe } from "@/types/recipe";
 import { ImageInput } from "./image";
+import { IngredientGroupsInput } from "./ingredients";
 import { LanguageSelect } from "./language";
 import { PortionSize } from "./portions";
-import { IngredientGroupsInput } from "./ingredients";
 
 type RecipeMediaSectionProps = {
   formData: RecipeFormData;

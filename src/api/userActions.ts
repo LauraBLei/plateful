@@ -1,4 +1,4 @@
-import { UserProfile } from "@/types/user";
+import { UpdateUserRequest, UserProfile } from "src/types/user";
 import { getAuthHeaders } from "./headerActions";
 
 const API_BASE_URL =
@@ -44,15 +44,6 @@ export async function getUserWithFollowData(
   if (!res.ok) return null;
   return await res.json();
 }
-
-export type UpdateUserRequest = {
-  id: string;
-  bio?: string;
-  name?: string;
-  followingUpdated?: string[];
-  followersUpdated?: string[];
-  updatedList?: number[];
-};
 
 export async function updateUser(fields: UpdateUserRequest) {
   const headers = await getAuthHeaders();

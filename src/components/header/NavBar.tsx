@@ -6,10 +6,11 @@ import React from "react";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 import SetColorMode from "./SetColorMode";
 
-import { signInWithGoogle } from "@/api/authActions";
-import { signOutHandler } from "@/helpers/AuthHelper";
-import useHydrated from "@/hooks/useHydrated";
 import type { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { signInWithGoogle } from "src/api/authActions";
+import { supabase } from "src/helpers/supaBaseBrowserClient";
+import useIsMounted from "src/hooks/useMounted";
 import NavLinks from "./NavLinks";
 
 interface NavBarProps {
@@ -17,11 +18,17 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ user }) => {
-  const isHydrated = useHydrated();
+  const isMounted = useIsMounted();
+  const router = useRouter();
 
-  if (!isHydrated) {
+  if (!isMounted) {
     return <></>;
   }
+
+  const signOutHandler = async () => {
+    await supabase.auth.signOut();
+    router.refresh();
+  };
 
   return (
     <nav className="flex items-center gap-5">

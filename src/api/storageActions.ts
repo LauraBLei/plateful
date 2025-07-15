@@ -1,6 +1,5 @@
-import { Recipe } from "@/types/recipe";
-import { UserProfile } from "@/types/user";
-import supabase from "lib/supabase";
+import { supabase } from "src/helpers/supaBaseBrowserClient";
+import { SearchResults } from "src/types/types";
 
 /**
  * Deletes an image from Supabase storage given its public URL
@@ -42,12 +41,6 @@ export async function deleteImageFromStorage(
     console.error("Error processing image URL:", error);
     return false;
   }
-}
-
-export interface SearchResults {
-  recipes: Recipe[];
-  users: UserProfile[];
-  query: string;
 }
 
 export async function searchContent(

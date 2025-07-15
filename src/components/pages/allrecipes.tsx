@@ -1,9 +1,9 @@
 "use client";
 
-import AllRecipesGrid from "@/components/allrecipes/AllRecipesGrid";
-import { RecipeFilter, useRecipeFilter } from "@/components/shared/filter";
-import { Recipe } from "@/types/recipe";
 import { useState } from "react";
+import { Recipe } from "src/types/recipe";
+import AllRecipesGrid from "../allrecipes/AllRecipesGrid";
+import { RecipeFilter, useRecipeFilter } from "../shared/RecipeFilter";
 
 interface AllRecipesProps {
   initialRecipes?: Recipe[];

@@ -1,6 +1,6 @@
-import { getAllRecipes } from "@/api/recipeActions";
-import AllRecipes from "@/components/pages/allrecipes";
-import { Recipe } from "@/types/recipe";
+import { getAllRecipes } from "src/api/recipeActions";
+import AllRecipes from "src/components/pages/AllRecipes";
+import { Recipe } from "src/types/recipe";
 
 const AllRecipesPage = async () => {
   const recipes: Recipe[] = await getAllRecipes();

@@ -1,5 +1,5 @@
-import { RecipeCard } from "@/components/shared/RecipeCard";
-import type { Recipe } from "@/types/recipe";
+import { Recipe } from "src/types/recipe";
+import { RecipeCard } from "./RecipeCard";
 
 interface RecipeGridProps {
   recipes: Recipe[];

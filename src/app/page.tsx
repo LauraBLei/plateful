@@ -1,7 +1,7 @@
-import { fetchRecentRecipes, fetchTimeRecipes } from "@/api/recipeActions";
-import { Homepage } from "@/components/pages/home";
-import { createServerSupabaseClient } from "@/helpers/ServerAuthHelper";
-import { Recipe } from "@/types/recipe";
+import { fetchRecentRecipes, fetchTimeRecipes } from "src/api/recipeActions";
+import { Homepage } from "src/components/pages/HomePage";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
+import { Recipe } from "src/types/recipe";
 
 const Home = async () => {
   const supabase = await createServerSupabaseClient();

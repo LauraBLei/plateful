@@ -1,6 +1,6 @@
-import { CommonContext } from "@/providers/contextTypes";
 import { Moon, Sun } from "lucide-react";
 import React, { useContext } from "react";
+import { CommonContext } from "src/providers/contextTypes";
 
 const SetColorMode: React.FC = () => {
   const { darkMode, toggleDarkMode } = useContext(CommonContext);

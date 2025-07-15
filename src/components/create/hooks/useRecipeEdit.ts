@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchRecipeById } from "@/api/recipeActions";
-import { Recipe } from "@/types/recipe";
+import { useEffect, useState } from "react";
+import { fetchRecipeById } from "src/api/recipeActions";
+import { Recipe } from "src/types/recipe";
 
 export const useRecipeEdit = () => {
   const searchParams = useSearchParams();

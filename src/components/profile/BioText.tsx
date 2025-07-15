@@ -1,8 +1,8 @@
 import { Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { UserProfile } from "../../../lib/types/user";
 import { updateUser } from "../../api/userActions";
+import type { UserProfile } from "../../types/user";
 
 interface BioTextProps {
   profile: UserProfile;

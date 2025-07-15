@@ -1,7 +1,7 @@
-import type { Recipe } from "@/types/recipe";
 import Link from "next/link";
-import type { UserProfile } from "../../../lib/types/user";
+import { Recipe } from "src/types/recipe";
 import { readFavoriteRecipes } from "../../api/recipeActions";
+import type { UserProfile } from "../../types/user";
 
 interface OptionsProps {
   variant?: "desktop" | "tablet";

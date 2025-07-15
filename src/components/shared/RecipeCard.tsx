@@ -1,10 +1,11 @@
 "use client";
 
-import { deleteRecipe } from "@/api/recipeActions";
-import { AuthContext } from "@/providers/contextTypes";
 import { Clock, Edit, Trash2Icon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
+import { deleteRecipe } from "src/api/recipeActions";
+import { AuthContext } from "src/providers/contextTypes";
 import { FillImage, ImageContainer } from "./FillImage";
 
 interface RecipeCardProps {
@@ -12,7 +13,6 @@ interface RecipeCardProps {
   title: string;
   time: number;
   id: number;
-
   owner?: {
     id: string;
     name: string;
@@ -34,6 +34,7 @@ const getCookingTimeLabel = (minutes: number): string => {
       return "> 2 hours";
   }
 };
+
 export const RecipeCard = ({
   image,
   title,
@@ -44,6 +45,7 @@ export const RecipeCard = ({
 }: RecipeCardProps) => {
   const { profile } = useContext(AuthContext);
   const isOwnRecipe = profile && owner && profile.id === owner.id;
+  const router = useRouter();
 
   const onDelete = async () => {
     if (!profile) return;
@@ -51,7 +53,7 @@ export const RecipeCard = ({
     if (!confirmed) return;
     try {
       await deleteRecipe({ userId: profile.id, recipeId: id });
-      window.location.reload();
+      router.refresh();
     } catch {
       alert("Failed to delete recipe.");
     }

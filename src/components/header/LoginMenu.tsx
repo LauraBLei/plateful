@@ -1,31 +1,28 @@
 "use client";
 
-import { signInWithGoogle } from "@/api/authActions";
-import { signOutHandler } from "@/helpers/AuthHelper";
-import useHydrated from "@/hooks/useHydrated";
-import { AuthContext } from "@/providers/contextTypes";
-import type { User } from "@supabase/supabase-js";
 import { User2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useContext, useRef, useState } from "react";
-import Logo from "./logo";
+import { signInWithGoogle } from "src/api/authActions";
+import { supabase } from "src/helpers/supaBaseBrowserClient";
+import useMounted from "src/hooks/useMounted";
+import { AuthContext } from "src/providers/contextTypes";
+import Logo from "./Logo";
 import LogOutButton from "./LogOut";
 import MenuButton from "./MenuButton";
 import MobileSearchBar from "./MobileSearchBar";
 import NavLinks from "./NavLinks";
 import SetColorMode from "./SetColorMode";
 
-interface LoginMenuProps {
-  user: User | null;
-}
-
-const LoginMenu: React.FC<LoginMenuProps> = ({ user }) => {
+const LoginMenu: React.FC = () => {
   const { profile } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
-  const isHydrated = useHydrated();
+  const isHydrated = useMounted();
 
   // Handler for blur event to close menu if focus leaves
   const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
@@ -33,6 +30,11 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ user }) => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setMenuOpen(false);
     }
+  };
+
+  const signOutHandler = async () => {
+    await supabase.auth.signOut();
+    router.refresh();
   };
 
   if (!isHydrated) {
