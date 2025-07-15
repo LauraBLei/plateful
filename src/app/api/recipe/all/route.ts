@@ -1,9 +1,8 @@
-import { supabase } from "@/supabase";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { supabase } from "src/helpers/supaBaseBrowserClient";
 
 export async function GET() {
   try {
-    // Get all recipes
     const { data, error } = await supabase
       .from("recipes")
       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)");

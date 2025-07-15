@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { useRef } from "react";
-import type { Recipe } from "@/types/recipe";
+import { Recipe } from "src/types/recipe";
+import { FillImage, ImageContainer } from "../shared/FillImage";
 
 interface ImageInputProps {
   setImage: (input: File | null) => void;
@@ -35,20 +35,19 @@ export const ImageInput = ({
     <div>
       <label className="headlineTwo">Upload Image</label>
 
-      <div
-        onClick={triggerFileSelect}
-        className="relative aspect-[308/181] w-full  overflow-hidden max-h-[200px] md:max-h-[400px] flex items-center justify-center border-2 border-dashed border-brand-black dark:border-brand-white rounded cursor-pointer bg-brand-white lg:bg-transparent lg:hover:bg-gray-100 transition"
-      >
-        {imagePreviewUrl ? (
-          <Image
-            fill
-            src={imagePreviewUrl}
-            alt="Preview"
-            className="object-cover"
-          />
-        ) : (
-          <span className="text-brand-black">Click to upload image</span>
-        )}
+      <div onClick={triggerFileSelect} className="cursor-pointer">
+        <ImageContainer className="aspect-[308/181] w-full overflow-hidden max-h-[200px] md:max-h-[400px] flex items-center justify-center border-2 border-dashed border-brand-black dark:border-brand-white rounded bg-brand-white lg:bg-transparent lg:hover:bg-gray-100 transition">
+          {imagePreviewUrl ? (
+            <FillImage
+              src={imagePreviewUrl}
+              alt="Preview"
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <span className="text-brand-black">Click to upload image</span>
+          )}
+        </ImageContainer>
       </div>
 
       <input

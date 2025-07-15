@@ -1,140 +1,67 @@
-"use client";
+import { fetchRecentRecipes, fetchTimeRecipes } from "src/api/recipeActions";
+import { Homepage } from "src/components/pages/HomePage";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
+import { Recipe } from "src/types/recipe";
 
-import { AuthContext } from "@/components/contextTypes";
-import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
-import { Recipe } from "@/types/recipe";
-import { supabase } from "@/supabase";
-import {
-  fetchTimeRecipes,
-  fetchRecentRecipes,
-  fetchFollowingRecipes,
-} from "@/api/homeFetch";
+const Home = async () => {
+  const supabase = await createServerSupabaseClient();
 
-import { RecipeCard } from "@/components/card";
-import Loader from "@/components/loader";
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-const Home = () => {
-  const { profile } = useContext(AuthContext);
-  const [followerRecipes, setFollowerRecipes] = useState<Recipe[]>([]);
-  const [timeRecipes, setTimeRecipes] = useState<Recipe[]>([]);
-  const [recentRecipes, setRecentRecipes] = useState<Recipe[]>([]);
-  const [followingName, setFollowingName] = useState<string>("");
-  const [loading, setLoading] = useState(true);
+  let followingRecipes = [];
 
-  useEffect(() => {
-    setLoading(true);
-    fetchTimeRecipes().then((x) => setTimeRecipes(x));
-    fetchRecentRecipes().then((x) => {
-      setRecentRecipes(x);
-      setLoading(false);
-    });
-    fetchFollowingRecipes(profile, setFollowingName).then((recipes) =>
-      setFollowerRecipes(recipes)
-    );
-  }, [profile]);
+  if (user) {
+    const following = await getFollowers(supabase, user.id);
 
-  const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "google" });
-  };
+    // Pick a random following user
+    const selected =
+      following.length > 0
+        ? [following[Math.floor(Math.random() * following.length)]]
+        : [];
 
-  if (loading) {
-    return <Loader />;
+    if (selected.length > 0) {
+      // Get the recipes and user info of a random user the client is following
+      followingRecipes = await getRecipesFromFollowers(supabase, selected[0]);
+    }
   }
-
+  const recentRecipes = await fetchRecentRecipes();
+  const timeRecipes = await fetchTimeRecipes();
   return (
-    <div className="max-w-[1440px] mb-30 w-full px-2 font-primary flex flex-col gap-5">
-      <div>
-        {profile ? (
-          <div className="flex  min-h-[270px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
-            <div className="flex-1 flex items-center justify-center rounded-t-md md:rounded-l-md md:rounded-r-none dark:bg-brand-white bg-brand-black h-full px-5 text-center shadow-md min-h-[160px] md:min-h-[270px]">
-              <h1 className="text-2xl md:text-5xl font-semibold text-brand-white dark:text-brand-black">
-                Welcome {profile.name}
-              </h1>
-            </div>
-            <div className="flex-1 rounded-b-md  md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white min-h-[160px] md:min-h-[270px]">
-              <p className="font-semibold">Got a recipe you wanna share?</p>
-              <Link href={"/create"} className="button text-lg  my-5">
-                Add a recipe
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="flex  max-h-[400px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
-            <div className="flex-1 rounded-t-md md:rounded-l-md md:rounded-r-none dark:bg-brand-white bg-brand-black h-full px-5 text-center py-10 md:py-20 shadow-md">
-              <h1 className="text-2xl md:text-5xl font-semibold text-brand-white dark:text-brand-black">
-                Welcome to Plateful!
-              </h1>
-            </div>
-            <div className="flex-1 rounded-b-md md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white">
-              <p className="font-semibold">Got a recipe you wanna share?</p>
-              <button
-                onClick={signInWithGoogle}
-                className="button text-lg  my-5"
-              >
-                Sign up now!
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-      {profile && (
-        <section id="follow" className="flex flex-col gap-2">
-          <h2 className="headline">
-            Recent recipes from {followingName || "following"}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2">
-            {followerRecipes.length > 0 ? (
-              followerRecipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  image={recipe.image}
-                  id={recipe.id}
-                  title={recipe.name}
-                  time={recipe.time}
-                  owner={recipe.owner}
-                />
-              ))
-            ) : (
-              <p className="col-span-full">
-                No recent recipes from your following yet.
-              </p>
-            )}
-          </div>
-        </section>
-      )}
-      <section id="recent" className="flex flex-col gap-2">
-        <h2 className="headline">Recent</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-2">
-          {recentRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              image={recipe.image}
-              id={recipe.id}
-              title={recipe.name}
-              time={recipe.time}
-              owner={recipe.owner}
-            />
-          ))}
-        </div>
-      </section>
-      <section id="30min" className="flex flex-col gap-2">
-        <h2 className="headline">30 min recipes!</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2">
-          {timeRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              image={recipe.image}
-              id={recipe.id}
-              title={recipe.name}
-              time={recipe.time}
-              owner={recipe.owner}
-            />
-          ))}
-        </div>
-      </section>
-    </div>
+    <Homepage
+      recentRecipes={recentRecipes}
+      timeRecipes={timeRecipes}
+      followingRecipes={followingRecipes}
+    />
   );
 };
+
+async function getRecipesFromFollowers(
+  supabase: any,
+  userId: string
+): Promise<Recipe[]> {
+  const { data: recipes } = await supabase
+    .from("recipes")
+    .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
+    .eq("owner_id", userId);
+
+  return recipes
+    .sort(
+      (a: { created: Date }, b: { created: Date }) =>
+        new Date(b.created || b.created).getTime() -
+        new Date(a.created || a.created).getTime()
+    )
+    .slice(0, 3);
+}
+
+async function getFollowers(supabase: any, userId: string): Promise<string[]> {
+  const { data: userData } = await supabase
+    .from("users")
+    .select("following")
+    .eq("id", userId)
+    .single();
+  return userData?.following ?? [];
+}
 
 export default Home;
