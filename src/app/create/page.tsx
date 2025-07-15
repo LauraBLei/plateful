@@ -1,6 +1,6 @@
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
-import { CreatePageContent } from "src/components/pages/create";
+import { CreatePageContent } from "src/components/pages/CreatePage";
 
 const CreateRecipe = () => {
   return (

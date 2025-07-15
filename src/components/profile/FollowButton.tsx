@@ -33,9 +33,9 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
     setIsLoading(true);
 
     try {
-      const unfollowTargetUserForLoggedInUser = loggedInUser.following.filter(
-        (id) => id !== targetUser.id
-      );
+      // const unfollowTargetUserForLoggedInUser = loggedInUser.following.filter(
+      //   (id) => id !== targetUser.id
+      // );
       const updatedFollowing = isFollowing
         ? removeId(targetUser, loggedInUser.following) // Unfollow
         : addId(targetUser, loggedInUser.following); // Follow

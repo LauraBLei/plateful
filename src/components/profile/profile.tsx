@@ -36,7 +36,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     return filter.filterRecipesLocally(
       isFabTabActive ? currectRecipes : recipes || []
     );
-  }, [recipes, filter]);
+  }, [recipes, filter, currectRecipes, isFabTabActive]);
 
   return (
     <div className="px-2 mb-30 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
