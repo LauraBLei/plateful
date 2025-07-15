@@ -4,7 +4,7 @@ import { LogOut, User2 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { FillImage, ImageContainer } from "../shared/FillImage";
-import SetColorMode from "./SetColorMode";
+import ThemeSwitch from "./ThemeSwitch";
 
 import type { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
@@ -33,7 +33,7 @@ const NavBar: React.FC<NavBarProps> = ({ user }) => {
   return (
     <nav className="flex items-center gap-5">
       <NavLinks />
-      <SetColorMode />
+      <ThemeSwitch />
       {user ? (
         <Link href={`/profile/${user.id}`}>
           <ImageContainer className="rounded-full aspect-square overflow-hidden w-[40px] hover-effect">

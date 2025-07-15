@@ -44,7 +44,11 @@ export const ImageContainer: React.FC<ImageContainerProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`relative ${className}`} style={{ position: "relative" }}>
+    <div
+      className={`relative ${className}`}
+      style={{ position: "relative" }}
+      suppressHydrationWarning
+    >
       {children}
     </div>
   );

@@ -1,11 +1,15 @@
 "use client";
 
-import { DarkModeProvider } from "./darkModeProvider";
+import { ThemeProvider } from "next-themes";
 
 export default function Providers({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <DarkModeProvider>{children}</DarkModeProvider>;
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system">
+      {children}
+    </ThemeProvider>
+  );
 }

@@ -8,13 +8,13 @@ import React, { useContext, useRef, useState } from "react";
 import { signInWithGoogle } from "src/api/authActions";
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useMounted from "src/hooks/useMounted";
-import { AuthContext } from "src/providers/contextTypes";
+import { AuthContext } from "src/types/contextTypes";
 import Logo from "./Logo";
 import LogOutButton from "./LogOut";
 import MenuButton from "./MenuButton";
 import MobileSearchBar from "./MobileSearchBar";
 import NavLinks from "./NavLinks";
-import SetColorMode from "./SetColorMode";
+import ThemeSwitch from "./ThemeSwitch";
 
 const LoginMenu: React.FC = () => {
   const { profile } = useContext(AuthContext);
@@ -66,7 +66,7 @@ const LoginMenu: React.FC = () => {
           <nav className="flex flex-col gap-6">
             <MobileSearchBar setMenuOpen={setMenuOpen} />
             <NavLinks setMenuOpen={setMenuOpen} />
-            <SetColorMode />
+            <ThemeSwitch />
             {profile ? (
               <Link
                 className="flex items-center gap-2 hover-effect"

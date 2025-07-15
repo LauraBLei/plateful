@@ -1,24 +1,37 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import Link from "next/link";
-import React, { useContext } from "react";
+import React from "react";
 import useMounted from "src/hooks/useMounted";
-import { CommonContext } from "src/providers/contextTypes";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 
 const Logo: React.FC = () => {
-  const { darkMode } = useContext(CommonContext);
-  const isHydrated = useMounted();
+  const { resolvedTheme } = useTheme();
+  const isMounted = useMounted;
 
-  if (!isHydrated) {
-    return <></>;
+  if (!isMounted) {
+    // default image
+    return (
+      <Link href="/">
+        <ImageContainer className="aspect-[5/2] w-[120px] p-2 flex justify-center items-center cursor-pointer">
+          <FillImage
+            className="object-contain"
+            src="/logo/light.png"
+            alt="Plateful Logo"
+            sizes="120px"
+          />
+        </ImageContainer>
+      </Link>
+    );
   }
+
   return (
     <Link href="/">
       <ImageContainer className="aspect-[5/2] w-[120px] p-2 flex justify-center items-center cursor-pointer">
         <FillImage
           className="object-contain"
-          src={darkMode ? "/logo/dark.png" : "/logo/light.png"}
+          src={resolvedTheme === "dark" ? "/logo/dark.png" : "/logo/light.png"}
           alt="Plateful Logo"
           sizes="120px"
         />

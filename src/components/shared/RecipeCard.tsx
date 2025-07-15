@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { deleteRecipe } from "src/api/recipeActions";
-import { AuthContext } from "src/providers/contextTypes";
+import { AuthContext } from "src/types/contextTypes";
 import { FillImage, ImageContainer } from "./FillImage";
 
 interface RecipeCardProps {

@@ -1,7 +1,7 @@
 "use client";
 import type { User } from "@supabase/supabase-js";
 import { createContext, type Dispatch, type SetStateAction } from "react";
-import type { UserProfile } from "../types/user";
+import type { UserProfile } from "./user";
 
 export type ContextProviderProps = {
   children: React.ReactNode;
