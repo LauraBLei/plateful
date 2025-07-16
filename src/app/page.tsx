@@ -1,4 +1,5 @@
 import { fetchRecentRecipes, fetchTimeRecipes } from "src/api/recipeActions";
+import { getUser } from "src/api/userActions";
 import { Homepage } from "src/components/pages/HomePage";
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import { Recipe } from "src/types/recipe";
@@ -11,8 +12,10 @@ const Home = async () => {
   } = await supabase.auth.getUser();
 
   let followingRecipes = [];
+  let profile = null;
 
   if (user) {
+    profile = await getUser(user.id);
     const following = await getFollowers(supabase, user.id);
 
     // Pick a random following user
@@ -33,6 +36,7 @@ const Home = async () => {
       recentRecipes={recentRecipes}
       timeRecipes={timeRecipes}
       followingRecipes={followingRecipes}
+      profile={profile}
     />
   );
 };

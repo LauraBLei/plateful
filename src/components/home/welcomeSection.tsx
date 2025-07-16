@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { useContext } from "react";
 import { signInWithGoogle } from "src/api/authActions";
-import { AuthContext } from "../../types/contextTypes";
 
 const Welcome = ({ text }) => {
   return (
@@ -13,9 +11,7 @@ const Welcome = ({ text }) => {
   );
 };
 
-export const WelcomeSection = () => {
-  const { profile } = useContext(AuthContext);
-
+export const WelcomeSection = ({ profile }) => {
   return (
     <section>
       {profile ? (

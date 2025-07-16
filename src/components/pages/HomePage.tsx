@@ -1,22 +1,25 @@
 "use client";
 import { Recipe } from "src/types/recipe";
 import { SectionComponent } from "../home/SectionComponent";
-import { WelcomeSection } from "../home/WelcomeSection";
+import { User } from "@supabase/supabase-js";
+import { WelcomeSection } from "../home/welcomeSection";
 
 interface HomepageProps {
   recentRecipes: Recipe[];
   timeRecipes: Recipe[];
   followingRecipes?: Recipe[];
+  profile: User;
 }
 
 export const Homepage = ({
   recentRecipes,
   timeRecipes,
   followingRecipes: followerRecipes,
+  profile,
 }: HomepageProps) => {
   return (
     <div className="max-w-[1440px] mb-30 w-full px-2 font-primary flex flex-col gap-5">
-      <WelcomeSection />
+      <WelcomeSection profile={profile} />
       {followerRecipes?.length > 0 && (
         <SectionComponent
           recipeList={followerRecipes}

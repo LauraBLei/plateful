@@ -1,8 +1,6 @@
 import { RecipeCard } from "../shared/RecipeCard";
 
 export const SectionComponent = ({ recipeList, sectionName }) => {
-  console.log(recipeList);
-
   return (
     <section id="follow" className="flex flex-col gap-2">
       <h2 className="headline">{sectionName}</h2>
