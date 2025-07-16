@@ -18,7 +18,9 @@ async function getUserDataFromServer(
   try {
     const { data, error } = await supabase
       .from("users")
-      .select(`*,recipes (*)`)
+      .select(
+        `*,recipes (*, owner:users!recipes_owner_id_fkey(id, name, avatar))`
+      )
       .eq("id", userId)
       .single();
 

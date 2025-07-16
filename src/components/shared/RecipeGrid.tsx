@@ -1,5 +1,6 @@
 import { Recipe } from "src/types/recipe";
 import { RecipeCard } from "./RecipeCard";
+import { useEffect } from "react";
 
 interface RecipeGridProps {
   recipes: Recipe[];
@@ -16,6 +17,10 @@ export const RecipeGrid: React.FC<RecipeGridProps> = ({
   emptyMessage = "No recipes yet!",
   noResultsMessage = "No recipes match your filters.",
 }) => {
+  useEffect(() => {
+    console.log("recipes: ", recipes);
+  }, [recipes]);
+
   return (
     <div className="w-full flex flex-col gap-5">
       <h1 className="headline">{title}</h1>
