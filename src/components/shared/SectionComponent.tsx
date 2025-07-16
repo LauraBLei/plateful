@@ -1,4 +1,4 @@
-import { RecipeCard } from "../shared/RecipeCard";
+import { RecipeCard } from "./RecipeCard";
 
 export const SectionComponent = ({ recipeList, sectionName }) => {
   return (

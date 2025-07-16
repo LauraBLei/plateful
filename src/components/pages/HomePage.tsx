@@ -1,6 +1,6 @@
 "use client";
 import { Recipe } from "src/types/recipe";
-import { SectionComponent } from "../home/SectionComponent";
+import { SectionComponent } from "../shared/SectionComponent";
 import { User } from "@supabase/supabase-js";
 import { WelcomeSection } from "../home/welcomeSection";
 

@@ -1,6 +1,6 @@
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import LoginMenu from "./LoginMenu";
-import Logo from "./Logo";
+import Logo from "./logo";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
 

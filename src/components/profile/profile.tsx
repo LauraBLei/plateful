@@ -5,12 +5,12 @@ import { Recipe } from "src/types/recipe";
 import { UserProfile } from "src/types/user";
 import { Avatar } from "../shared/Avatar";
 import { RecipeFilter, useRecipeFilter } from "../shared/RecipeFilter";
-import { RecipeGrid } from "../shared/RecipeGrid";
 import { BioText } from "./BioText";
 import { FollowButton } from "./FollowButton";
 import { FollowerInfo } from "./FollowerInfo";
 import { Options } from "./Options";
 import { ProfileName } from "./ProfileName";
+import { SectionComponent } from "../shared/SectionComponent";
 
 interface ProfilePageProps {
   targetUser: UserProfile | null;
@@ -26,17 +26,25 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   const [activeTab, setActiveTab] = useState<"recipes" | "favorites">(
     "recipes"
   );
-  const [currectRecipes, setCurrentRecipes] = useState<Recipe[]>(recipes || []);
+  const [baseRecipes, setBaseRecipes] = useState<Recipe[]>(recipes || []);
 
   const isOwnProfile = targetUser?.id === loggedInUser?.id;
   const isFabTabActive = activeTab === "favorites";
   const filter = useRecipeFilter();
 
-  const filteredRecipes = useMemo(() => {
-    return filter.filterRecipesLocally(
-      isFabTabActive ? currectRecipes : recipes || []
-    );
-  }, [recipes, filter, currectRecipes, isFabTabActive]);
+  // Calculate filtered recipes using useMemo
+  const currentRecipes = useMemo(() => {
+    // If there are active filters, apply them
+    if (
+      filter.selectedTags.length > 0 ||
+      filter.selectedLanguage ||
+      filter.selectedTime
+    ) {
+      return filter.filterRecipesLocally(baseRecipes);
+    }
+    // If no filters, return base recipes (which could be recipes or favorites)
+    return baseRecipes;
+  }, [baseRecipes, filter]);
 
   return (
     <div className="px-2 mb-30 flex w-full h-full max-w-[1440px] gap-5 font-primary text-brand-black dark:text-brand-white">
@@ -46,7 +54,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           loggedInUser={loggedInUser}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          setCurrentRecipes={setCurrentRecipes}
+          setCurrentRecipes={setBaseRecipes}
           isFabTabActive={isFabTabActive}
           serverRecipes={recipes || []}
           isOwnProfile={isOwnProfile}
@@ -68,11 +76,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             }
             forceMobileLayout={true}
           />
-
-          <RecipeGrid
-            recipes={isFabTabActive ? currectRecipes : recipes}
-            filteredRecipes={filteredRecipes}
-            title={
+          <SectionComponent
+            sectionName={
               isOwnProfile
                 ? isFabTabActive
                   ? "Your favourites"
@@ -81,8 +86,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
                 ? `${targetUser?.name}'s favourites`
                 : `${targetUser?.name}'s Recipes`
             }
-            emptyMessage={"No recipes!"}
-            noResultsMessage={"No recipes match your filters."}
+            recipeList={currentRecipes}
           />
         </div>
       </div>
