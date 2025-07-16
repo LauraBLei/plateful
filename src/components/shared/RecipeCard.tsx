@@ -3,7 +3,6 @@
 import { Clock, Edit, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
 import { deleteRecipe } from "src/api/recipeActions";
 import { FillImage, ImageContainer } from "./FillImage";
 import { useAuth } from "src/hooks/useAuth";
@@ -44,9 +43,7 @@ export const RecipeCard = ({
 }: RecipeCardProps) => {
   const { user } = useAuth();
 
-  const isOwnRecipe = useMemo(() => {
-    return user?.id === owner?.id;
-  }, [user?.id, owner?.id]);
+  const isOwnRecipe = user?.id === owner?.id;
 
   const router = useRouter();
 
