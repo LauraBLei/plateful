@@ -1,8 +1,7 @@
-"use client";
-import { Recipe } from "src/types/recipe";
-import { SectionComponent } from "../shared/SectionComponent";
 import { User } from "@supabase/supabase-js";
+import { Recipe } from "src/types/recipe";
 import { WelcomeSection } from "../home/welcomeSection";
+import { SectionComponent } from "../shared/SectionComponent";
 
 interface HomepageProps {
   recentRecipes: Recipe[];

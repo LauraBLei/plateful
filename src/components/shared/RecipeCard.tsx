@@ -4,8 +4,8 @@ import { Clock, Edit, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { deleteRecipe } from "src/api/recipeActions";
-import { FillImage, ImageContainer } from "./FillImage";
 import { useAuth } from "src/hooks/useAuth";
+import { FillImage, ImageContainer } from "./FillImage";
 
 interface RecipeCardProps {
   image: string;
@@ -44,7 +44,6 @@ export const RecipeCard = ({
   const { user } = useAuth();
 
   const isOwnRecipe = user?.id === owner?.id;
-
   const router = useRouter();
 
   const onDelete = async () => {

@@ -1,7 +1,7 @@
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
 import { getUser } from "src/api/userActions";
-import ProfilePage from "src/components/profile/profile";
+import ProfilePage from "src/components/pages/ProfilePage";
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import { Recipe } from "src/types/recipe";
 import { UserProfile } from "src/types/user";
@@ -29,10 +29,7 @@ async function getUserDataFromServer(
       return { user: null, recipes: [] };
     }
 
-    // Extract user data (without recipes)
     const { recipes, ...userData } = data;
-
-    // Sort recipes by created in descending order (newest first)
     const sortedRecipes = (recipes || []).sort((a: Recipe, b: Recipe) => {
       return new Date(b.created).getTime() - new Date(a.created).getTime();
     });
