@@ -2,7 +2,6 @@
 
 import { useAuth } from "src/providers/AuthProvider";
 import { ErrorDisplay } from "../create/ErrorDisplay";
-import { useRecipeEdit } from "../create/hooks/useRecipeEdit";
 import { useRecipeForm } from "../create/hooks/useRecipeForm";
 import { useRecipeSubmission } from "../create/hooks/useRecipeSubmission";
 import { RecipeFormActions } from "../create/RecipeFormActions";
@@ -10,14 +9,8 @@ import { RecipeFormLayout } from "../create/RecipeFormLayout";
 
 export const CreatePageContent = () => {
   const { user } = useAuth();
-  const {
-    isEdit,
-    existingRecipe,
-    isLoading: isLoadingRecipe,
-    error: loadError,
-  } = useRecipeEdit();
 
-  const { formData, updateField, validateForm } = useRecipeForm(existingRecipe);
+  const { formData, updateField, validateForm } = useRecipeForm();
 
   const {
     submitRecipe,
@@ -36,35 +29,21 @@ export const CreatePageContent = () => {
       return;
     }
 
-    await submitRecipe(formData, isEdit, existingRecipe);
+    await submitRecipe(formData, false);
   };
 
-  if (isLoadingRecipe) {
-    return (
-      <div className="max-w-[1440px] mb-30 flex flex-col gap-10 w-full px-2">
-        <div className="flex justify-center items-center py-20">
-          <div>Loading recipe...</div>
-        </div>
-      </div>
-    );
-  }
-
-  const displayError = loadError || submitError;
+  const displayError = submitError;
 
   return (
     <div className="max-w-[1440px] mb-30 flex flex-col gap-10 w-full px-2">
-      <h1 className="headline">{isEdit ? "Edit Recipe!" : "Create Recipe!"}</h1>
+      <h1 className="headline">Create Recipe!</h1>
       <ErrorDisplay error={displayError} onClear={clearError} />
       <form
         onSubmit={handleSubmit}
         className="w-full space-y-6 font-primary text-brand-black dark:text-brand-white"
       >
-        <RecipeFormLayout
-          formData={formData}
-          updateField={updateField}
-          existingRecipe={existingRecipe}
-        />
-        <RecipeFormActions isEdit={isEdit} isSubmitting={isSubmitting} />
+        <RecipeFormLayout formData={formData} updateField={updateField} />
+        <RecipeFormActions isEdit={false} isSubmitting={isSubmitting} />
       </form>
     </div>
   );
