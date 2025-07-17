@@ -1,5 +1,6 @@
 "use client";
-import { Edit, Link, Trash2Icon } from "lucide-react";
+import { Edit, Trash2Icon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { deleteRecipe } from "src/api/browserActions";
