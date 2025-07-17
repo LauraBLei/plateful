@@ -5,9 +5,9 @@ import SearchBar from "./SearchBar";
 
 export const Header = async () => {
   return (
-    <header className="max-w-[1440px] w-full p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
+    <header className="max-w-[1440px] w-full p-2 font-primary flex text-brand-black dark:text-brand-white font-semibold ">
+      <Logo />
       <div className="hidden md:flex w-full justify-between items-center">
-        <Logo />
         <SearchBar />
         <NavBar />
       </div>
