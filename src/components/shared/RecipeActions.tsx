@@ -28,7 +28,7 @@ const RecipeActions = ({ id, currentUser }: RecipeActionsProps) => {
   return (
     <div className="w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10">
       <Link
-        href={`/create/${id}`}
+        href={`/edit/${id}`}
         type="button"
         className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-white"
       >
