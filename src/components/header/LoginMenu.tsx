@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
-import { signInWithGoogle } from "src/api/authActions";
 
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useMounted from "src/hooks/useMounted";
@@ -18,7 +17,7 @@ import ThemeSwitch from "./ThemeSwitch";
 
 const LoginMenu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, signInWithGoogle } = useAuth();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
   const isHydrated = useMounted();
@@ -82,9 +81,10 @@ const LoginMenu = () => {
               </Link>
             ) : (
               <button
-                onClick={() => {
+                onClick={async () => {
                   setMenuOpen(false);
-                  signInWithGoogle();
+                  await signInWithGoogle();
+                  router.refresh();
                 }}
                 className="flex items-center gap-2 hover-effect hover:text-brand-orange"
               >
