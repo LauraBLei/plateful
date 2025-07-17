@@ -36,7 +36,7 @@ const RecipeActions = ({ id, currentUser }: RecipeActionsProps) => {
       </Link>
       <button
         type="button"
-        className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-white"
+        className="ml-1 text-xs px-2 py-1 cursor-pointer rounded hover:bg-brand-orange hover:text-brand-black text-brand-white"
         onClick={async (e) => {
           await onDelete(e);
         }}
