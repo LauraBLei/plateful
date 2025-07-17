@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get("code");
 
   if (code) {
     const cookieStore = await cookies();
@@ -18,9 +18,14 @@ export async function GET(request: NextRequest) {
             return cookieStore.getAll();
           },
           setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
+            try {
+              cookiesToSet.forEach(({ name, value, options }) => {
+                cookieStore.set(name, value, options);
+              });
+            } catch (error) {
+              // Ignore cookie setting errors in this context
+              console.warn("Cookie setting error:", error);
+            }
           },
         },
       }
@@ -31,16 +36,14 @@ export async function GET(request: NextRequest) {
 
       if (error) {
         console.error("Auth callback error:", error);
-        return NextResponse.redirect(`${origin}/?error=auth_error`);
+        return NextResponse.redirect(new URL('/?error=auth_failed', requestUrl.origin));
       }
-
-      console.log("Auth successful, redirecting to home");
     } catch (error) {
-      console.error("Auth callback exception:", error);
-      return NextResponse.redirect(`${origin}/?error=auth_exception`);
+      console.error("Auth error:", error);
+      return NextResponse.redirect(new URL('/?error=auth_failed', requestUrl.origin));
     }
   }
 
-  // Redirect to home page after successful auth
-  return NextResponse.redirect(`${origin}/`);
+  // Redirect to the home page
+  return NextResponse.redirect(new URL('/', requestUrl.origin));
 }
