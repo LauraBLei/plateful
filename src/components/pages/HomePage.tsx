@@ -16,10 +16,12 @@ export const Homepage = ({
   return (
     <div className="max-w-[1440px] mb-30 w-full px-2 font-primary flex flex-col gap-5">
       <WelcomeSection />
-      {followerRecipes?.length > 0 && (
+      {followerRecipes && followerRecipes.length > 0 && (
         <SectionComponent
           recipeList={followerRecipes}
-          sectionName={`Recent Recipes from ${followerRecipes[0].owner.name}`}
+          sectionName={`Recent Recipes from ${
+            followerRecipes[0]?.owner?.name || "Unknown"
+          }`}
         />
       )}
       <SectionComponent recipeList={recentRecipes} sectionName={"Recent"} />

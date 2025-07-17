@@ -1,7 +1,11 @@
 import RecipePage from "src/components/pages/RecipePage";
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
-export default async function Recipe({ params }) {
+interface RecipeProps {
+  params: Promise<{ id: string }>;
+}
+
+const Recipe: React.FC<RecipeProps> = async ({ params }) => {
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
   const { data: recipe, error } = await supabase
@@ -15,4 +19,6 @@ export default async function Recipe({ params }) {
   }
 
   return <RecipePage recipe={recipe} owner={recipe.owner} />;
-}
+};
+
+export default Recipe;

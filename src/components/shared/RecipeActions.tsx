@@ -7,7 +7,7 @@ import { UserProfile } from "src/types/user";
 
 interface RecipeActionsProps {
   id: number;
-  currentUser: UserProfile;
+  currentUser?: UserProfile | null;
 }
 
 const RecipeActions = ({ id, currentUser }: RecipeActionsProps) => {

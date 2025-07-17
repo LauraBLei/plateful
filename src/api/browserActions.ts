@@ -18,6 +18,7 @@ export async function deleteRecipe({
   if (!response.ok) throw new Error("Failed to delete recipe");
   return true;
 }
+
 export async function fetchRecipeById(
   recipeId: number
 ): Promise<Recipe | null> {
@@ -25,6 +26,7 @@ export async function fetchRecipeById(
   if (!res.ok) return null;
   return await res.json();
 }
+
 export async function updateRecipe({
   recipeId,
   userId,
@@ -32,7 +34,7 @@ export async function updateRecipe({
 }: {
   recipeId: number;
   userId: string;
-  updateData: any;
+  updateData: Partial<Recipe>;
 }): Promise<boolean> {
   const headers = getAuthHeaders();
   const response = await fetch("/api/recipe/update", {
@@ -42,7 +44,10 @@ export async function updateRecipe({
   });
   return response.ok;
 }
-export async function createRecipe(recipeData: any): Promise<any> {
+
+export async function createRecipe(
+  recipeData: Omit<Recipe, "id" | "created" | "updated" | "owner" | "owner_id">
+): Promise<Recipe | null> {
   try {
     const headers = getAuthHeaders();
     const response = await fetch("/api/recipe/create", {

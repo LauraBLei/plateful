@@ -34,9 +34,12 @@ export const useRecipeForm = (existingRecipe?: Recipe | null) => {
     }
   }, [existingRecipe]);
 
-  const updateField = useCallback((field: keyof RecipeFormData, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const updateField = useCallback(
+    (field: keyof RecipeFormData, value: unknown) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
   const resetForm = useCallback(() => {
     setFormData(getDefaultFormData());

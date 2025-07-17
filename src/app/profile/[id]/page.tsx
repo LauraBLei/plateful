@@ -1,3 +1,4 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
 import ProfilePage from "src/components/pages/ProfilePage";
@@ -5,13 +6,16 @@ import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import { Recipe } from "src/types/recipe";
 import { UserProfile } from "src/types/user";
 
+// Force dynamic rendering since we check user authentication
+export const dynamic = "force-dynamic";
+
 interface ServerProfileData {
   user: UserProfile | null;
   recipes: Recipe[];
 }
 
 async function getUserDataFromServer(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string
 ): Promise<ServerProfileData> {
   try {
@@ -43,7 +47,7 @@ async function getUserDataFromServer(
   }
 }
 
-const Profile = async ({ params }) => {
+const Profile = async ({ params }: { params: Promise<{ id: string }> }) => {
   const supabase = await createServerSupabaseClient();
   const { id } = await params;
   const { user, recipes } = await getUserDataFromServer(supabase, id);

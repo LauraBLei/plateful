@@ -41,19 +41,19 @@ export const RecipeCard = ({
         </Link>
         {!isOwnRecipe && (
           <Link
-            href={`/profile/${owner.id}`}
+            href={`/profile/${owner?.id}`}
             className={`w-full flex absolute bottom-0 bg-brand-black/50 z-10 p-2 items-center gap-2 hover:bg-brand-black/80 transition-opacity`}
           >
             <ImageContainer className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
               <FillImage
-                src={owner.avatar || "/default.jpg"}
-                alt={owner.name}
+                src={owner?.avatar || "/default.jpg"}
+                alt={owner?.name || "alt text"}
                 className="object-cover"
                 sizes="40px"
               />
             </ImageContainer>
             <span className="text-base text-brand-white font-semibold truncate">
-              {owner.name}
+              {owner?.name}
             </span>
           </Link>
         )}

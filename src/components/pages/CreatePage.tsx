@@ -9,7 +9,7 @@ import { RecipeFormActions } from "../create/RecipeFormActions";
 import { RecipeFormLayout } from "../create/RecipeFormLayout";
 
 export const CreatePageContent = () => {
-  const { user: currentUser } = useAuth();
+  const { user } = useAuth();
   const {
     isEdit,
     existingRecipe,
@@ -24,7 +24,7 @@ export const CreatePageContent = () => {
     isSubmitting,
     error: submitError,
     clearError,
-  } = useRecipeSubmission(currentUser);
+  } = useRecipeSubmission(user);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

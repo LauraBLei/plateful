@@ -5,7 +5,7 @@ import { TimeSelect } from "./time";
 
 type RecipeBasicInfoSectionProps = {
   formData: RecipeFormData;
-  updateField: (field: keyof RecipeFormData, value: any) => void;
+  updateField: (field: keyof RecipeFormData, value: unknown) => void;
 };
 
 export const RecipeBasicInfoSection = ({

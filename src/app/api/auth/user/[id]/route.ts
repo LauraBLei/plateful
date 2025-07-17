@@ -14,12 +14,16 @@ export async function POST(req: NextRequest) {
       bio: "",
     });
     return NextResponse.json({ success: true }, { status: 200 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
-export async function GET(req: NextRequest, { params }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params;
   const { searchParams } = new URL(req.url);
 
@@ -92,7 +96,10 @@ export async function GET(req: NextRequest, { params }) {
   }
 }
 
-export async function PATCH(req: NextRequest, { params }) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const authSupabase = await createServerSupabaseClient();
     const { id: userId } = await params;

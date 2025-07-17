@@ -29,6 +29,14 @@ export const ProfileSidebar = ({
   const isOwnProfile = targetUser?.id === user?.id;
   const profileImage = targetUser?.avatar ?? "/default.jpg";
 
+  if (!targetUser) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <p className="text-gray-500">User not found</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div

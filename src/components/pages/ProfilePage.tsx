@@ -14,11 +14,11 @@ interface ProfilePageProps {
 }
 const ProfilePage: React.FC<ProfilePageProps> = ({ targetUser, recipes }) => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<RecipeType>();
-  const [baseRecipes, setBaseRecipes] = useState<Recipe[]>(recipes);
+  const [activeTab, setActiveTab] = useState<RecipeType>("recipes");
+  const [baseRecipes, setBaseRecipes] = useState<Recipe[]>(recipes || []);
 
   useEffect(() => {
-    setBaseRecipes(recipes);
+    setBaseRecipes(recipes || []);
   }, [recipes]);
 
   const filter = useRecipeFilter();

@@ -4,7 +4,7 @@ import { RecipeMediaSection } from "./RecipeMediaSection";
 
 type RecipeFormLayoutProps = {
   formData: RecipeFormData;
-  updateField: (field: keyof RecipeFormData, value: any) => void;
+  updateField: (field: keyof RecipeFormData, value: unknown) => void;
   existingRecipe?: Recipe | null;
 };
 

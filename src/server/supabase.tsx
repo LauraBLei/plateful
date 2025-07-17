@@ -10,11 +10,12 @@ export async function getRecipesFromFollowers(
     .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
     .eq("owner_id", userId);
 
+  if (!recipes) return [];
+
   return recipes
     .sort(
-      (a: { created: Date }, b: { created: Date }) =>
-        new Date(b.created || b.created).getTime() -
-        new Date(a.created || a.created).getTime()
+      (a: Recipe, b: Recipe) =>
+        new Date(b.created).getTime() - new Date(a.created).getTime()
     )
     .slice(0, 3);
 }
