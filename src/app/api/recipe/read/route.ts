@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "src/helpers/supaBaseBrowserClient";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   const idParams = searchParams.getAll("id");
 
   try {
+    const supabase = await createServerSupabaseClient();
     if (idParams.length > 0) {
       // One or more ids: always return an array
       const ids = idParams.map(Number);

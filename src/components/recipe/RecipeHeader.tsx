@@ -1,9 +1,10 @@
 "use client";
 
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
-import React, { useContext } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { updateUser } from "src/api/userActions";
-import { AuthContext } from "src/types/contextTypes";
+import { useAuth } from "src/providers/AuthProvider";
 import { Recipe } from "src/types/recipe";
 
 interface RecipeHeaderProps {
@@ -11,50 +12,38 @@ interface RecipeHeaderProps {
 }
 
 export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
-  const { profile, updateProfile } = useContext(AuthContext);
-
-  const isFavorite = !!(
-    profile &&
-    recipe &&
-    profile.favorites?.includes(recipe.id)
-  );
+  const { user } = useAuth();
+  const isFavorite = !!(user && recipe && user.favorites?.includes(recipe.id));
   const cookingTime = getCookingTimeLabel(recipe?.time ? recipe.time : 30);
+  const router = useRouter();
 
   const handleSetFavorite = async () => {
-    if (profile && recipe) {
-      const currentFavorites = Array.isArray(profile.favorites)
-        ? profile.favorites
-        : [];
+    if (user && recipe) {
+      const currentFavorites = user.favorites;
 
       let updatedFavorites: number[];
       if (isFavorite) {
-        // Remove favorite if it exists
         updatedFavorites = currentFavorites.filter((f) => f !== recipe.id);
       } else {
-        // Add favorite if it doesn't exist
         updatedFavorites = [...currentFavorites, recipe.id];
       }
 
       try {
         await updateUser({
-          id: profile.id,
-          bio: profile.bio,
+          id: user.id,
           updatedList: updatedFavorites,
         });
+        router.refresh();
 
-        if (updatedFavorites && updateProfile) {
-          updateProfile({ favorites: updatedFavorites });
-        }
-
-        console.log("Favorites updated successfully");
+        console.log("Favorites updated successfully ", updatedFavorites);
       } catch (error) {
         console.error("Failed to update favorites:", error);
       }
     } else {
       console.log("Cannot update favorites:", {
-        hasProfile: !!profile,
+        hasProfile: !!user,
         hasRecipe: !!recipe,
-        profileId: profile?.id,
+        profileId: user?.id,
         recipeId: recipe?.id,
       });
     }

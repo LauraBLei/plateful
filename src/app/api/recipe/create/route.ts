@@ -33,8 +33,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ id: data.id }, { status: 200 });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Recipe creation exception:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -1,9 +1,8 @@
 import { getAllRecipes } from "src/api/recipeActions";
 import AllRecipes from "src/components/pages/allrecipes";
-import { Recipe } from "src/types/recipe";
 
 const AllRecipesPage = async () => {
-  const recipes: Recipe[] = await getAllRecipes();
+  const recipes = await getAllRecipes();
   return <AllRecipes initialRecipes={recipes} />;
 };
 

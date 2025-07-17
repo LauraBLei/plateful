@@ -6,7 +6,7 @@ import { PortionSize } from "./portions";
 
 type RecipeMediaSectionProps = {
   formData: RecipeFormData;
-  updateField: (field: keyof RecipeFormData, value: any) => void;
+  updateField: (field: keyof RecipeFormData, value: unknown) => void;
   existingRecipe?: Recipe | null;
 };
 
@@ -16,7 +16,7 @@ export const RecipeMediaSection = ({
   existingRecipe,
 }: RecipeMediaSectionProps) => {
   return (
-    <div className="flex gap-5 flex-col w-full">
+    <div className="flex lg:flex-1 gap-5 flex-col w-full">
       <ImageInput
         setImage={(image) => updateField("image", image)}
         image={formData.image}

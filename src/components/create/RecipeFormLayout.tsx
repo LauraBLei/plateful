@@ -4,7 +4,7 @@ import { RecipeMediaSection } from "./RecipeMediaSection";
 
 type RecipeFormLayoutProps = {
   formData: RecipeFormData;
-  updateField: (field: keyof RecipeFormData, value: any) => void;
+  updateField: (field: keyof RecipeFormData, value: unknown) => void;
   existingRecipe?: Recipe | null;
 };
 
@@ -14,14 +14,18 @@ export const RecipeFormLayout = ({
   existingRecipe,
 }: RecipeFormLayoutProps) => {
   return (
-    <div className="flex w-full gap-5 flex-wrap lg:flex-nowrap">
-      <RecipeMediaSection
-        formData={formData}
-        updateField={updateField}
-        existingRecipe={existingRecipe}
-      />
+    <div className="flex w-full gap-5 lg:flex-row flex-col">
+      <div className="flex-1 min-w-0">
+        <RecipeMediaSection
+          formData={formData}
+          updateField={updateField}
+          existingRecipe={existingRecipe}
+        />
+      </div>
 
-      <RecipeBasicInfoSection formData={formData} updateField={updateField} />
+      <div className="flex-1 min-w-0">
+        <RecipeBasicInfoSection formData={formData} updateField={updateField} />
+      </div>
     </div>
   );
 };

@@ -1,6 +1,15 @@
-import { RecipeCard } from "../shared/RecipeCard";
+import { Recipe } from "src/types/recipe";
+import { RecipeCard } from "./RecipeCard";
 
-export const SectionComponent = ({ recipeList, sectionName }) => {
+interface SectionComponentProps {
+  recipeList: Recipe[];
+  sectionName: string;
+}
+
+export const SectionComponent: React.FC<SectionComponentProps> = ({
+  recipeList,
+  sectionName,
+}) => {
   return (
     <section id="follow" className="flex flex-col gap-2">
       <h2 className="headline">{sectionName}</h2>

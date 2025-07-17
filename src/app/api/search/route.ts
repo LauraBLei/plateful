@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "src/helpers/supaBaseBrowserClient";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const searchTerm = query.trim();
 
   try {
-    // Search recipes by name or tag
+    const supabase = await createServerSupabaseClient();
     const { data: recipes, error: recipesError } = await supabase
       .from("recipes")
       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")

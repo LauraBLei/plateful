@@ -4,13 +4,13 @@ import { UserProfile } from "src/types/user";
 import { updateUser } from "../../api/userActions";
 
 interface FollowButtonProps {
-  targetUser: UserProfile;
+  targetUser: UserProfile | null;
   loggedInUser?: UserProfile | null;
   variant?: "desktop" | "tablet";
 }
 
 const removeId = (targetUser: UserProfile, arr: string[]) =>
-  arr.filter((id) => id !== targetUser.id);
+  arr.filter((id) => id !== targetUser?.id);
 
 const addId = (targetUser: UserProfile, arr: string[]) => [
   ...(arr || []),
@@ -24,7 +24,8 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const isFollowing = loggedInUser?.following?.includes(targetUser.id) || false;
+  const isFollowing =
+    (targetUser && loggedInUser?.following?.includes(targetUser.id)) || false;
 
   const handleFollow = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -33,16 +34,16 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
     setIsLoading(true);
 
     try {
-      // const unfollowTargetUserForLoggedInUser = loggedInUser.following.filter(
-      //   (id) => id !== targetUser.id
-      // );
+      if (!targetUser || !loggedInUser) {
+        return;
+      }
       const updatedFollowing = isFollowing
-        ? removeId(targetUser, loggedInUser.following) // Unfollow
-        : addId(targetUser, loggedInUser.following); // Follow
+        ? removeId(targetUser, loggedInUser.following)
+        : addId(targetUser, loggedInUser.following);
 
       const updatedFollowers = isFollowing
-        ? removeId(targetUser, targetUser.followers) // Remove from followers
-        : addId(targetUser, targetUser.followers); // Add to followers
+        ? removeId(targetUser, targetUser.followers)
+        : addId(targetUser, targetUser.followers);
 
       const updateCurrentUserPromise = updateUser({
         id: loggedInUser.id,

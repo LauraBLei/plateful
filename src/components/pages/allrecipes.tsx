@@ -6,13 +6,12 @@ import AllRecipesGrid from "../allrecipes/AllRecipesGrid";
 import { RecipeFilter, useRecipeFilter } from "../shared/RecipeFilter";
 
 interface AllRecipesProps {
-  initialRecipes?: Recipe[];
+  initialRecipes: Recipe[];
 }
 
 const AllRecipes = ({ initialRecipes = [] }: AllRecipesProps) => {
   const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes);
   const [loading, setLoading] = useState(initialRecipes.length === 0);
-
   const {
     selectedTags,
     selectedLanguage,

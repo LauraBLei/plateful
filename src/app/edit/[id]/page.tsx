@@ -1,11 +1,10 @@
-import RecipePage from "src/components/pages/RecipePage";
+import { EditPageContent } from "src/components/pages/EditPage";
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 interface RecipeProps {
   params: Promise<{ id: string }>;
 }
-
-const Recipe: React.FC<RecipeProps> = async ({ params }) => {
+const EditRecipe: React.FC<RecipeProps> = async ({ params }) => {
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
   const { data: recipe, error } = await supabase
@@ -18,7 +17,7 @@ const Recipe: React.FC<RecipeProps> = async ({ params }) => {
     return <div>Recipe not found</div>;
   }
 
-  return <RecipePage recipe={recipe} owner={recipe.owner} />;
+  return <EditPageContent recipe={recipe} />;
 };
 
-export default Recipe;
+export default EditRecipe;

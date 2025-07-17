@@ -1,21 +1,15 @@
-import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import LoginMenu from "./LoginMenu";
-import Logo from "./Logo";
+import Logo from "./logo";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
 
 export const Header = async () => {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   return (
-    <header className="max-w-[1440px] w-full p-2 font-primary text-brand-black dark:text-brand-white font-semibold ">
-      <div className="hidden md:flex w-full justify-between items-center">
-        <Logo />
+    <header className="max-w-[1440px] w-full p-2 font-primary flex items-center justify-between text-brand-black dark:text-brand-white font-semibold ">
+      <Logo />
+      <div className="hidden md:flex w-full justify-end items-center">
         <SearchBar />
-        <NavBar user={user} />
+        <NavBar />
       </div>
       <LoginMenu />
     </header>

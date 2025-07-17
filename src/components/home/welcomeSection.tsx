@@ -1,26 +1,16 @@
+"use client";
 import Link from "next/link";
-import { useContext } from "react";
 import { signInWithGoogle } from "src/api/authActions";
-import { AuthContext } from "../../types/contextTypes";
-
-const Welcome = ({ text }) => {
-  return (
-    <div className="flex-1 flex items-center justify-center rounded-t-md md:rounded-l-md md:rounded-r-none dark:bg-brand-white bg-brand-black h-full px-5 text-center shadow-md min-h-[160px] md:min-h-[270px]">
-      <h1 className="text-2xl md:text-5xl font-semibold text-brand-white dark:text-brand-black">
-        {text}
-      </h1>
-    </div>
-  );
-};
+import { useAuth } from "src/providers/AuthProvider";
+import { Welcome } from "./Welcome";
 
 export const WelcomeSection = () => {
-  const { profile } = useContext(AuthContext);
-
+  const { user } = useAuth();
   return (
     <section>
-      {profile ? (
+      {user ? (
         <div className="flex  min-h-[270px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
-          <Welcome text={`Welcome ${profile.name}`} />
+          <Welcome text={`Welcome ${user.name}`} />
           <div className="flex-1 rounded-b-md  md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white min-h-[160px] md:min-h-[270px]">
             <p className="font-semibold">Got a recipe you wanna share?</p>
             <Link href={"/create"} className="button text-lg  my-5">

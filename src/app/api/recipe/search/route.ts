@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "src/helpers/supaBaseBrowserClient";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const language = searchParams.get("language");
 
   try {
-    // Flexible filter: support multiple tags, multiple times, and language
+    const supabase = await createServerSupabaseClient();
     let query = supabase
       .from("recipes")
       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)");

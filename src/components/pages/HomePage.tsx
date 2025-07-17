@@ -1,26 +1,27 @@
-"use client";
 import { Recipe } from "src/types/recipe";
-import { SectionComponent } from "../home/SectionComponent";
-import { WelcomeSection } from "../home/WelcomeSection";
+import { WelcomeSection } from "../home/welcomeSection";
+import { SectionComponent } from "../shared/SectionComponent";
 
 interface HomepageProps {
   recentRecipes: Recipe[];
   timeRecipes: Recipe[];
-  followingRecipes?: Recipe[];
+  followerRecipes?: Recipe[];
 }
 
 export const Homepage = ({
   recentRecipes,
   timeRecipes,
-  followingRecipes: followerRecipes,
+  followerRecipes,
 }: HomepageProps) => {
   return (
     <div className="max-w-[1440px] mb-30 w-full px-2 font-primary flex flex-col gap-5">
       <WelcomeSection />
-      {followerRecipes?.length > 0 && (
+      {followerRecipes && followerRecipes.length > 0 && (
         <SectionComponent
           recipeList={followerRecipes}
-          sectionName={`Recent Recipes from ${followerRecipes[0].owner.name}`}
+          sectionName={`Recent Recipes from ${
+            followerRecipes[0]?.owner?.name || "Unknown"
+          }`}
         />
       )}
       <SectionComponent recipeList={recentRecipes} sectionName={"Recent"} />

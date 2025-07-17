@@ -6,11 +6,12 @@ import { useRecipeForm } from "../create/hooks/useRecipeForm";
 import { useRecipeSubmission } from "../create/hooks/useRecipeSubmission";
 import { RecipeFormActions } from "../create/RecipeFormActions";
 import { RecipeFormLayout } from "../create/RecipeFormLayout";
+import { Recipe } from "src/types/recipe";
 
-export const CreatePageContent = () => {
+export const EditPageContent = ({ recipe }: { recipe: Recipe }) => {
   const { user } = useAuth();
 
-  const { formData, updateField, validateForm } = useRecipeForm();
+  const { formData, updateField, validateForm } = useRecipeForm(recipe);
 
   const {
     submitRecipe,
@@ -29,21 +30,25 @@ export const CreatePageContent = () => {
       return;
     }
 
-    await submitRecipe(formData, false);
+    await submitRecipe(formData, true, recipe);
   };
 
   const displayError = submitError;
 
   return (
     <div className="max-w-[1440px] mb-30 flex flex-col gap-10 w-full px-2">
-      <h1 className="headline">Create Recipe!</h1>
+      <h1 className="headline">Edit Recipe! </h1>
       <ErrorDisplay error={displayError} onClear={clearError} />
       <form
         onSubmit={handleSubmit}
         className="w-full space-y-6 font-primary text-brand-black dark:text-brand-white"
       >
-        <RecipeFormLayout formData={formData} updateField={updateField} />
-        <RecipeFormActions isEdit={false} isSubmitting={isSubmitting} />
+        <RecipeFormLayout
+          formData={formData}
+          updateField={updateField}
+          existingRecipe={recipe}
+        />
+        <RecipeFormActions isEdit={true} isSubmitting={isSubmitting} />
       </form>
     </div>
   );

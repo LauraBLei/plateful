@@ -5,7 +5,7 @@ import { TimeSelect } from "./time";
 
 type RecipeBasicInfoSectionProps = {
   formData: RecipeFormData;
-  updateField: (field: keyof RecipeFormData, value: any) => void;
+  updateField: (field: keyof RecipeFormData, value: unknown) => void;
 };
 
 export const RecipeBasicInfoSection = ({
@@ -13,7 +13,7 @@ export const RecipeBasicInfoSection = ({
   updateField,
 }: RecipeBasicInfoSectionProps) => {
   return (
-    <div className="w-full flex flex-col gap-5 lg:max-w-[700px]">
+    <div className="w-full flex lg:flex-1 flex-col gap-5 lg:max-w-[700px]">
       <div>
         <label className="headlineTwo" htmlFor="title">
           Recipe Title

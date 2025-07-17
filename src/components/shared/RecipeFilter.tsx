@@ -1,4 +1,5 @@
 import React from "react";
+import { Recipe } from "src/types/recipe";
 
 export interface FilterOptions {
   selectedTags: string[];
@@ -162,7 +163,9 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
 };
 
 // Custom hook for managing filter state and logic
-export const useRecipeFilter = (onFilterApply?: (recipes: any[]) => void) => {
+export const useRecipeFilter = (
+  onFilterApply?: (recipes: Recipe[]) => void
+) => {
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = React.useState<string>("");
   const [selectedTime, setSelectedTime] = React.useState<string>("");
@@ -223,7 +226,7 @@ export const useRecipeFilter = (onFilterApply?: (recipes: any[]) => void) => {
 
   // Filter recipes locally (for user profile pages)
   const filterRecipesLocally = React.useCallback(
-    (recipes: any[]) => {
+    (recipes: Recipe[]) => {
       return recipes.filter((recipe) => {
         // Filter by tags (use applied tags, not selected)
         if (appliedTags.length > 0) {
@@ -251,7 +254,10 @@ export const useRecipeFilter = (onFilterApply?: (recipes: any[]) => void) => {
 
         // Filter by time (use applied time, not selected)
         if (appliedTime) {
-          const recipeTime = parseInt(recipe.time || "0");
+          const recipeTime =
+            typeof recipe.time === "string"
+              ? parseInt(recipe.time)
+              : recipe.time;
           const filterTime = parseInt(appliedTime);
 
           if (filterTime === 15 && recipeTime >= 30) return false;

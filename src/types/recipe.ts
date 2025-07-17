@@ -38,3 +38,4 @@ export type RecipeFormData = {
   portion: number;
   ingredientGroups: IngredientGroup[];
 };
+export type RecipeType = "recipes" | "favorites";

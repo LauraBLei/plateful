@@ -1,12 +1,14 @@
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import { createRecipe, updateRecipe } from "src/api/recipeActions";
-import { uploadRecipeImage } from "src/api/storageActions";
-import { AuthContext } from "src/types/contextTypes";
+import { useState } from "react";
+import {
+  createRecipe,
+  updateRecipe,
+  uploadRecipeImage,
+} from "src/api/browserActions";
 import { Recipe, RecipeFormData } from "src/types/recipe";
+import { UserProfile } from "src/types/user";
 
-export const useRecipeSubmission = () => {
-  const { user } = useContext(AuthContext);
+export const useRecipeSubmission = (user: UserProfile | null) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +37,9 @@ export const useRecipeSubmission = () => {
       } else {
         await handleRecipeCreation(formData, uploadedUrl);
       }
-    } catch (err: any) {
-      const errorMessage = err.message || "Failed to save recipe";
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to save recipe";
       setError(errorMessage);
       console.error("Recipe submission failed:", err);
     } finally {
@@ -77,14 +80,16 @@ export const useRecipeSubmission = () => {
     formData: RecipeFormData,
     uploadedUrl: string
   ) => {
-    const recipeData = {
+    const recipeData: Omit<
+      Recipe,
+      "id" | "created" | "updated" | "owner" | "owner_id"
+    > = {
       name: formData.title,
       steps: formData.steps,
       ingredients: formData.ingredientGroups,
       image: uploadedUrl,
       time: formData.time,
       tag: formData.tag,
-      owner_id: user?.id,
       language: formData.language,
       portions: formData.portion,
     };

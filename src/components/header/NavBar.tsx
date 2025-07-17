@@ -2,24 +2,21 @@
 
 import { LogOut, User2 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 import ThemeSwitch from "./ThemeSwitch";
 
-import type { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { signInWithGoogle } from "src/api/authActions";
+
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useIsMounted from "src/hooks/useMounted";
+import { useAuth } from "src/providers/AuthProvider";
 import NavLinks from "./NavLinks";
 
-interface NavBarProps {
-  user: User | null;
-}
-
-const NavBar: React.FC<NavBarProps> = ({ user }) => {
+const NavBar = () => {
   const isMounted = useIsMounted();
   const router = useRouter();
+  const { user } = useAuth();
 
   if (!isMounted) {
     return <></>;
@@ -38,12 +35,8 @@ const NavBar: React.FC<NavBarProps> = ({ user }) => {
         <Link href={`/profile/${user.id}`}>
           <ImageContainer className="rounded-full aspect-square overflow-hidden w-[40px] hover-effect">
             <FillImage
-              src={
-                user?.user_metadata?.avatar_url
-                  ? user?.user_metadata?.avatar_url
-                  : "/default.jpg"
-              }
-              alt={user?.user_metadata?.full_name}
+              src={user?.avatar ? user?.avatar : "/default.jpg"}
+              alt={user?.name}
               className="object-cover"
               sizes="40px"
             />
