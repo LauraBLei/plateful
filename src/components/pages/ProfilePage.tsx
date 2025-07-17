@@ -78,6 +78,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             forceMobileLayout={true}
           />
           <SectionComponent
+            currentUser={loggedInUser || null}
             sectionName={
               isOwnProfile
                 ? isFabTabActive

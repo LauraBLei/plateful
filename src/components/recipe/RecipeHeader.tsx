@@ -1,50 +1,49 @@
 "use client";
 
 import { Clock, HeartMinus, HeartPlus } from "lucide-react";
-import React, { useContext } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { updateUser } from "src/api/userActions";
-import { AuthContext } from "src/types/contextTypes";
 import { Recipe } from "src/types/recipe";
+import { UserProfile } from "src/types/user";
 
 interface RecipeHeaderProps {
   recipe: Recipe;
+  owner: UserProfile;
 }
 
-export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
-  const { profile, updateProfile } = useContext(AuthContext);
-
+export const RecipeHeader: React.FC<RecipeHeaderProps> = ({
+  recipe,
+  owner,
+}) => {
   const isFavorite = !!(
-    profile &&
+    owner &&
     recipe &&
-    profile.favorites?.includes(recipe.id)
+    owner.favorites?.includes(recipe.id)
   );
   const cookingTime = getCookingTimeLabel(recipe?.time ? recipe.time : 30);
+  const router = useRouter();
 
   const handleSetFavorite = async () => {
-    if (profile && recipe) {
-      const currentFavorites = Array.isArray(profile.favorites)
-        ? profile.favorites
+    if (owner && recipe) {
+      const currentFavorites = Array.isArray(owner.favorites)
+        ? owner.favorites
         : [];
 
       let updatedFavorites: number[];
       if (isFavorite) {
-        // Remove favorite if it exists
         updatedFavorites = currentFavorites.filter((f) => f !== recipe.id);
       } else {
-        // Add favorite if it doesn't exist
         updatedFavorites = [...currentFavorites, recipe.id];
       }
 
       try {
         await updateUser({
-          id: profile.id,
-          bio: profile.bio,
+          id: owner.id,
+          bio: owner.bio,
           updatedList: updatedFavorites,
         });
-
-        if (updatedFavorites && updateProfile) {
-          updateProfile({ favorites: updatedFavorites });
-        }
+        router.refresh();
 
         console.log("Favorites updated successfully");
       } catch (error) {
@@ -52,9 +51,9 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
       }
     } else {
       console.log("Cannot update favorites:", {
-        hasProfile: !!profile,
+        hasProfile: !!owner,
         hasRecipe: !!recipe,
-        profileId: profile?.id,
+        profileId: owner?.id,
         recipeId: recipe?.id,
       });
     }

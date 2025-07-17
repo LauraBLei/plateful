@@ -16,7 +16,7 @@ const SearchPage = () => {
   const query = searchParams.get("q") || "";
 
   const [results, setResults] = useState<SearchResults | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const SearchPage = () => {
         setError("An error occurred while searching");
         console.error("Search error:", err);
       } finally {
-        setLoading(false);
+        setLoading(true);
       }
     };
 
@@ -133,7 +133,6 @@ const SearchPage = () => {
             </section>
           )}
 
-          {/* Recipes Section */}
           {results.recipes.length > 0 && (
             <section>
               <h2 className="text-2xl font-semibold mb-6 text-brand-black dark:text-brand-white border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -142,6 +141,7 @@ const SearchPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {results.recipes.map((recipe: Recipe) => (
                   <RecipeCard
+                    currentUser={null}
                     key={recipe.id}
                     id={recipe.id}
                     image={recipe.image}

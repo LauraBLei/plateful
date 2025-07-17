@@ -1,16 +1,19 @@
 import { Loader } from "lucide-react";
 import React from "react";
 import { Recipe } from "src/types/recipe";
+import { UserProfile } from "src/types/user";
 import { RecipeCard } from "../shared/RecipeCard";
 
 interface AllRecipesGridProps {
   recipes: Recipe[];
   loading: boolean;
+  currentUser?: UserProfile | null;
 }
 
 const AllRecipesGrid: React.FC<AllRecipesGridProps> = ({
   recipes,
   loading,
+  currentUser,
 }) => (
   <div className="w-full flex flex-col gap-2">
     <h1 className="headline">All Recipes</h1>
@@ -29,6 +32,7 @@ const AllRecipesGrid: React.FC<AllRecipesGridProps> = ({
               title={recipe.name}
               time={recipe.time}
               owner={recipe.owner}
+              currentUser={currentUser}
             />
           ))
         ) : (

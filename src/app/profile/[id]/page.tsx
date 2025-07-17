@@ -1,7 +1,7 @@
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
-import { getUser } from "src/api/userActions";
 import ProfilePage from "src/components/pages/ProfilePage";
+import { getCurrentUser } from "src/helpers/getCurrentUser";
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import { Recipe } from "src/types/recipe";
 import { UserProfile } from "src/types/user";
@@ -52,14 +52,7 @@ const Profile = async ({ params }) => {
     id
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let loggedInUser: UserProfile | null = null;
-  if (user) {
-    loggedInUser = await getUser(user.id);
-  }
+  const loggedInUser = await getCurrentUser();
 
   return (
     <Suspense fallback={<Loader />}>

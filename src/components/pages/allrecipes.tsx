@@ -2,17 +2,18 @@
 
 import { useState } from "react";
 import { Recipe } from "src/types/recipe";
+import { UserProfile } from "src/types/user";
 import AllRecipesGrid from "../allrecipes/AllRecipesGrid";
 import { RecipeFilter, useRecipeFilter } from "../shared/RecipeFilter";
 
 interface AllRecipesProps {
   initialRecipes?: Recipe[];
+  currentUser?: UserProfile | null;
 }
 
-const AllRecipes = ({ initialRecipes = [] }: AllRecipesProps) => {
+const AllRecipes = ({ initialRecipes = [], currentUser }: AllRecipesProps) => {
   const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes);
   const [loading, setLoading] = useState(initialRecipes.length === 0);
-
   const {
     selectedTags,
     selectedLanguage,
@@ -48,7 +49,11 @@ const AllRecipes = ({ initialRecipes = [] }: AllRecipesProps) => {
         title="Filter recipes"
       />
 
-      <AllRecipesGrid recipes={recipes} loading={loading} />
+      <AllRecipesGrid
+        recipes={recipes}
+        loading={loading}
+        currentUser={currentUser}
+      />
     </div>
   );
 };

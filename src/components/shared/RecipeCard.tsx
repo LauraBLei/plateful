@@ -1,17 +1,15 @@
-"use client";
-
-import { Clock, Edit, Trash2Icon } from "lucide-react";
+import { Clock } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { deleteRecipe } from "src/api/recipeActions";
-import { useAuth } from "src/hooks/useAuth";
+import { UserProfile } from "src/types/user";
 import { FillImage, ImageContainer } from "./FillImage";
+import { RecipeActions } from "./RecipeActions";
 
 interface RecipeCardProps {
   image: string;
   title: string;
   time: number;
   id: number;
+  currentUser: UserProfile;
   owner?: {
     id: string;
     name: string;
@@ -19,45 +17,15 @@ interface RecipeCardProps {
   };
 }
 
-const getCookingTimeLabel = (minutes: number): string => {
-  switch (minutes) {
-    case 30:
-      return "30 min";
-    case 60:
-      return "1 hour";
-    case 90:
-      return "1.5 hours";
-    case 120:
-      return "2 hours";
-    default:
-      return "> 2 hours";
-  }
-};
-
 export const RecipeCard = ({
   image,
   title,
   time,
   id,
   owner,
+  currentUser,
 }: RecipeCardProps) => {
-  const { user } = useAuth();
-
-  const isOwnRecipe = user?.id === owner?.id;
-  const router = useRouter();
-
-  const onDelete = async () => {
-    if (!user) return;
-    const confirmed = confirm("are you sure you wanna delete this?");
-    if (!confirmed) return;
-    try {
-      await deleteRecipe({ userId: user.id, recipeId: id });
-      router.refresh();
-    } catch {
-      alert("Failed to delete recipe.");
-    }
-  };
-
+  const isOwnRecipe = currentUser?.id === owner?.id;
   const cookingTime = getCookingTimeLabel(time);
   return (
     <div className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white">
@@ -71,7 +39,7 @@ export const RecipeCard = ({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
-        {owner && !isOwnRecipe && (
+        {!isOwnRecipe && (
           <Link
             href={`/profile/${owner.id}`}
             className={`w-full flex absolute bottom-0 bg-brand-black/50 z-10 p-2 items-center gap-2 hover:bg-brand-black/80 transition-opacity`}
@@ -89,29 +57,8 @@ export const RecipeCard = ({
             </span>
           </Link>
         )}
-        {isOwnRecipe && (
-          <div className="w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10">
-            <Link
-              href={`/create?id=${id}`}
-              type="button"
-              className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-white"
-            >
-              <Edit />
-            </Link>
-            <button
-              type="button"
-              className="ml-1 text-xs px-2 py-1 rounded hover:bg-brand-orange hover:text-brand-black text-brand-white"
-              onClick={async (e) => {
-                e.preventDefault();
-                await onDelete();
-              }}
-            >
-              <Trash2Icon />
-            </button>
-          </div>
-        )}
+        {isOwnRecipe && <RecipeActions id={id} currentUser={currentUser} />}
       </ImageContainer>
-
       <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
         <div className="flex items-center gap-2 whitespace-nowrap">
@@ -121,4 +68,19 @@ export const RecipeCard = ({
       </div>
     </div>
   );
+};
+
+const getCookingTimeLabel = (minutes: number): string => {
+  switch (minutes) {
+    case 30:
+      return "30 min";
+    case 60:
+      return "1 hour";
+    case 90:
+      return "1.5 hours";
+    case 120:
+      return "2 hours";
+    default:
+      return "> 2 hours";
+  }
 };

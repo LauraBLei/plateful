@@ -7,7 +7,7 @@ import { useRecipeSubmission } from "../create/hooks/useRecipeSubmission";
 import { RecipeFormActions } from "../create/RecipeFormActions";
 import { RecipeFormLayout } from "../create/RecipeFormLayout";
 
-export const CreatePageContent = () => {
+export const CreatePageContent = ({ currentUser }) => {
   const {
     isEdit,
     existingRecipe,
@@ -22,7 +22,7 @@ export const CreatePageContent = () => {
     isSubmitting,
     error: submitError,
     clearError,
-  } = useRecipeSubmission();
+  } = useRecipeSubmission(currentUser);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

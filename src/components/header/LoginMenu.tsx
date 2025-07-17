@@ -4,19 +4,22 @@ import { User2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { signInWithGoogle } from "src/api/authActions";
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useMounted from "src/hooks/useMounted";
-import { AuthContext } from "src/types/contextTypes";
+import { UserProfile } from "src/types/user";
 import LogOutButton from "./LogOut";
 import MenuButton from "./MenuButton";
 import MobileSearchBar from "./MobileSearchBar";
 import NavLinks from "./NavLinks";
 import ThemeSwitch from "./ThemeSwitch";
 
-const LoginMenu: React.FC = () => {
-  const { profile } = useContext(AuthContext);
+interface LoginMenuProps {
+  profile?: UserProfile;
+}
+
+const LoginMenu: React.FC<LoginMenuProps> = ({ profile }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const router = useRouter();

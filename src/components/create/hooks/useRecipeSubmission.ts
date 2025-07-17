@@ -1,12 +1,10 @@
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { createRecipe, updateRecipe } from "src/api/recipeActions";
 import { uploadRecipeImage } from "src/api/storageActions";
-import { AuthContext } from "src/types/contextTypes";
 import { Recipe, RecipeFormData } from "src/types/recipe";
 
-export const useRecipeSubmission = () => {
-  const { user } = useContext(AuthContext);
+export const useRecipeSubmission = (user) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
