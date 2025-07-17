@@ -8,27 +8,22 @@ import React, { useRef, useState } from "react";
 import { signInWithGoogle } from "src/api/authActions";
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useMounted from "src/hooks/useMounted";
-import { UserProfile } from "src/types/user";
+import { useAuth } from "src/providers/AuthProvider";
 import LogOutButton from "./LogOut";
 import MenuButton from "./MenuButton";
 import MobileSearchBar from "./MobileSearchBar";
 import NavLinks from "./NavLinks";
 import ThemeSwitch from "./ThemeSwitch";
 
-interface LoginMenuProps {
-  profile?: UserProfile;
-}
-
-const LoginMenu: React.FC<LoginMenuProps> = ({ profile }) => {
+const LoginMenu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const { user } = useAuth();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
   const isHydrated = useMounted();
 
   // Handler for blur event to close menu if focus leaves
   const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    // Only close if focus moves outside the menu
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setMenuOpen(false);
     }
@@ -42,6 +37,7 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ profile }) => {
   if (!isHydrated) {
     return <></>;
   }
+
   return (
     <div
       className="flex md:hidden w-full justify-between items-center"
@@ -68,17 +64,17 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ profile }) => {
             <MobileSearchBar setMenuOpen={setMenuOpen} />
             <NavLinks setMenuOpen={setMenuOpen} />
             <ThemeSwitch />
-            {profile ? (
+            {user ? (
               <Link
                 className="flex items-center gap-2 hover-effect"
-                href={`/profile/${profile.id}`}
+                href={`/profile/${user.id}`}
                 onClick={() => setMenuOpen(false)}
               >
                 <Image
                   width={32}
                   height={32}
-                  src={profile.avatar ? profile.avatar : "/default.jpg"}
-                  alt={profile.name}
+                  src={user.avatar ? user.avatar : "/default.jpg"}
+                  alt={user.name}
                   className="rounded-full"
                 />
                 Profile
@@ -94,7 +90,7 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ profile }) => {
                 <User2 /> Sign in
               </button>
             )}
-            {profile && (
+            {user && (
               <LogOutButton
                 onClick={() => {
                   setMenuOpen(false);

@@ -1,14 +1,9 @@
 import { getAllRecipes } from "src/api/recipeActions";
 import AllRecipes from "src/components/pages/allrecipes";
-import { getCurrentUser } from "src/helpers/getCurrentUser";
 
 const AllRecipesPage = async () => {
-  const [recipes, currentUser] = await Promise.all([
-    getAllRecipes(),
-    getCurrentUser(),
-  ]);
-
-  return <AllRecipes initialRecipes={recipes} currentUser={currentUser} />;
+  const recipes = await getAllRecipes();
+  return <AllRecipes initialRecipes={recipes} />;
 };
 
 export default AllRecipesPage;

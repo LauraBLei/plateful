@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { signInWithGoogle } from "src/api/authActions";
 import { useAuth } from "src/providers/AuthProvider";

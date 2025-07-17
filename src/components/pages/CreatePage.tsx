@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "src/providers/AuthProvider";
 import { ErrorDisplay } from "../create/ErrorDisplay";
 import { useRecipeEdit } from "../create/hooks/useRecipeEdit";
 import { useRecipeForm } from "../create/hooks/useRecipeForm";
@@ -7,7 +8,8 @@ import { useRecipeSubmission } from "../create/hooks/useRecipeSubmission";
 import { RecipeFormActions } from "../create/RecipeFormActions";
 import { RecipeFormLayout } from "../create/RecipeFormLayout";
 
-export const CreatePageContent = ({ currentUser }) => {
+export const CreatePageContent = () => {
+  const { user: currentUser } = useAuth();
   const {
     isEdit,
     existingRecipe,

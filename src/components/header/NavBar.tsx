@@ -2,7 +2,6 @@
 
 import { LogOut, User2 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 import ThemeSwitch from "./ThemeSwitch";
 
@@ -10,16 +9,13 @@ import { useRouter } from "next/navigation";
 import { signInWithGoogle } from "src/api/authActions";
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useIsMounted from "src/hooks/useMounted";
-import { UserProfile } from "src/types/user";
+import { useAuth } from "src/providers/AuthProvider";
 import NavLinks from "./NavLinks";
 
-interface NavBarProps {
-  user: UserProfile | null;
-}
-
-const NavBar: React.FC<NavBarProps> = ({ user }) => {
+const NavBar = () => {
   const isMounted = useIsMounted();
   const router = useRouter();
+  const { user } = useAuth();
 
   if (!isMounted) {
     return <></>;
