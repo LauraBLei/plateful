@@ -26,7 +26,6 @@ const Home = async () => {
       recentRecipes={recentRecipes}
       timeRecipes={timeRecipes}
       followerRecipes={followerRecipes}
-      currentUser={currentUser}
     />
   );
 };

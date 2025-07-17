@@ -4,31 +4,22 @@ import { Clock, HeartMinus, HeartPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { updateUser } from "src/api/userActions";
+import { useAuth } from "src/providers/AuthProvider";
 import { Recipe } from "src/types/recipe";
-import { UserProfile } from "src/types/user";
 
 interface RecipeHeaderProps {
   recipe: Recipe;
-  owner: UserProfile;
 }
 
-export const RecipeHeader: React.FC<RecipeHeaderProps> = ({
-  recipe,
-  owner,
-}) => {
-  const isFavorite = !!(
-    owner &&
-    recipe &&
-    owner.favorites?.includes(recipe.id)
-  );
+export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
+  const { user } = useAuth();
+  const isFavorite = !!(user && recipe && user.favorites?.includes(recipe.id));
   const cookingTime = getCookingTimeLabel(recipe?.time ? recipe.time : 30);
   const router = useRouter();
 
   const handleSetFavorite = async () => {
-    if (owner && recipe) {
-      const currentFavorites = Array.isArray(owner.favorites)
-        ? owner.favorites
-        : [];
+    if (user && recipe) {
+      const currentFavorites = user.favorites;
 
       let updatedFavorites: number[];
       if (isFavorite) {
@@ -39,21 +30,20 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({
 
       try {
         await updateUser({
-          id: owner.id,
-          bio: owner.bio,
+          id: user.id,
           updatedList: updatedFavorites,
         });
         router.refresh();
 
-        console.log("Favorites updated successfully");
+        console.log("Favorites updated successfully ", updatedFavorites);
       } catch (error) {
         console.error("Failed to update favorites:", error);
       }
     } else {
       console.log("Cannot update favorites:", {
-        hasProfile: !!owner,
+        hasProfile: !!user,
         hasRecipe: !!recipe,
-        profileId: owner?.id,
+        profileId: user?.id,
         recipeId: recipe?.id,
       });
     }

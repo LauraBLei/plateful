@@ -1,5 +1,7 @@
 "use client";
-import { ProfileSidebarProps } from "../pages/ProfilePage";
+import { useAuth } from "src/providers/AuthProvider";
+import { Recipe, RecipeType } from "src/types/recipe";
+import { UserProfile } from "src/types/user";
 import { Avatar } from "../shared/Avatar";
 import { BioText } from "./BioText";
 import { FollowButton } from "./FollowButton";
@@ -7,15 +9,24 @@ import { FollowerInfo } from "./FollowerInfo";
 import { Options } from "./Options";
 import { ProfileName } from "./ProfileName";
 
+export interface ProfileSidebarProps {
+  targetUser: UserProfile | null;
+  activeTab: RecipeType;
+  setActiveTab: (tab: RecipeType) => void;
+  setCurrentRecipes: (recipes: Recipe[]) => void;
+  isFabTabActive: boolean;
+  serverRecipes: Recipe[];
+}
+
 export const ProfileSidebar = ({
   targetUser,
-  loggedInUser,
   setActiveTab,
   setCurrentRecipes,
   isFabTabActive,
   serverRecipes,
-  isOwnProfile = false,
 }: ProfileSidebarProps) => {
+  const { user } = useAuth();
+  const isOwnProfile = targetUser?.id === user?.id;
   const profileImage = targetUser?.avatar ?? "/default.jpg";
 
   return (
@@ -37,7 +48,7 @@ export const ProfileSidebar = ({
           <BioText profile={targetUser} variant="desktop" />
         </div>
         {!isOwnProfile && targetUser ? (
-          <FollowButton targetUser={targetUser} loggedInUser={loggedInUser} />
+          <FollowButton targetUser={targetUser} loggedInUser={user} />
         ) : (
           isOwnProfile && (
             <Options
@@ -70,7 +81,7 @@ export const ProfileSidebar = ({
           {!isOwnProfile && targetUser ? (
             <FollowButton
               targetUser={targetUser}
-              loggedInUser={loggedInUser}
+              loggedInUser={user}
               variant="tablet"
             />
           ) : (

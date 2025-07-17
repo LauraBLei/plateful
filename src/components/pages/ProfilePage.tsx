@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Recipe } from "src/types/recipe";
+import { useAuth } from "src/providers/AuthProvider";
+import { Recipe, RecipeType } from "src/types/recipe";
 import { UserProfile } from "src/types/user";
 import { ProfileSidebar } from "../profile/ProfileSidebar";
 import { RecipeFilter, useRecipeFilter } from "../shared/RecipeFilter";
@@ -9,26 +10,20 @@ import { SectionComponent } from "../shared/SectionComponent";
 
 interface ProfilePageProps {
   targetUser: UserProfile | null;
-  recipes?: Recipe[];
-  loggedInUser?: UserProfile | null;
+  recipes: Recipe[];
 }
-type RecipeType = "recipes" | "favorites";
-
-const ProfilePage: React.FC<ProfilePageProps> = ({
-  targetUser,
-  recipes,
-  loggedInUser,
-}) => {
+const ProfilePage: React.FC<ProfilePageProps> = ({ targetUser, recipes }) => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<RecipeType>();
-  const [baseRecipes, setBaseRecipes] = useState<Recipe[]>(recipes || []);
+  const [baseRecipes, setBaseRecipes] = useState<Recipe[]>(recipes);
 
   useEffect(() => {
-    setBaseRecipes(recipes || []);
+    setBaseRecipes(recipes);
   }, [recipes]);
 
-  const isOwnProfile = targetUser?.id === loggedInUser?.id;
-  const isFabTabActive = activeTab === "favorites";
   const filter = useRecipeFilter();
+  const isFabTabActive = activeTab === "favorites";
+  const isOwnProfile = targetUser?.id === user?.id;
 
   const currentRecipes = useMemo(() => {
     if (
@@ -54,13 +49,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       <div className="flex flex-col gap-5 lg:flex-row w-full">
         <ProfileSidebar
           targetUser={targetUser}
-          loggedInUser={loggedInUser}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           setCurrentRecipes={setBaseRecipes}
           isFabTabActive={isFabTabActive}
           serverRecipes={recipes || []}
-          isOwnProfile={isOwnProfile}
         />
 
         <div className="h-full flex flex-col  gap-5 w-full">
@@ -78,7 +71,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             forceMobileLayout={true}
           />
           <SectionComponent
-            currentUser={loggedInUser || null}
             sectionName={
               isOwnProfile
                 ? isFabTabActive
@@ -93,16 +85,5 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     </div>
   );
 };
-
-export interface ProfileSidebarProps {
-  targetUser: UserProfile | null;
-  loggedInUser?: UserProfile | null;
-  activeTab: RecipeType;
-  setActiveTab: (tab: RecipeType) => void;
-  setCurrentRecipes: (recipes: Recipe[]) => void;
-  isFabTabActive: boolean;
-  serverRecipes: Recipe[];
-  isOwnProfile?: boolean;
-}
 
 export default ProfilePage;

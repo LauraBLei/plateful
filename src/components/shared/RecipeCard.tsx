@@ -1,6 +1,6 @@
 import { Clock } from "lucide-react";
 import Link from "next/link";
-import { UserProfile } from "src/types/user";
+import { useAuth } from "src/providers/AuthProvider";
 import { FillImage, ImageContainer } from "./FillImage";
 import { RecipeActions } from "./RecipeActions";
 
@@ -9,7 +9,6 @@ interface RecipeCardProps {
   title: string;
   time: number;
   id: number;
-  currentUser: UserProfile;
   owner?: {
     id: string;
     name: string;
@@ -23,8 +22,8 @@ export const RecipeCard = ({
   time,
   id,
   owner,
-  currentUser,
 }: RecipeCardProps) => {
+  const { user: currentUser } = useAuth();
   const isOwnRecipe = currentUser?.id === owner?.id;
   const cookingTime = getCookingTimeLabel(time);
   return (

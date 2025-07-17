@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { signInWithGoogle } from "src/api/authActions";
+import { useAuth } from "src/providers/AuthProvider";
 import { Welcome } from "./Welcome";
 
-export const WelcomeSection = ({ currentUser }) => {
+export const WelcomeSection = () => {
+  const { user } = useAuth();
   return (
     <section>
-      {currentUser ? (
+      {user ? (
         <div className="flex  min-h-[270px] h-full flex-col md:flex-row text-brand-black dark:text-brand-white">
-          <Welcome text={`Welcome ${currentUser.name}`} />
+          <Welcome text={`Welcome ${user.name}`} />
           <div className="flex-1 rounded-b-md  md:rounded-r-md md:rounded-l-none p-5 text-2xl text-center items-center justify-center flex flex-col border-1 border-brand-black dark:border-brand-white min-h-[160px] md:min-h-[270px]">
             <p className="font-semibold">Got a recipe you wanna share?</p>
             <Link href={"/create"} className="button text-lg  my-5">
