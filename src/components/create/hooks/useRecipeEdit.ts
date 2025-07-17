@@ -1,6 +1,6 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchRecipeById } from "src/api/recipeActions";
+import { fetchRecipeById } from "src/api/browserActions";
 import { Recipe } from "src/types/recipe";
 
 export const useRecipeEdit = () => {

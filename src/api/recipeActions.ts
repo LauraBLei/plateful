@@ -1,46 +1,30 @@
-// API logic for recipe deletion
-import { supabase } from "src/helpers/supaBaseBrowserClient";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 import { Recipe } from "src/types/recipe";
-import { getAuthHeaders } from "./headerActions";
 
-export async function deleteRecipe({
-  userId,
-  recipeId,
-}: {
-  userId: string;
-  recipeId: number;
-}): Promise<boolean> {
-  const headers = getAuthHeaders();
-  const response = await fetch("/api/recipe/delete", {
-    method: "DELETE",
-    headers,
-    body: JSON.stringify({ userId, recipeId }),
-  });
-  if (!response.ok) throw new Error("Failed to delete recipe");
-  return true;
-}
+// export async function getRecipesByTag(tag: string): Promise<Recipe[]> {
+//   try {
+//     const supabase = await createServerSupabaseClient();
 
-export async function getRecipesByTag(tag: string): Promise<Recipe[]> {
-  try {
-    const { data, error } = await supabase
-      .from("recipes")
-      .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
-      .contains("tags", [tag]);
+//     const { data, error } = await supabase
+//       .from("recipes")
+//       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
+//       .contains("tags", [tag]);
 
-    if (error) {
-      console.error("Error fetching recipes by tag from Supabase:", error);
-      return [];
-    }
+//     if (error) {
+//       console.error("Error fetching recipes by tag from Supabase:", error);
+//       return [];
+//     }
 
-    return data || [];
-  } catch (error) {
-    console.error("Error fetching recipes by tag:", error);
-    return [];
-  }
-}
+//     return data || [];
+//   } catch (error) {
+//     console.error("Error fetching recipes by tag:", error);
+//     return [];
+//   }
+// }
 
 export async function getAllRecipes(): Promise<Recipe[]> {
   try {
+    const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("recipes")
       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)");
@@ -57,57 +41,9 @@ export async function getAllRecipes(): Promise<Recipe[]> {
   }
 }
 
-export async function fetchRecipeById(
-  recipeId: number
-): Promise<Recipe | null> {
-  const res = await fetch(`/api/recipe/read?id=${recipeId}`);
-  if (!res.ok) return null;
-  return await res.json();
-}
-
-export async function updateRecipe({
-  recipeId,
-  userId,
-  updateData,
-}: {
-  recipeId: number;
-  userId: string;
-  updateData: any;
-}): Promise<boolean> {
-  const headers = getAuthHeaders();
-  const response = await fetch("/api/recipe/update", {
-    method: "PATCH",
-    headers,
-    body: JSON.stringify({ recipeId, userId, updateData }),
-  });
-  return response.ok;
-}
-
-export async function createRecipe(recipeData: any): Promise<any> {
-  try {
-    const headers = getAuthHeaders();
-    const response = await fetch("/api/recipe/create", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(recipeData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage =
-        errorData.error || `HTTP ${response.status}: ${response.statusText}`;
-      throw new Error(`Failed to create recipe: ${errorMessage}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Create recipe error:", error);
-    throw error;
-  }
-}
-
 export async function fetchTimeRecipes(): Promise<Recipe[]> {
   try {
+    const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("recipes")
       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
@@ -128,6 +64,7 @@ export async function fetchTimeRecipes(): Promise<Recipe[]> {
 
 export async function fetchRecentRecipes(): Promise<Recipe[]> {
   try {
+    const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("recipes")
       .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")
@@ -144,17 +81,4 @@ export async function fetchRecentRecipes(): Promise<Recipe[]> {
     console.error("Error fetching recent recipes:", error);
     return [];
   }
-}
-
-export async function readFavoriteRecipes({
-  favorites,
-}: {
-  id: string;
-  favorites: number[];
-}): Promise<Recipe[]> {
-  if (!favorites || favorites.length === 0) return [];
-  const params = favorites.map((fid) => `id=${fid}`).join("&");
-  const res = await fetch(`/api/recipe/read?${params}`);
-  if (!res.ok) return [];
-  return await res.json();
 }

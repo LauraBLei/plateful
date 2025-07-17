@@ -1,6 +1,6 @@
 import Link from "next/link";
+import { readFavoriteRecipes } from "src/api/browserActions";
 import { Recipe } from "src/types/recipe";
-import { readFavoriteRecipes } from "../../api/recipeActions";
 import type { UserProfile } from "../../types/user";
 
 interface OptionsProps {

@@ -4,7 +4,7 @@ import { Loader, Search as SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { searchContent } from "src/api/storageActions";
+import { searchContent } from "src/api/browserActions";
 import { FillImage, ImageContainer } from "src/components/shared/FillImage";
 import { RecipeCard } from "src/components/shared/RecipeCard";
 import { Recipe } from "src/types/recipe";

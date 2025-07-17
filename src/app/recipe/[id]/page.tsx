@@ -1,8 +1,9 @@
 import RecipePage from "src/components/pages/RecipePage";
-import { supabase } from "src/helpers/supaBaseBrowserClient";
+import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
 export default async function Recipe({ params }) {
   const { id } = await params;
+  const supabase = await createServerSupabaseClient();
   const { data: recipe, error } = await supabase
     .from("recipes")
     .select("*, owner:users!recipes_owner_id_fkey(id, name, avatar)")

@@ -1,7 +1,10 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createRecipe, updateRecipe } from "src/api/recipeActions";
-import { uploadRecipeImage } from "src/api/storageActions";
+import {
+  createRecipe,
+  updateRecipe,
+  uploadRecipeImage,
+} from "src/api/browserActions";
 import { Recipe, RecipeFormData } from "src/types/recipe";
 
 export const useRecipeSubmission = (user) => {

@@ -2,7 +2,7 @@
 import { Edit, Link, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { deleteRecipe } from "src/api/recipeActions";
+import { deleteRecipe } from "src/api/browserActions";
 import { UserProfile } from "src/types/user";
 
 interface RecipeActionsProps {

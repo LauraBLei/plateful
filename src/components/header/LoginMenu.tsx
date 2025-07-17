@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { signInWithGoogle } from "src/api/authActions";
-import { supabase } from "src/helpers/supaBaseBrowserClient";
+
 import useMounted from "src/hooks/useMounted";
 import { useAuth } from "src/providers/AuthProvider";
 import LogOutButton from "./LogOut";
