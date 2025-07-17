@@ -8,6 +8,7 @@ import ThemeSwitch from "./ThemeSwitch";
 import { useRouter } from "next/navigation";
 import { signInWithGoogle } from "src/api/authActions";
 
+import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useIsMounted from "src/hooks/useMounted";
 import { useAuth } from "src/providers/AuthProvider";
 import NavLinks from "./NavLinks";
