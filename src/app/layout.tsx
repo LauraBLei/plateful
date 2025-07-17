@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Footer } from "src/components/footer/Footer";
+import { Footer } from "src/components/footer/footer";
 import { Header } from "src/components/header/header";
 import { getCurrentUser } from "src/helpers/getCurrentUser";
 import Providers from "src/providers/providers";
