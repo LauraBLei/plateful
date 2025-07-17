@@ -1,6 +1,6 @@
 "use client";
 
-import { User2 } from "lucide-react";
+import { User2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -55,11 +55,11 @@ const LoginMenu = () => {
       >
         <div className="flex flex-col h-full p-6">
           <button
-            className="self-end mb-8 text-2xl font-bold focus:outline-none"
+            className="self-end mb-8 text-2xl font-bold cursor-pointer border-1 rounded-full p-1 hover:text-brand-orange"
             aria-label="Close menu"
             onClick={() => setMenuOpen(false)}
           >
-            &times;
+            <X />
           </button>
           <nav className="flex flex-col gap-6">
             <MobileSearchBar setMenuOpen={setMenuOpen} />
