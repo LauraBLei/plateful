@@ -3,10 +3,10 @@ import { SearchResults } from "src/types/types";
 import { getAuthHeaders } from "./headerHelper";
 
 const getBaseUrl = () => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return process.env.NEXT_PUBLIC_API_BASE_URL || window.location.origin;
   }
-  return process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+  return process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 };
 
 export async function deleteRecipe({
