@@ -53,7 +53,8 @@ export const ProfileSidebar = ({
             <ProfileName targetUser={targetUser} variant="desktop" />
             {/* <FollowerInfo targetUser={targetUser} variant="desktop" /> */}
           </div>
-          <BioText profile={targetUser} variant="desktop" />
+          {isOwnProfile && <BioText profile={targetUser} variant="desktop" />}
+          {targetUser && targetUser.bio ? targetUser.bio : "no bio added yet"}
         </div>
         {isOwnProfile && (
           <Options
