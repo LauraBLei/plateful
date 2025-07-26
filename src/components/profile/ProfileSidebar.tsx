@@ -51,11 +51,11 @@ export const ProfileSidebar = ({
           />
           <div className="flex flex-col gap-5">
             <ProfileName targetUser={targetUser} variant="desktop" />
-            <FollowerInfo targetUser={targetUser} variant="desktop" />
+            {/* <FollowerInfo targetUser={targetUser} variant="desktop" /> */}
           </div>
           <BioText profile={targetUser} variant="desktop" />
         </div>
-        {!isOwnProfile && targetUser ? (
+        {/* {!isOwnProfile && targetUser ? (
           <FollowButton targetUser={targetUser} loggedInUser={user} />
         ) : (
           isOwnProfile && (
@@ -69,7 +69,7 @@ export const ProfileSidebar = ({
               isOwnProfile={isOwnProfile}
             />
           )
-        )}
+        )} */}
       </div>
 
       <div className="flex lg:hidden w-full">
