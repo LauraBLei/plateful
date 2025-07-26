@@ -55,21 +55,17 @@ export const ProfileSidebar = ({
           </div>
           <BioText profile={targetUser} variant="desktop" />
         </div>
-        {/* {!isOwnProfile && targetUser ? (
-          <FollowButton targetUser={targetUser} loggedInUser={user} />
-        ) : (
-          isOwnProfile && (
-            <Options
-              variant="desktop"
-              setActiveTab={setActiveTab}
-              setCurrentRecipes={setCurrentRecipes}
-              isFabTabActive={isFabTabActive}
-              profile={targetUser}
-              serverRecipes={serverRecipes}
-              isOwnProfile={isOwnProfile}
-            />
-          )
-        )} */}
+        {isOwnProfile && (
+          <Options
+            variant="desktop"
+            setActiveTab={setActiveTab}
+            setCurrentRecipes={setCurrentRecipes}
+            isFabTabActive={isFabTabActive}
+            profile={targetUser}
+            serverRecipes={serverRecipes}
+            isOwnProfile={isOwnProfile}
+          />
+        )}
       </div>
 
       <div className="flex lg:hidden w-full">
