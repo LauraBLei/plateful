@@ -20,6 +20,7 @@ interface AuthContextType {
   setUser: (user: UserProfile | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   signInWithGoogle: () => Promise<void>;
+  signOutHandler: () => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -70,10 +71,9 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/api/auth/callback`,
         },
       });
-
       if (error) {
         console.error("Sign in error:", error);
         return;
@@ -86,6 +86,11 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
     }
   };
 
+  const signOutHandler = async () => {
+    await supabase.auth.signOut();
+    router.refresh();
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -94,6 +99,7 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
         setUser: setUser,
         setIsAuthenticated,
         signInWithGoogle,
+        signOutHandler,
       }}
     >
       {children}

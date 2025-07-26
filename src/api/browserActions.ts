@@ -1,6 +1,6 @@
 import { Recipe } from "src/types/recipe";
 import { SearchResults } from "src/types/types";
-import { getAuthHeaders } from "./headerActions";
+import { getAuthHeaders } from "./headerHelper";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || window.location.origin;
 

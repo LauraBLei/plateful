@@ -1,11 +1,10 @@
 "use client";
 import Link from "next/link";
-import { signInWithGoogle } from "src/api/authActions";
 import { useAuth } from "src/providers/AuthProvider";
 import { Welcome } from "./Welcome";
 
 export const WelcomeSection = () => {
-  const { user } = useAuth();
+  const { user, signInWithGoogle } = useAuth();
   return (
     <section>
       {user ? (

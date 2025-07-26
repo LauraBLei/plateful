@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -36,14 +36,18 @@ export async function GET(request: NextRequest) {
 
       if (error) {
         console.error("Auth callback error:", error);
-        return NextResponse.redirect(new URL('/?error=auth_failed', requestUrl.origin));
+        return NextResponse.redirect(
+          new URL("/?error=auth_failed", requestUrl.origin)
+        );
       }
     } catch (error) {
       console.error("Auth error:", error);
-      return NextResponse.redirect(new URL('/?error=auth_failed', requestUrl.origin));
+      return NextResponse.redirect(
+        new URL("/?error=auth_failed", requestUrl.origin)
+      );
     }
   }
 
   // Redirect to the home page
-  return NextResponse.redirect(new URL('/', requestUrl.origin));
+  return NextResponse.redirect(new URL("/", requestUrl.origin));
 }

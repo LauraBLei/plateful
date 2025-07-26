@@ -1,5 +1,5 @@
 import { UpdateUserRequest, UserProfile } from "src/types/user";
-import { getAuthHeaders } from "./headerActions";
+import { getAuthHeaders } from "./headerHelper";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";

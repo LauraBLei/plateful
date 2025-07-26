@@ -5,27 +5,17 @@ import Link from "next/link";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 import ThemeSwitch from "./ThemeSwitch";
 
-import { useRouter } from "next/navigation";
-import { signInWithGoogle } from "src/api/authActions";
-
-import { supabase } from "src/helpers/supaBaseBrowserClient";
 import useIsMounted from "src/hooks/useMounted";
 import { useAuth } from "src/providers/AuthProvider";
 import NavLinks from "./NavLinks";
 
 const NavBar = () => {
   const isMounted = useIsMounted();
-  const router = useRouter();
-  const { user } = useAuth();
+  const { user, signInWithGoogle, signOutHandler } = useAuth();
 
   if (!isMounted) {
     return <></>;
   }
-
-  const signOutHandler = async () => {
-    await supabase.auth.signOut();
-    router.refresh();
-  };
 
   return (
     <nav className="flex items-center gap-5">
