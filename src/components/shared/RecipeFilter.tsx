@@ -212,9 +212,10 @@ export const useRecipeFilter = (
       if (selectedLanguage) params.append("language", selectedLanguage);
       if (selectedTime) params.append("time", selectedTime);
 
+      const baseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || window.location.origin;
       const res = await fetch(
-        process.env.NEXT_PUBLIC_API_BASE_URL ||
-          window.location.origin + `/api/recipe/search?${params.toString()}`
+        `${baseUrl}/api/recipe/search?${params.toString()}`
       );
       const data = await res.json();
 
