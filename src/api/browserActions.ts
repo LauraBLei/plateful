@@ -2,7 +2,12 @@ import { Recipe } from "src/types/recipe";
 import { SearchResults } from "src/types/types";
 import { getAuthHeaders } from "./headerHelper";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || window.location.origin;
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return process.env.NEXT_PUBLIC_API_BASE_URL || window.location.origin;
+  }
+  return process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+};
 
 export async function deleteRecipe({
   userId,
@@ -12,7 +17,7 @@ export async function deleteRecipe({
   recipeId: number;
 }): Promise<boolean> {
   const headers = getAuthHeaders();
-  const response = await fetch(`${baseUrl}/api/recipe/delete`, {
+  const response = await fetch(`${getBaseUrl()}/api/recipe/delete`, {
     method: "DELETE",
     headers,
     body: JSON.stringify({ userId, recipeId }),
@@ -31,7 +36,7 @@ export async function updateRecipe({
   updateData: Partial<Recipe>;
 }): Promise<boolean> {
   const headers = getAuthHeaders();
-  const response = await fetch(`${baseUrl}/api/recipe/update`, {
+  const response = await fetch(`${getBaseUrl()}/api/recipe/update`, {
     method: "PATCH",
     headers,
     body: JSON.stringify({ recipeId, userId, updateData }),
@@ -44,7 +49,7 @@ export async function createRecipe(
 ): Promise<Recipe | null> {
   try {
     const headers = getAuthHeaders();
-    const response = await fetch(`${baseUrl}/api/recipe/create`, {
+    const response = await fetch(`${getBaseUrl()}/api/recipe/create`, {
       method: "POST",
       headers,
       body: JSON.stringify(recipeData),
@@ -71,7 +76,7 @@ export async function readFavoriteRecipes({
 }): Promise<Recipe[]> {
   if (!favorites || favorites.length === 0) return [];
   const params = favorites.map((fid) => `id=${fid}`).join("&");
-  const res = await fetch(`${baseUrl}/api/recipe/read?${params}`);
+  const res = await fetch(`${getBaseUrl()}/api/recipe/read?${params}`);
   if (!res.ok) return [];
   return await res.json();
 }
@@ -84,7 +89,7 @@ export async function searchContent(
 
   try {
     const res = await fetch(
-      `${baseUrl}/api/search?q=${encodeURIComponent(query.trim())}`
+      `${getBaseUrl()}/api/search?q=${encodeURIComponent(query.trim())}`
     );
 
     if (!res.ok) {
@@ -108,7 +113,7 @@ export async function uploadRecipeImage(
   const formData = new FormData();
   formData.append("file", image);
   formData.append("userId", userId);
-  const response = await fetch(`${baseUrl}/api/recipe/uploadImage`, {
+  const response = await fetch(`${getBaseUrl()}/api/recipe/uploadImage`, {
     method: "POST",
     body: formData,
   });
