@@ -50,11 +50,20 @@ export const ProfileSidebar = ({
             size="large"
           />
           <div className="flex flex-col gap-5">
-            <ProfileName targetUser={targetUser} variant="desktop" />
+            {isOwnProfile ? (
+              <ProfileName targetUser={targetUser} variant="desktop" />
+            ) : (
+              <h1 className=" text-center text-2xl">{targetUser?.name}</h1>
+            )}
             {/* <FollowerInfo targetUser={targetUser} variant="desktop" /> */}
           </div>
-          {isOwnProfile && <BioText profile={targetUser} variant="desktop" />}
-          {targetUser && targetUser.bio ? targetUser.bio : "no bio added yet"}
+          {isOwnProfile ? (
+            <BioText profile={targetUser} variant="desktop" />
+          ) : targetUser && targetUser.bio ? (
+            targetUser.bio
+          ) : (
+            "no bio added yet"
+          )}
         </div>
         {isOwnProfile && (
           <Options
