@@ -15,7 +15,7 @@ const Recipe: React.FC<RecipeProps> = async ({ params }) => {
     .single();
 
   if (error || !recipe) {
-    return <div>Recipe not found</div>;
+    return <div>Recipe deleted</div>;
   }
 
   return <RecipePage recipe={recipe} owner={recipe.owner} />;

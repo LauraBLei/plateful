@@ -7,6 +7,7 @@ import { updateUser } from "src/api/userActions";
 import { useAuth } from "src/providers/AuthProvider";
 import { Recipe } from "src/types/recipe";
 import CookingTime from "../shared/CookingTime";
+import { RecipeActions } from "../shared/RecipeActions";
 
 interface RecipeHeaderProps {
   recipe: Recipe;
@@ -16,6 +17,7 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
   const { user } = useAuth();
   const isFavorite = !!(user && recipe && user.favorites?.includes(recipe.id));
   const router = useRouter();
+  const isOwnRecipe = user?.id === recipe.owner?.id;
 
   const handleSetFavorite = async () => {
     if (user && recipe) {
@@ -54,6 +56,9 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
       <h1 className="headline flex justify-between">
         {recipe?.name}
         <div className="flex items-center gap-5">
+          {isOwnRecipe && (
+            <RecipeActions id={recipe.id} currentUser={user} className="flex" />
+          )}
           <button
             onClick={handleSetFavorite}
             className="flex gap-2 items-center hover:text-brand-orange cursor-pointer"

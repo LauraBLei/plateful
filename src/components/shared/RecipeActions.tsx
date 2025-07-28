@@ -9,9 +9,10 @@ import { UserProfile } from "src/types/user";
 interface RecipeActionsProps {
   id: number;
   currentUser?: UserProfile | null;
+  className?: string;
 }
 
-const RecipeActions = ({ id, currentUser }: RecipeActionsProps) => {
+const RecipeActions = ({ id, currentUser, className }: RecipeActionsProps) => {
   const router = useRouter();
   const onDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -26,7 +27,12 @@ const RecipeActions = ({ id, currentUser }: RecipeActionsProps) => {
     }
   };
   return (
-    <div className="w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10">
+    <div
+      className={
+        className ||
+        "w-full flex absolute bottom-0 justify-end bg-brand-black/50 z-10"
+      }
+    >
       <Link
         href={`/edit/${id}`}
         type="button"
