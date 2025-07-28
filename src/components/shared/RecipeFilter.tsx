@@ -241,18 +241,28 @@ export const useRecipeFilter = (
             typeof recipe.time === "string"
               ? parseInt(recipe.time)
               : recipe.time;
-          const filterTime = parseInt(appliedTime);
-
-          if (filterTime === 15 && recipeTime >= 30) return false;
-          if (filterTime === 30 && (recipeTime < 30 || recipeTime > 30))
-            return false;
-          if (filterTime === 60 && (recipeTime < 60 || recipeTime > 60))
-            return false;
-          if (filterTime === 90 && (recipeTime < 90 || recipeTime > 90))
-            return false;
-          if (filterTime === 120 && (recipeTime < 120 || recipeTime > 120))
-            return false;
-          if (filterTime === 180 && recipeTime <= 120) return false;
+          switch (appliedTime) {
+            case "15": // Less than 30 minutes
+              if (recipeTime >= 30) return false;
+              break;
+            case "30": // 30 minutes
+              if (recipeTime < 30 || recipeTime >= 60) return false;
+              break;
+            case "60": // 1 hour
+              if (recipeTime < 60 || recipeTime >= 90) return false;
+              break;
+            case "90": // 1.5 hours
+              if (recipeTime < 90 || recipeTime >= 120) return false;
+              break;
+            case "120": // 2 hours
+              if (recipeTime < 120 || recipeTime >= 180) return false;
+              break;
+            case "180": // More than 2 hours
+              if (recipeTime < 180) return false;
+              break;
+            default:
+              break;
+          }
         }
 
         return true;
