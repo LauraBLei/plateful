@@ -1,9 +1,9 @@
 "use client";
-import { Clock } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "src/providers/AuthProvider";
 import { FillImage, ImageContainer } from "./FillImage";
 import { RecipeActions } from "./RecipeActions";
+import CookingTime from "./CookingTime";
 
 interface RecipeCardProps {
   image: string;
@@ -26,7 +26,6 @@ export const RecipeCard = ({
 }: RecipeCardProps) => {
   const { user: currentUser } = useAuth();
   const isOwnRecipe = currentUser?.id === owner?.id;
-  const cookingTime = getCookingTimeLabel(time);
   return (
     <div className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white">
       <ImageContainer className="aspect-[308/181] w-full rounded-md overflow-hidden shadow-md mx-auto">
@@ -61,26 +60,8 @@ export const RecipeCard = ({
       </ImageContainer>
       <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
-        <div className="flex items-center gap-2 whitespace-nowrap">
-          <Clock className="w-[20px]" />
-          <span className="text-sm">{cookingTime}</span>
-        </div>
+        <CookingTime time={time} />
       </div>
     </div>
   );
-};
-
-const getCookingTimeLabel = (minutes: number): string => {
-  switch (minutes) {
-    case 30:
-      return "30 min";
-    case 60:
-      return "1 hour";
-    case 90:
-      return "1.5 hours";
-    case 120:
-      return "2 hours";
-    default:
-      return "> 2 hours";
-  }
 };
