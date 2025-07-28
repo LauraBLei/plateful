@@ -10,13 +10,11 @@ export interface FilterOptions {
 interface RecipeFilterProps {
   // Filter state
   selectedTags: string[];
-  selectedLanguage: string;
   selectedTime: string;
   showMobileFilter: boolean;
 
   // Event handlers
   onTagChange: (tag: string) => void;
-  onLanguageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onTimeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onFilter: (e: React.FormEvent) => void;
   onToggleMobileFilter: () => void;
@@ -37,8 +35,6 @@ const mealTypes = [
   "snack",
 ];
 
-const languages = ["danish", "norwegian", "english"];
-
 const timeOptions = [
   { value: "15", label: "Less than 30 minutes" },
   { value: "30", label: "30 minutes" },
@@ -50,11 +46,9 @@ const timeOptions = [
 
 export const RecipeFilter: React.FC<RecipeFilterProps> = ({
   selectedTags,
-  selectedLanguage,
   selectedTime,
   showMobileFilter,
   onTagChange,
-  onLanguageChange,
   onTimeChange,
   onFilter,
   onToggleMobileFilter,
@@ -132,21 +126,6 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                   {timeOptions.map((t) => (
                     <option key={t.value} value={t.value}>
                       {t.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <div className="font-semibold mb-2">Language:</div>
-                <select
-                  value={selectedLanguage}
-                  onChange={onLanguageChange}
-                  className="input dark:bg-brand-black bg-brand-white font-semibold"
-                >
-                  <option value="">Any</option>
-                  {languages.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang.charAt(0).toUpperCase() + lang.slice(1)}
                     </option>
                   ))}
                 </select>

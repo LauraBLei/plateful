@@ -14,11 +14,9 @@ const AllRecipes = ({ initialRecipes = [] }: AllRecipesProps) => {
   const [loading, setLoading] = useState(initialRecipes.length === 0);
   const {
     selectedTags,
-    selectedLanguage,
     selectedTime,
     showMobileFilter,
     handleTagChange,
-    handleLanguageChange,
     handleTimeChange,
     handleFilter,
     handleToggleMobileFilter,
@@ -36,11 +34,9 @@ const AllRecipes = ({ initialRecipes = [] }: AllRecipesProps) => {
     <div className="max-w-[1440px] font-primary mb-30 w-full flex flex-col lg:flex-row gap-5 mx-auto p-4 text-brand-black dark:text-brand-white">
       <RecipeFilter
         selectedTags={selectedTags}
-        selectedLanguage={selectedLanguage}
         selectedTime={selectedTime}
         showMobileFilter={showMobileFilter}
         onTagChange={handleTagChange}
-        onLanguageChange={handleLanguageChange}
         onTimeChange={handleTimeChange}
         onFilter={onFilter}
         onToggleMobileFilter={handleToggleMobileFilter}

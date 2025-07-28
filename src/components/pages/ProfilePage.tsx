@@ -59,11 +59,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ targetUser, recipes }) => {
         <div className="h-full flex flex-col  gap-5 w-full">
           <RecipeFilter
             selectedTags={filter.selectedTags}
-            selectedLanguage={filter.selectedLanguage}
             selectedTime={filter.selectedTime}
             showMobileFilter={filter.showMobileFilter}
             onTagChange={filter.handleTagChange}
-            onLanguageChange={filter.handleLanguageChange}
             onTimeChange={filter.handleTimeChange}
             onFilter={filter.handleFilter}
             onToggleMobileFilter={filter.handleToggleMobileFilter}
