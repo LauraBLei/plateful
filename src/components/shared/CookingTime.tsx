@@ -12,18 +12,13 @@ const CookingTime: React.FC<CookingTimeProps> = ({ time }) => (
 );
 
 const getCookingTimeLabel = (minutes: number): string => {
-  switch (minutes) {
-    case 30:
-      return "30 min";
-    case 60:
-      return "1 hour";
-    case 90:
-      return "1.5 hours";
-    case 120:
-      return "2 hours";
-    default:
-      return "> 2 hours";
-  }
+  if (!minutes || isNaN(minutes)) return "N/A";
+  const hrs = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hrs > 0 && mins > 0)
+    return `${hrs} hour${hrs > 1 ? "s" : ""} ${mins} min`;
+  if (hrs > 0) return `${hrs} hour${hrs > 1 ? "s" : ""}`;
+  return `${mins} min`;
 };
 
 export default CookingTime;

@@ -1,11 +1,12 @@
 "use client";
 
-import { Clock, HeartMinus, HeartPlus } from "lucide-react";
+import { HeartMinus, HeartPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { updateUser } from "src/api/userActions";
 import { useAuth } from "src/providers/AuthProvider";
 import { Recipe } from "src/types/recipe";
+import CookingTime from "../shared/CookingTime";
 
 interface RecipeHeaderProps {
   recipe: Recipe;
@@ -14,7 +15,6 @@ interface RecipeHeaderProps {
 export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
   const { user } = useAuth();
   const isFavorite = !!(user && recipe && user.favorites?.includes(recipe.id));
-  const cookingTime = getCookingTimeLabel(recipe?.time ? recipe.time : 30);
   const router = useRouter();
 
   const handleSetFavorite = async () => {
@@ -67,27 +67,10 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
               {isFavorite ? "Remove from favorite" : "Add to favorite"}
             </span>
           </button>
-          <p className="flex items-center gap-2">
-            <Clock className="w-[20px]" />
-            <span className="text-sm whitespace-nowrap">{cookingTime}</span>
-          </p>
+
+          <CookingTime time={recipe.time} />
         </div>
       </h1>
     </div>
   );
-};
-
-const getCookingTimeLabel = (minutes: number) => {
-  switch (minutes) {
-    case 30:
-      return "30 min";
-    case 60:
-      return "1 hour";
-    case 90:
-      return "1.5 hours";
-    case 120:
-      return "2 hours";
-    default:
-      return "> 2 hours";
-  }
 };
