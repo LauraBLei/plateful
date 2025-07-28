@@ -24,14 +24,11 @@ export const InformationTooltip: React.FC<InformationTooltipProps> = ({
       style={{ outline: "none" }}
     >
       {visible && (
-        <p className="absolute w-60 z-40 text-sm md:text-base left-10 bg-brand-black p-2 rounded-md border-1 border-brand-orange">
+        <p className="text-white absolute w-60 z-40 text-sm md:text-base left-10 bg-brand-black p-2 rounded-md border-1 border-brand-orange">
           {text}
         </p>
       )}
-      <Info
-        size={18}
-        className="text-brand-gray-600 dark:text-brand-gray-300 cursor-pointer"
-      />
+      <Info size={18} className="text-brand-orange  cursor-pointer" />
     </div>
   );
 };

@@ -3,32 +3,44 @@ interface TimeSelectProps {
   setTime: (value: number) => void;
 }
 
-const timeOptions = [
-  { value: 15, label: "Less than 30 minutes" },
-  { value: 30, label: "30 minutes" },
-  { value: 60, label: "1 hour" },
-  { value: 90, label: "1.5 hours" },
-  { value: 120, label: "2 hours" },
-  { value: 180, label: "More than 2 hours" },
-];
-
-export const TimeSelect = ({ time, setTime }: TimeSelectProps) => (
-  <div className="w-full flex flex-col gap-2">
-    <label htmlFor="time" className="headlineTwo">
-      Time Required
-    </label>
-    <select
-      id="time"
-      value={time}
-      onChange={(e) => setTime(Number(e.target.value))}
-      className="input cursor-pointer"
-      required
-    >
-      {timeOptions.map((opt) => (
-        <option className="text-brand-black" key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+export const TimeSelect = ({ time, setTime }: TimeSelectProps) => {
+  const hours = Math.floor(Number(time) / 60) || 0;
+  const minutes = Number(time) % 60 || 0;
+  return (
+    <div className="w-full flex flex-col gap-2">
+      <label htmlFor="time-hours" className="headlineTwo">
+        Time Required
+      </label>
+      <div className="flex gap-2 items-center">
+        <input
+          id="time-hours"
+          type="number"
+          min={0}
+          max={24}
+          value={hours}
+          onChange={(e) => {
+            const newHours = parseInt(e.target.value, 10) || 0;
+            setTime(newHours * 60 + minutes);
+          }}
+          className="input w-16 text-center"
+          placeholder="Hours"
+        />
+        <span>h</span>
+        <input
+          id="time-minutes"
+          type="number"
+          min={0}
+          max={59}
+          value={minutes}
+          onChange={(e) => {
+            const newMinutes = parseInt(e.target.value, 10) || 0;
+            setTime(hours * 60 + newMinutes);
+          }}
+          className="input w-16 text-center"
+          placeholder="Minutes"
+        />
+        <span>min</span>
+      </div>
+    </div>
+  );
+};

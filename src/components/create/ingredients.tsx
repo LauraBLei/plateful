@@ -1,3 +1,5 @@
+import { InformationTooltip } from "./information";
+
 export type IngredientGroup = {
   groupName: string;
   ingredients: string[];
@@ -59,6 +61,7 @@ export const IngredientGroupsInput = ({
           className="w-full mb-6 border border-gray-200 p-4 rounded-md space-y-4 bg-brand-black text-brand-white dark:text-brand-black dark:bg-brand-white "
         >
           <div className="flex items-center gap-2 w-full">
+            <InformationTooltip text="Optional: You can give a name to this group of ingredients to help organize your recipe. For example, you might call it 'Dough', 'Sauce', or 'Toppings'. If you don’t want to use a name, just leave this box empty." />
             <label
               className="block font-semibold flex-1"
               htmlFor={`group-name-${groupIdx}`}
@@ -84,11 +87,13 @@ export const IngredientGroupsInput = ({
             placeholder="e.g. Base, Sauce, Toppings"
             className="input2"
             maxLength={50}
-            required
           />
 
           <div>
-            <label className="block mb-1 font-semibold">Ingredients</label>
+            <div className="flex gap-2 items-center mb-1">
+              <InformationTooltip text="List each ingredient needed for this group. Be specific with amounts and units (e.g. 2 cups flour, 1 tsp salt)." />
+              <label className="block  font-semibold">Ingredients</label>
+            </div>
             {group.ingredients.map((ingredient, ingIdx) => (
               <div key={ingIdx} className="flex items-center gap-2 mb-2">
                 <input
