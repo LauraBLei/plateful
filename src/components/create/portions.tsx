@@ -1,5 +1,5 @@
-import { Minus, Plus } from "lucide-react";
 import React from "react";
+import { InformationTooltip } from "./information";
 
 interface PortionSizeProps {
   portion: number;
@@ -21,6 +21,7 @@ export const PortionSize: React.FC<PortionSizeProps> = ({
     <div className="flex flex-col items-center gap-2 w-full">
       <p className="headlineTwo">Set Portion Size</p>
       <div className="flex gap-5 w-full">
+        <InformationTooltip text="Enter the number of servings this recipe makes. Adjust to match how many people you want to cook for" />
         <input
           type="number"
           min={1}
