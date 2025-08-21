@@ -85,6 +85,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ targetUser, recipes }) => {
             case "lt60": // Less than 1 hour
               if (recipeTime >= 60) return false;
               break;
+            case "lt120": // Less than 2 hours
+              if (recipeTime >= 120) return false;
+              break;
             case "30": // 30 minutes
               if (recipeTime < 30 || recipeTime >= 60) return false;
               break;

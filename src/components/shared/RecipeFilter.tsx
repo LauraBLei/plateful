@@ -37,6 +37,8 @@ const mealTypes = [
 
 const timeOptions = [
   { value: "15", label: "Less than 30 minutes" },
+  { value: "lt60", label: "Less than 1 hour" },
+  { value: "lt120", label: "Less than 2 hours" },
   { value: "30", label: "30 minutes" },
   { value: "60", label: "1 hour" },
   { value: "90", label: "1.5 hours" },
@@ -244,6 +246,12 @@ export const useRecipeFilter = (
           switch (appliedTime) {
             case "15": // Less than 30 minutes
               if (recipeTime >= 30) return false;
+              break;
+            case "lt60": // Less than 1 hour
+              if (recipeTime >= 60) return false;
+              break;
+            case "lt120": // Less than 2 hours
+              if (recipeTime >= 120) return false;
               break;
             case "30": // 30 minutes
               if (recipeTime < 30 || recipeTime >= 60) return false;
