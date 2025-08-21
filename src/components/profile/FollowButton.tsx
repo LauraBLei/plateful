@@ -30,27 +30,25 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
     (targetUser && user?.following?.includes(targetUser.id)) ?? false
   );
 
-  useEffect(() => {
-    setIsFollowing(
-      (targetUser && user?.following?.includes(targetUser.id)) ?? false
-    );
-  }, [user?.following, targetUser?.id, targetUser]);
-
   const handleFollow = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsLoading(true);
+
+    // Update UI immediately for instant feedback
+    const previousFollowingState = isFollowing;
+    setIsFollowing(!isFollowing);
 
     try {
       if (!targetUser || !user) {
         return;
       }
 
-      const updatedFollowing = isFollowing
+      const updatedFollowing = previousFollowingState
         ? removeId(targetUser.id, user.following || [])
         : addId(targetUser.id, user.following || []);
 
-      const updatedFollowers = isFollowing
+      const updatedFollowers = previousFollowingState
         ? removeId(user.id, targetUser.followers || [])
         : addId(user.id, targetUser.followers || []);
 
@@ -66,10 +64,11 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
 
       await Promise.all([updateCurrentUserPromise, updateTargetUserPromise]);
 
-      setIsFollowing(!isFollowing);
       router.refresh();
     } catch (error) {
       console.error("Error updating follow status:", error);
+      // Revert the UI change if the API call failed
+      setIsFollowing(previousFollowingState);
       alert("Failed to update follow status. Please try again.");
     } finally {
       setIsLoading(false);

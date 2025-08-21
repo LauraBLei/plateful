@@ -15,9 +15,13 @@ interface RecipeHeaderProps {
 
 export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
   const { user } = useAuth();
-  const isFavorite = !!(user && recipe && user.favorites?.includes(recipe.id));
   const router = useRouter();
   const isOwnRecipe = user?.id === recipe.owner?.id;
+
+  // Local state for immediate UI updates
+  const [isFavorite, setIsFavorite] = React.useState(
+    !!(user && recipe && user.favorites?.includes(recipe.id))
+  );
 
   const handleSetFavorite = async () => {
     if (user && recipe) {
@@ -30,6 +34,9 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
         updatedFavorites = [...currentFavorites, recipe.id];
       }
 
+      // Update UI immediately
+      setIsFavorite(!isFavorite);
+
       try {
         await updateUser({
           id: user.id,
@@ -40,6 +47,8 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
         console.log("Favorites updated successfully ", updatedFavorites);
       } catch (error) {
         console.error("Failed to update favorites:", error);
+        // Revert the UI change if the API call failed
+        setIsFavorite(isFavorite);
       }
     } else {
       console.log("Cannot update favorites:", {
