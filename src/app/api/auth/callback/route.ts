@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { getCookieOptions } from "src/helpers/cookieConfig";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -23,9 +24,7 @@ export async function GET(request: NextRequest) {
                 try {
                   cookieStore.set(name, value, {
                     ...options,
-                    httpOnly: false,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite: "lax",
+                    ...getCookieOptions(),
                   });
                 } catch (error) {
                   console.error("Failed to set cookie:", name, error);

@@ -53,9 +53,12 @@ export const ProfileSidebar = ({
             {isOwnProfile ? (
               <ProfileName targetUser={targetUser} variant="desktop" />
             ) : (
-              <h1 className=" text-center text-2xl">{targetUser?.name}</h1>
+              <>
+                <h1 className=" text-center text-2xl">{targetUser?.name}</h1>
+                <FollowButton targetUser={targetUser} variant="desktop" />
+              </>
             )}
-            {/* <FollowerInfo targetUser={targetUser} variant="desktop" /> */}
+            <FollowerInfo targetUser={targetUser} variant="desktop" />
           </div>
           {isOwnProfile ? (
             <BioText profile={targetUser} variant="desktop" />
@@ -93,11 +96,7 @@ export const ProfileSidebar = ({
           </div>
           <BioText profile={targetUser} variant="tablet" />
           {!isOwnProfile && targetUser ? (
-            <FollowButton
-              targetUser={targetUser}
-              loggedInUser={user}
-              variant="tablet"
-            />
+            <FollowButton targetUser={targetUser} variant="tablet" />
           ) : (
             isOwnProfile && (
               <Options
