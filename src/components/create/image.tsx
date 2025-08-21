@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Plus } from "lucide-react";
 import { Recipe } from "src/types/recipe";
 import { FillImage, ImageContainer } from "../shared/FillImage";
 import { InformationTooltip } from "./information";
@@ -49,7 +50,10 @@ export const ImageInput = ({
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <span className="text-brand-black">Click to upload image</span>
+            <div className="flex flex-col items-center justify-center text-brand-black dark:text-brand-white">
+              <Plus className="w-12 h-12 mb-2 opacity-50" />
+              <span>Click to upload image</span>
+            </div>
           )}
         </ImageContainer>
       </div>
