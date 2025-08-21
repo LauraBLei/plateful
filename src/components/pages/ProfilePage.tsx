@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "src/providers/AuthProvider";
 import { Recipe, RecipeType } from "src/types/recipe";
 import { UserProfile } from "src/types/user";
@@ -16,25 +16,103 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ targetUser, recipes }) => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<RecipeType>("recipes");
   const [baseRecipes, setBaseRecipes] = useState<Recipe[]>(recipes || []);
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(
+    recipes || []
+  );
 
   useEffect(() => {
     setBaseRecipes(recipes || []);
+    setFilteredRecipes(recipes || []);
   }, [recipes]);
 
   const filter = useRecipeFilter();
   const isFabTabActive = activeTab === "favorites";
   const isOwnProfile = targetUser?.id === user?.id;
 
-  const currentRecipes = useMemo(() => {
+  // Handle filter application
+  const handleFilterApply = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Apply filters to current recipes using selected values
     if (
       filter.selectedTags.length > 0 ||
       filter.selectedLanguage ||
       filter.selectedTime
     ) {
-      return filter.filterRecipesLocally(baseRecipes);
+      // Create a temporary filter object to use the filterRecipesLocally function
+      const tempAppliedFilters = {
+        appliedTags: filter.selectedTags,
+        appliedLanguage: filter.selectedLanguage,
+        appliedTime: filter.selectedTime,
+      };
+
+      // Filter recipes manually using the same logic as filterRecipesLocally
+      const filtered = baseRecipes.filter((recipe) => {
+        // Filter by tags
+        if (tempAppliedFilters.appliedTags.length > 0) {
+          const recipeTags = recipe.tag || [];
+          const tagsArray = Array.isArray(recipeTags)
+            ? recipeTags
+            : [recipeTags];
+          const hasMatchingTag = tempAppliedFilters.appliedTags.some((tag) =>
+            tagsArray.some(
+              (recipeTag: string) =>
+                recipeTag?.toLowerCase() === tag.toLowerCase()
+            )
+          );
+          if (!hasMatchingTag) return false;
+        }
+
+        // Filter by language
+        if (
+          tempAppliedFilters.appliedLanguage &&
+          recipe.language?.toLowerCase() !==
+            tempAppliedFilters.appliedLanguage.toLowerCase()
+        ) {
+          return false;
+        }
+
+        // Filter by time
+        if (tempAppliedFilters.appliedTime) {
+          const recipeTime =
+            typeof recipe.time === "string"
+              ? parseInt(recipe.time)
+              : recipe.time;
+          switch (tempAppliedFilters.appliedTime) {
+            case "15": // Less than 30 minutes
+              if (recipeTime >= 30) return false;
+              break;
+            case "lt60": // Less than 1 hour
+              if (recipeTime >= 60) return false;
+              break;
+            case "30": // 30 minutes
+              if (recipeTime < 30 || recipeTime >= 60) return false;
+              break;
+            case "60": // 1 hour
+              if (recipeTime < 60 || recipeTime >= 90) return false;
+              break;
+            case "90": // 1.5 hours
+              if (recipeTime < 90 || recipeTime >= 120) return false;
+              break;
+            case "120": // 2 hours
+              if (recipeTime < 120 || recipeTime >= 180) return false;
+              break;
+            case "180": // More than 2 hours
+              if (recipeTime < 180) return false;
+              break;
+            default:
+              break;
+          }
+        }
+
+        return true;
+      });
+
+      setFilteredRecipes(filtered);
+    } else {
+      setFilteredRecipes(baseRecipes);
     }
-    return baseRecipes;
-  }, [baseRecipes, filter]);
+  };
 
   const filterTitle = isFabTabActive
     ? "Filter your favourites"
@@ -63,7 +141,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ targetUser, recipes }) => {
             showMobileFilter={filter.showMobileFilter}
             onTagChange={filter.handleTagChange}
             onTimeChange={filter.handleTimeChange}
-            onFilter={filter.handleFilter}
+            onFilter={handleFilterApply}
             onToggleMobileFilter={filter.handleToggleMobileFilter}
             title={filterTitle}
             forceMobileLayout={true}
@@ -76,7 +154,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ targetUser, recipes }) => {
                   : "Your Recipes"
                 : sectionTitle
             }
-            recipeList={currentRecipes}
+            recipeList={filteredRecipes}
           />
         </div>
       </div>
