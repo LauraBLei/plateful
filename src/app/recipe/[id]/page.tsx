@@ -1,3 +1,4 @@
+import Link from "next/link";
 import RecipePage from "src/components/pages/RecipePage";
 import { createServerSupabaseClient } from "src/helpers/supabaseServerClient";
 
@@ -15,7 +16,21 @@ const Recipe: React.FC<RecipeProps> = async ({ params }) => {
     .single();
 
   if (error || !recipe) {
-    return <div>Recipe deleted</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4 font-primary">
+        <div className="max-w-md mx-auto">
+          <h1 className="headlineTwo mb-4 text-brand-black dark:text-brand-white">
+            Recipe Not Found
+          </h1>
+          <p className="text-brand-black/70 dark:text-brand-white/70 mb-6">
+            This recipe has been deleted or doesn&apos;t exist.
+          </p>
+          <Link href="/" className="button button-active inline-block">
+            Go Back to Home
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return <RecipePage recipe={recipe} owner={recipe.owner} />;
