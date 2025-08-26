@@ -10,13 +10,11 @@ export interface FilterOptions {
 interface RecipeFilterProps {
   // Filter state
   selectedTags: string[];
-  selectedLanguage: string;
   selectedTime: string;
   showMobileFilter: boolean;
 
   // Event handlers
   onTagChange: (tag: string) => void;
-  onLanguageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onTimeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onFilter: (e: React.FormEvent) => void;
   onToggleMobileFilter: () => void;
@@ -37,10 +35,10 @@ const mealTypes = [
   "snack",
 ];
 
-const languages = ["danish", "norwegian", "english"];
-
 const timeOptions = [
   { value: "15", label: "Less than 30 minutes" },
+  { value: "lt60", label: "Less than 1 hour" },
+  { value: "lt120", label: "Less than 2 hours" },
   { value: "30", label: "30 minutes" },
   { value: "60", label: "1 hour" },
   { value: "90", label: "1.5 hours" },
@@ -50,11 +48,9 @@ const timeOptions = [
 
 export const RecipeFilter: React.FC<RecipeFilterProps> = ({
   selectedTags,
-  selectedLanguage,
   selectedTime,
   showMobileFilter,
   onTagChange,
-  onLanguageChange,
   onTimeChange,
   onFilter,
   onToggleMobileFilter,
@@ -132,21 +128,6 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                   {timeOptions.map((t) => (
                     <option key={t.value} value={t.value}>
                       {t.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <div className="font-semibold mb-2">Language:</div>
-                <select
-                  value={selectedLanguage}
-                  onChange={onLanguageChange}
-                  className="input dark:bg-brand-black bg-brand-white font-semibold"
-                >
-                  <option value="">Any</option>
-                  {languages.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang.charAt(0).toUpperCase() + lang.slice(1)}
                     </option>
                   ))}
                 </select>
@@ -262,18 +243,34 @@ export const useRecipeFilter = (
             typeof recipe.time === "string"
               ? parseInt(recipe.time)
               : recipe.time;
-          const filterTime = parseInt(appliedTime);
-
-          if (filterTime === 15 && recipeTime >= 30) return false;
-          if (filterTime === 30 && (recipeTime < 30 || recipeTime > 30))
-            return false;
-          if (filterTime === 60 && (recipeTime < 60 || recipeTime > 60))
-            return false;
-          if (filterTime === 90 && (recipeTime < 90 || recipeTime > 90))
-            return false;
-          if (filterTime === 120 && (recipeTime < 120 || recipeTime > 120))
-            return false;
-          if (filterTime === 180 && recipeTime <= 120) return false;
+          switch (appliedTime) {
+            case "15": // Less than 30 minutes
+              if (recipeTime >= 30) return false;
+              break;
+            case "lt60": // Less than 1 hour
+              if (recipeTime >= 60) return false;
+              break;
+            case "lt120": // Less than 2 hours
+              if (recipeTime >= 120) return false;
+              break;
+            case "30": // 30 minutes
+              if (recipeTime < 30 || recipeTime >= 60) return false;
+              break;
+            case "60": // 1 hour
+              if (recipeTime < 60 || recipeTime >= 90) return false;
+              break;
+            case "90": // 1.5 hours
+              if (recipeTime < 90 || recipeTime >= 120) return false;
+              break;
+            case "120": // 2 hours
+              if (recipeTime < 120 || recipeTime >= 180) return false;
+              break;
+            case "180": // More than 2 hours
+              if (recipeTime < 180) return false;
+              break;
+            default:
+              break;
+          }
         }
 
         return true;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TextCounter } from "../../helpers/textCounter";
+import { InformationTooltip } from "./information";
 
 interface StepsInputProps {
   steps: string[];
@@ -29,7 +30,10 @@ export const StepsInput = ({ steps, setSteps }: StepsInputProps) => {
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <h2 className="headlineTwo ">Recipe Steps</h2>
+      <div className="flex gap-2 items-center">
+        <InformationTooltip text="Describe each step of the recipe clearly. Use short sentences and include tips or timing if needed." />
+        <h2 className="headlineTwo ">Recipe Steps</h2>
+      </div>
       <div className="w-full mb-6 border border-gray-200 p-4 rounded-md space-y-4 bg-brand-black text-brand-white dark:text-brand-black dark:bg-brand-white ">
         {steps.map((step, i) => (
           <div key={i} className="mb-2 flex flex-col  gap-2">

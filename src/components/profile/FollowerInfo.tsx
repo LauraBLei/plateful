@@ -77,17 +77,11 @@ export const FollowerInfo = ({
   const containerClasses =
     variant === "desktop" ? "flex gap-5" : "flex items-center w-full gap-5";
 
-  const followersText =
-    targetUser.followers && targetUser.followers.length === 1
-      ? " Follower"
-      : " Followers";
-  const followersCount = targetUser.followers ? targetUser.followers.length : 0;
+  const followersCount = targetUser.followers.length;
+  const followersText = pluralHelper(followersCount, "Follower");
 
-  const followingText =
-    targetUser.following && targetUser.following.length === 1
-      ? " Following"
-      : " Following";
-  const followingCount = targetUser.following ? targetUser.following.length : 0;
+  const followingText = "Following";
+  const followingCount = targetUser.following.length;
   return (
     <>
       <div className={containerClasses}>
@@ -98,7 +92,7 @@ export const FollowerInfo = ({
         >
           {loadingFollowers
             ? "Loading..."
-            : `${followersCount}${followersText}`}
+            : `${followersCount} ${followersText}`}
         </button>
         <button
           onClick={handleShowFollowing}
@@ -107,7 +101,7 @@ export const FollowerInfo = ({
         >
           {loadingFollowing
             ? "Loading..."
-            : `${followingCount}${followingText}`}
+            : `${followingCount} ${followingText}`}
         </button>
       </div>
 
@@ -128,4 +122,8 @@ export const FollowerInfo = ({
       />
     </>
   );
+};
+
+const pluralHelper = (count: number, word: string) => {
+  return count === 1 ? word : `${word}s`;
 };

@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getCookieOptions } from "src/helpers/cookieConfig";
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -18,8 +19,7 @@ export async function middleware(req: NextRequest) {
             req.cookies.set(name, value);
             res.cookies.set(name, value, {
               ...options,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "lax",
+              ...getCookieOptions(),
             });
           });
         },

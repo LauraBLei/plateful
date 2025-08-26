@@ -19,7 +19,7 @@ export const RecipeFormActions = ({
           : "Creating..."
         : isEdit
         ? "Update Recipe"
-        : "Submit Recipe"}
+        : "Create Recipe"}
     </button>
   );
 };
