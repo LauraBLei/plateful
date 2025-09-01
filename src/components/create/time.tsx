@@ -16,7 +16,7 @@ export const TimeSelect = ({ time, setTime }: TimeSelectProps) => {
           id="time-hours"
           type="number"
           min={0}
-          max={24}
+          max={99}
           value={hours}
           onChange={(e) => {
             const newHours = parseInt(e.target.value, 10) || 0;
