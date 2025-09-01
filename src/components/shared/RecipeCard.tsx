@@ -28,7 +28,7 @@ export const RecipeCard = ({
   const isOwnRecipe = currentUser?.id === owner?.id;
   const cookingTime = getCookingTimeLabel(time);
   return (
-    <div className="hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white">
+    <div className="relative hover-effect font font-primary text-lg  lg:max-w-[345px] w-full text-brand-black dark:text-brand-white">
       <ImageContainer className="aspect-[308/181] w-full rounded-md overflow-hidden shadow-md mx-auto">
         <Link href={`/recipe/${id}`} className="block w-full h-full relative">
           <FillImage
