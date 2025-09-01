@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { getUser } from "src/api/userActions";
+import { handleAuthError, isAuthError } from "src/helpers/authErrorHandler";
 import { supabase } from "src/helpers/supaBaseBrowserClient";
 import { UserProfile } from "src/types/user";
 
@@ -55,6 +56,9 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
             "Error fetching user data after auth state change:",
             error
           );
+          if (isAuthError(error)) {
+            handleAuthError(error);
+          }
         }
       } else if (event === "SIGNED_OUT") {
         setUser(null);
@@ -76,13 +80,16 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
       });
       if (error) {
         console.error("Sign in error:", error);
+        if (isAuthError(error)) {
+          handleAuthError(error);
+        }
         return;
       }
-
-      // The auth state change handler will handle user data fetching
-      // when the user returns from the OAuth redirect
     } catch (error) {
       console.error("Sign in exception:", error);
+      if (isAuthError(error)) {
+        handleAuthError(error);
+      }
     }
   };
 

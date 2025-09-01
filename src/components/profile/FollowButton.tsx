@@ -1,52 +1,59 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useAuth } from "src/providers/AuthProvider";
 import { UserProfile } from "src/types/user";
 import { updateUser } from "../../api/userActions";
 
 interface FollowButtonProps {
   targetUser: UserProfile | null;
-  loggedInUser?: UserProfile | null;
   variant?: "desktop" | "tablet";
 }
 
-const removeId = (targetUser: UserProfile, arr: string[]) =>
-  arr.filter((id) => id !== targetUser?.id);
+const removeId = (userId: string, arr: string[]) =>
+  arr.filter((id) => id !== userId);
 
-const addId = (targetUser: UserProfile, arr: string[]) => [
-  ...(arr || []),
-  targetUser.id,
-];
+const addId = (userId: string, arr: string[]) => {
+  if (arr.includes(userId)) {
+    return arr;
+  }
+  return [...arr, userId];
+};
 
 export const FollowButton: React.FC<FollowButtonProps> = ({
   targetUser,
-  loggedInUser,
   variant = "desktop",
 }) => {
+  const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const isFollowing =
-    (targetUser && loggedInUser?.following?.includes(targetUser.id)) || false;
+  const [isFollowing, setIsFollowing] = useState(
+    (targetUser && user?.following?.includes(targetUser.id)) ?? false
+  );
 
   const handleFollow = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-
     setIsLoading(true);
 
+    // Update UI immediately for instant feedback
+    const previousFollowingState = isFollowing;
+    setIsFollowing(!isFollowing);
+
     try {
-      if (!targetUser || !loggedInUser) {
+      if (!targetUser || !user) {
         return;
       }
-      const updatedFollowing = isFollowing
-        ? removeId(targetUser, loggedInUser.following)
-        : addId(targetUser, loggedInUser.following);
 
-      const updatedFollowers = isFollowing
-        ? removeId(targetUser, targetUser.followers)
-        : addId(targetUser, targetUser.followers);
+      const updatedFollowing = previousFollowingState
+        ? removeId(targetUser.id, user.following || [])
+        : addId(targetUser.id, user.following || []);
+
+      const updatedFollowers = previousFollowingState
+        ? removeId(user.id, targetUser.followers || [])
+        : addId(user.id, targetUser.followers || []);
 
       const updateCurrentUserPromise = updateUser({
-        id: loggedInUser.id,
+        id: user.id,
         followingUpdated: updatedFollowing,
       });
 
@@ -60,13 +67,15 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
       router.refresh();
     } catch (error) {
       console.error("Error updating follow status:", error);
+      // Revert the UI change if the API call failed
+      setIsFollowing(previousFollowingState);
       alert("Failed to update follow status. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!loggedInUser) {
+  if (!user) {
     return null; // Don't show follow button if not logged in
   }
 

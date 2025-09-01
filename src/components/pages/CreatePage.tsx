@@ -9,15 +9,10 @@ import { RecipeFormLayout } from "../create/RecipeFormLayout";
 
 export const CreatePageContent = () => {
   const { user } = useAuth();
-
   const { formData, updateField, validateForm } = useRecipeForm();
 
-  const {
-    submitRecipe,
-    isSubmitting,
-    error: submitError,
-    clearError,
-  } = useRecipeSubmission(user);
+  const { submitRecipe, isSubmitting, error, clearError } =
+    useRecipeSubmission(user);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,12 +27,10 @@ export const CreatePageContent = () => {
     await submitRecipe(formData, false);
   };
 
-  const displayError = submitError;
-
   return (
     <div className="max-w-[1440px] mb-30 flex flex-col gap-10 w-full px-2">
       <h1 className="headline">Create Recipe!</h1>
-      <ErrorDisplay error={displayError} onClear={clearError} />
+      <ErrorDisplay error={error} onClear={clearError} />
       <form
         onSubmit={handleSubmit}
         className="w-full space-y-6 font-primary text-brand-black dark:text-brand-white"

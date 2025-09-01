@@ -1,11 +1,13 @@
 "use client";
 
-import { Clock, HeartMinus, HeartPlus } from "lucide-react";
+import { HeartMinus, HeartPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { updateUser } from "src/api/userActions";
 import { useAuth } from "src/providers/AuthProvider";
 import { Recipe } from "src/types/recipe";
+import CookingTime from "../shared/CookingTime";
+import { RecipeActions } from "../shared/RecipeActions";
 
 interface RecipeHeaderProps {
   recipe: Recipe;
@@ -13,9 +15,13 @@ interface RecipeHeaderProps {
 
 export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
   const { user } = useAuth();
-  const isFavorite = !!(user && recipe && user.favorites?.includes(recipe.id));
-  const cookingTime = getCookingTimeLabel(recipe?.time ? recipe.time : 30);
   const router = useRouter();
+  const isOwnRecipe = user?.id === recipe.owner?.id;
+
+  // Local state for immediate UI updates
+  const [isFavorite, setIsFavorite] = React.useState(
+    !!(user && recipe && user.favorites?.includes(recipe.id))
+  );
 
   const handleSetFavorite = async () => {
     if (user && recipe) {
@@ -28,6 +34,9 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
         updatedFavorites = [...currentFavorites, recipe.id];
       }
 
+      // Update UI immediately
+      setIsFavorite(!isFavorite);
+
       try {
         await updateUser({
           id: user.id,
@@ -38,6 +47,8 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
         console.log("Favorites updated successfully ", updatedFavorites);
       } catch (error) {
         console.error("Failed to update favorites:", error);
+        // Revert the UI change if the API call failed
+        setIsFavorite(isFavorite);
       }
     } else {
       console.log("Cannot update favorites:", {
@@ -54,6 +65,9 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
       <h1 className="headline flex justify-between">
         {recipe?.name}
         <div className="flex items-center gap-5">
+          {isOwnRecipe && (
+            <RecipeActions id={recipe.id} currentUser={user} className="flex" />
+          )}
           <button
             onClick={handleSetFavorite}
             className="flex gap-2 items-center hover:text-brand-orange cursor-pointer"
@@ -67,27 +81,10 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
               {isFavorite ? "Remove from favorite" : "Add to favorite"}
             </span>
           </button>
-          <p className="flex items-center gap-2">
-            <Clock className="w-[20px]" />
-            <span className="text-sm whitespace-nowrap">{cookingTime}</span>
-          </p>
+
+          <CookingTime time={recipe.time} />
         </div>
       </h1>
     </div>
   );
-};
-
-const getCookingTimeLabel = (minutes: number) => {
-  switch (minutes) {
-    case 30:
-      return "30 min";
-    case 60:
-      return "1 hour";
-    case 90:
-      return "1.5 hours";
-    case 120:
-      return "2 hours";
-    default:
-      return "> 2 hours";
-  }
 };

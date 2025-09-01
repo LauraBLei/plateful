@@ -1,7 +1,6 @@
 import { Recipe, RecipeFormData } from "src/types/recipe";
 import { ImageInput } from "./image";
 import { IngredientGroupsInput } from "./ingredients";
-import { LanguageSelect } from "./language";
 import { PortionSize } from "./portions";
 
 type RecipeMediaSectionProps = {
@@ -21,11 +20,6 @@ export const RecipeMediaSection = ({
         setImage={(image) => updateField("image", image)}
         image={formData.image}
         existingRecipe={existingRecipe}
-      />
-
-      <LanguageSelect
-        language={formData.language}
-        setLanguage={(language) => updateField("language", language)}
       />
 
       <PortionSize

@@ -29,7 +29,7 @@ export const RecipeBasicInfoSection = ({
         />
       </div>
 
-      <div className="flex gap-5 w-full">
+      <div className="flex flex-col sm:flex-row gap-5 w-full">
         <TimeSelect
           time={formData.time}
           setTime={(time) => updateField("time", time)}
