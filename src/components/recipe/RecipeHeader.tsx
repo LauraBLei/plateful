@@ -61,10 +61,9 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
   };
 
   return (
-    <div className="flex justify-between">
-      <h1 className="headline flex justify-between">
-        {recipe?.name}
-        <div className="flex items-center gap-5">
+    <div className="flex flex-col gap-2 md:gap-5 w-full justify-items-center">
+      <div className="flex items-center gap-5 justify-end">
+        <div className="flex gap-5">
           {isOwnRecipe && (
             <RecipeActions id={recipe.id} currentUser={user} className="flex" />
           )}
@@ -77,14 +76,15 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = ({ recipe }) => {
             ) : (
               <HeartPlus className="w-[20px] " />
             )}
-            <span className="whitespace-nowrap text-sm">
+            <span className="whitespace-nowrap text-sm hidden md:block">
               {isFavorite ? "Remove from favorite" : "Add to favorite"}
             </span>
           </button>
 
           <CookingTime time={recipe.time} />
         </div>
-      </h1>
+      </div>
+      <h1 className="headline flex justify-between">{recipe?.name}</h1>
     </div>
   );
 };
