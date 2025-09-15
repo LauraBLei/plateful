@@ -21,6 +21,7 @@ const LoginMenu = () => {
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
   const isHydrated = useMounted();
+  console.log("user:", user);
 
   // Handler for blur event to close menu if focus leaves
   const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
@@ -84,7 +85,6 @@ const LoginMenu = () => {
                 onClick={async () => {
                   setMenuOpen(false);
                   await signInWithGoogle();
-                  router.refresh();
                 }}
                 className="flex items-center gap-2 hover-effect hover:text-brand-orange"
               >

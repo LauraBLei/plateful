@@ -102,6 +102,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Redirect to the home page
-  return NextResponse.redirect(new URL("/", requestUrl.origin));
+  // Redirect to the home page with auth success flag
+  return NextResponse.redirect(new URL("/?auth=success", requestUrl.origin));
 }

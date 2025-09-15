@@ -35,6 +35,20 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
   );
   const router = useRouter();
 
+  // Check for auth success parameter and refresh to sync state
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authSuccess = urlParams.get("auth");
+
+    if (authSuccess === "success") {
+      console.log("🔄 Auth success detected, refreshing to sync state");
+      // Remove the parameter from URL and refresh
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, "", newUrl);
+      window.location.reload();
+    }
+  }, []); // Only run once on mount
+
   useEffect(() => {
     const {
       data: { subscription },
@@ -45,7 +59,6 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
           if (fullUserProfile) {
             setUser(fullUserProfile);
             setIsAuthenticated(true);
-            router.refresh();
             console.log(
               "User data updated after auth state change:",
               fullUserProfile
