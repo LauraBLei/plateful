@@ -26,6 +26,7 @@ export const TimeSelect = ({ time, setTime }: TimeSelectProps) => {
           placeholder="Hours"
         />
         <span>h</span>
+
         <input
           id="time-minutes"
           type="number"

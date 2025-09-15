@@ -61,7 +61,7 @@ export const RecipeCard = ({
       <div className="flex justify-between py-2 items-center">
         <p>{title}</p>
       </div>
-      <div className="absolute top-0 right-0 p-2 bg-brand-black/80 rounded-bl-md">
+      <div className="absolute top-0 right-0 p-2 bg-brand-black/80 text-brand-white rounded-bl-md">
         <CookingTime time={time} />
       </div>
     </div>
